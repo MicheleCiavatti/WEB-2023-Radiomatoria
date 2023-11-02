@@ -1,0 +1,50 @@
+@media print {
+	body {
+		font-family:'Times New Roman', Times, serif;
+		background-color: white;
+        color: black;
+	}
+
+	nav {
+		display: none;
+	}
+}
+
+@media screen {
+    body {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        background-color: darkslategray;
+    }
+}
+
+header h1 {
+    color: white;
+    text-decoration: overline;
+    text-align: center;
+    padding: 5px;
+}
+
+nav {
+    margin: 0 1%;
+}
+
+nav ul li {
+    display: inline-block;
+    width: 12%;
+    background-color: rgb(87, 53, 53);
+    text-align: center;
+    margin: 10px 0 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: bisque;
+}
+
+nav ul li a:hover {
+    color: rgb(217, 53, 53);
+}
+
+main {
+    margin: 15px 5% 0;
+}
