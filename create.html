@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <title>Crea account</title>
+        <meta charset="UTF-8"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <header>
+            <h1>Long Light</h1>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home page</a></li>
+                <li><a href="guide.html">Guida</a></li>
+                <li><a href="create.html">Crea account</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section>
+                <form action="create_new_account.php" method="post" name="new_account_form">
+                    <table>
+                        <tr>
+                            <td><label for="address">Indirizzo e-mail</label></td>
+                            <td><input type="email" name="address" id="address" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="passwd1">Password</label></td>
+                            <td><input type="password" name="passwd1" id="passwd1" minlength="8" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="passwd2">Password (conferma)</label></td>
+                            <td><input type="password" name="passwd2" id="passwd2" minlength="8" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="clue">Indizio (opzionale)</label></td>
+                            <td><textarea rows="2" cols="24" name="clue" id="clue"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label for="usrname">Nome Utente</label></td>
+                            <td><input type="text" name="usrname" id="usrname" required/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="reset" value="Annulla" title="Annulla"/></td>
+                            <td><input type="submit" value="Invia"/></td>
+                        </tr>
+                    </table>
+                </form>
+            </section>
+            <section>
+                <p>Indirizzo e-mail e Nome utente sono ambedue univoci: per la creazione di un nuovo account verranno accettati solamente valori assenti sul sito.<br/>L'Indizio consiste in un promemoria utilizzabile in fase di login per ricordare la propria password, inconsultabile senza aver inserito il relativo indirizzo e-mail.<p>
+            </section>
+        </main>
+    </body>
+</html>
