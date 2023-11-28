@@ -3,7 +3,7 @@
 -- *--------------------------------------------
 -- * DB-MAIN version: 11.0.2              
 -- * Generator date: Sep 14 2021              
--- * Generation date: Sat Nov 11 15:51:39 2023 
+-- * Generation date: Tue Nov 28 14:08:04 2023 
 -- * LUN file: C:\Users\miche\OneDrive - Alma Mater Studiorum Università di Bologna\Tecnologie Web\Progetto - DB Main\LONG_LIGHT.lun 
 -- * Schema: Relational/1 
 -- ********************************************* 
@@ -39,6 +39,12 @@ create table COMMENTI (
      ImmagineCommento varchar(1024),
      constraint IDCOMMENTO primary key (Creatore, NrPost, Scrittore, NrCommento));
 
+create table DISPONIBILITA' (
+     OraInizio int not null,
+     MinutiInizio int not null,
+     Utente varchar(50) not null,
+     constraint IDDISPONIBILITA' primary key (Utente, OraInizio, MinutiInizio));
+
 create table FASCE_ORARIE (
      OraInizio int not null,
      MinutiInizio int not null,
@@ -46,14 +52,14 @@ create table FASCE_ORARIE (
      MinutiFine int not null,
      constraint IDFASCIA_ORARIA primary key (OraInizio, MinutiInizio));
 
-create table FREQUENZE (
-     MHz float(10) not null,
-     constraint IDFREQUENZA primary key (MHz));
-
 create table FOLLOW (
      Followed varchar(50) not null,
      Follower varchar(50) not null,
      constraint IDFOLLOW primary key (Follower, Followed));
+
+create table FREQUENZE (
+     MHz float(10) not null,
+     constraint IDFREQUENZA primary key (MHz));
 
 create table INTERAZIONI (
      Creatore varchar(50) not null,
@@ -61,12 +67,6 @@ create table INTERAZIONI (
      Interagente varchar(50) not null,
      Tipo char not null,
      constraint IDINTERAZIONI primary key (Interagente, Creatore, NrPost));
-
-create table DISPONIBILITA' (
-     OraInizio int not null,
-     MinutiInizio int not null,
-     Utente varchar(50) not null,
-     constraint IDDISPONIBILITA' primary key (Utente, OraInizio, MinutiInizio));
 
 create table NOTIFICHE (
      Ricevente varchar(50) not null,
@@ -92,6 +92,7 @@ create table UTENTI (
      Password varchar(30) not null,
      DataNascita date not null,
      IndirizzoMail varchar(100) not null,
+     Indizio varchar(500) not null,
      FREQUENZA -- Object attribute not implemented --,
      constraint IDUTENTE primary key (NomeUtente));
 
@@ -123,6 +124,14 @@ alter table COMMENTI add constraint FKCONTENUTO
      foreign key (Creatore, NrPost)
      references POST (Creatore, NrPost);
 
+alter table DISPONIBILITA' add constraint FKDIS_UTE
+     foreign key (Utente)
+     references UTENTI (NomeUtente);
+
+alter table DISPONIBILITA' add constraint FKDIS_FAS
+     foreign key (OraInizio, MinutiInizio)
+     references FASCE_ORARIE (OraInizio, MinutiInizio);
+
 alter table FOLLOW add constraint FKFollower
      foreign key (Follower)
      references UTENTI (NomeUtente);
@@ -138,14 +147,6 @@ alter table INTERAZIONI add constraint FKINT_UTE
 alter table INTERAZIONI add constraint FKINT_POS
      foreign key (Creatore, NrPost)
      references POST (Creatore, NrPost);
-
-alter table DISPONIBILITA' add constraint FKDIS_UTE
-     foreign key (Utente)
-     references UTENTI (NomeUtente);
-
-alter table DISPONIBILITA' add constraint FKDIS_FAS
-     foreign key (OraInizio, MinutiInizio)
-     references FASCE_ORARIE (OraInizio, MinutiInizio);
 
 alter table NOTIFICHE add constraint FKCAUSA
      foreign key (Mandante)
