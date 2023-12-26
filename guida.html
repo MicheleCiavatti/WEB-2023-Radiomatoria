@@ -4,24 +4,25 @@
         <title>Guida</title>
         <meta charset="UTF-8"/>
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        <script src="oggetti.js" type="text/javascript"></script>
     </head>
     <body>
         <header>
-            <h1>Long Light</h1><!-- Titolo temporaneo del sito -->
+            <h1>Long Light</h1>
         </header>
         <nav>
             <ul>
-                <li><a href="#">Profilo</a></li>
-                <li><a href="index.html">Home page</a></li>
-                <li><a href="guide.html">Guida</a></li>
-                <li><a href="create.html">Crea account</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="#">Notifiche</a></li>
-                <li><a href="#">Logout</a></li>
+                <li id="pag_profilo"><a href="#">Profilo</a></li>
+                <li id="pag_principale"><a href="index.html">Home page</a></li>
+                <li id="pag_guida"><a href="guide.html">Guida</a></li>
+                <li id="pag_creazione"><a href="create.html">Crea account</a></li>
+                <li id="pag_accesso"><a href="login.html">Login</a></li>
+                <li id="pag_notifiche"><a href="#">Notifiche</a></li>
+                <li id="pag_uscita"><a href="#">Logout</a></li>
             </ul>
         </nav>
         <main>
-            <section>
+            <section id="informazioni">
                 <header><p>Spesso le tecnologie radio sono ritenute superate da telefonia, televisione ed Internet; eppure hanno i propri pregi e campi di utilizzo, sopravvivono, prosperano e raccolgono gruppi di appassionati; tali appassionati possono ascoltare contenuti, comunicare con altri utenti ed operare stazioni amatoriali per creare loro stessi contenuti radio. Tuttavia una radio ha come fondamentale caratteristica la comunicazione sincrona, che si rivela uno svantaggio in certe situazioni. E qui entra in gioco una controparte asincrona: "Long Light", un social media creato nel 2023 per diffondere la passione della radioamatoria e connettere chi la condivide. Per la registrazione il sito accetta chiunque, anche chi non possiede ancora un apparato radiofonico. Questa guida ha lo scopo di chiarire i maggiori dubbi che un utente potrebbe avere al riguardo.</p></header>
                 <main>
                     <h2>Informazioni</h2>
@@ -52,7 +53,7 @@ Solo dopo aver ottenuto la patente diviene possibile richiedere la licenza per o
 Normalmente i radioamatori vengono chiamati ad operare assieme alla Protezione Civile in quanto sono gli unici in grado di intervenire nell'immediatezza e con risorse disponibili in caso di disastro.</p>
                 </main>
             </section>
-            <section>
+            <section id="regolamento">
                 <h2>Regole</h2>
                 <article>
                     <ul>
@@ -68,11 +69,13 @@ Normalmente i radioamatori vengono chiamati ad operare assieme alla Protezione C
                     </ul>
                 </article>
             </section>
-            <section>
+            <section id="invito">
                 <h2>Invito</h2>
                 <p>Speriamo che questa pagina ti abbia aiutato a vedere le tecnologie radiofoniche in una luce diversa e ti invitiamo a partecipare in questo sito come utente registrato.</p>
                 <a href="create.html">Crea account</a>
             </section>
         </main>
+        <script src="js/generale.js" type="text/javascript"></script>
+        <script src="js/guida.js" type="text/javascript"></script>
     </body>
 </html>
