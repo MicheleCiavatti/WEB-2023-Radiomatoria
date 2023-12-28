@@ -9,13 +9,13 @@ class DatabaseHelper {
         }
     }
 
-    public function checkLogin($userName, $pw) {
+    public function checkLogin($mail, $pw) {
         $s = $this->db->prepare(
             "SELECT *
              FROM UTENTI
-             WHERE NomeUtente = ? AND Password = ?"
+             WHERE IndirizzoMail = ? AND Password = ?"
             );
-        $s->bind_param("s", $userName);
+        $s->bind_param("s", $mail);
         $s->bind_param("s", $pw);
         $s->execute();
         $result = $s->get_result();
