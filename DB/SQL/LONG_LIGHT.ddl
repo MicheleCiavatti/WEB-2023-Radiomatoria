@@ -3,7 +3,7 @@
 -- *--------------------------------------------
 -- * DB-MAIN version: 11.0.2              
 -- * Generator date: Sep 14 2021              
--- * Generation date: Tue Dec 26 14:00:03 2023 
+-- * Generation date: Fri Dec 29 13:26:30 2023 
 -- * LUN file: C:\Users\miche\OneDrive - Alma Mater Studiorum Università di Bologna\Tecnologie Web\Progetto - DB Main\LONG_LIGHT.lun 
 -- * Schema: Relational/1 
 -- ********************************************* 
@@ -12,8 +12,8 @@
 -- Database Section
 -- ________________ 
 
-create database LongLight;
-use LongLight;
+create database longlight;
+use longlight;
 
 
 -- Tables Section
@@ -89,7 +89,7 @@ create table UTENTI (
      FotoProfilo varchar(1024) not null,
      Indirizzo varchar(100) not null,
      Città varchar(30) not null,
-     Password varchar(30) not null,
+     Password varchar(255) not null,
      DataNascita date not null,
      IndirizzoMail varchar(100) not null,
      Indizio varchar(500) not null,

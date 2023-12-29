@@ -24,7 +24,15 @@
                 <li><a href="index.html">Home page</a></li>
                 <li><a href="guide.html">Guida</a></li>
                 <li><a href="create.html">Crea account</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li>
+                    <?php 
+                        if (isset($_SESSION['uid'])):
+                    ?>
+                    <a href="includes/logout.inc.php">Logout</a>
+                    <?php else: ?>
+                    <a href="login.html">Login</a>
+                    <?php endif; ?>
+                </li>
                 <li><a href="#">Notifiche</a></li>
             </ul>
         </nav>
