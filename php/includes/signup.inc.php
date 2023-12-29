@@ -14,5 +14,7 @@ if(isset($_POST['submit'])) {
     require "../classes/dbh.classes.php";
     require "../classes/signup.classes.php";
     require "../classes/signup-contr.classes.php";
-    
+    $signup = new SignupContr($uid, $address, $city, $mail, $birthdate, $pw, $pwrepeat, $clue);
+    $signup->signupUser();
+    header('location: ../home.php?error=none');
 }
