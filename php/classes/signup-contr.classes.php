@@ -52,7 +52,8 @@ class SignupContr extends Signup {
     
     public function signupUser() {
         if($this->emptyInput()) {
-            header('location: ../login.php?error=emptyinput');
+            alert('Empty imputs!');
+            header('location: ../login.html?error=emptyinput');
             exit();
         }
         if($this->invalidUid()) {

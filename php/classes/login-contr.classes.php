@@ -17,8 +17,9 @@ class LoginContr extends Login {
     
     public function loginUser() {
         if($this->emptyInput()) {
-            if (empty($this->pw)) header('location: ../login.php?error=emptypw');
-            else header('location: ../login.php?error=emptyuid');
+            alert('Empty Inputs!');
+            if (empty($this->pw)) header('location: ../../login.html?error=emptypw');
+            else header('location: ../../login.html?error=emptyuid');
             exit();
         }
         $this->getUser($this->uid, $this->pw);
