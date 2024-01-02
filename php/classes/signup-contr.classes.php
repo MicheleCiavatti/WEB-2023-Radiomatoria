@@ -53,23 +53,23 @@ class SignupContr extends Signup {
     public function signupUser() {
         if($this->emptyInput()) {
             alert('Empty imputs!');
-            header('location: ../login.html?error=emptyinput');
+            header('location: ../../login.html?error=emptyinput');
             exit();
         }
         if($this->invalidUid()) {
-            header('location: ../login.php?error=username');
+            header('location: ../../login.html?error=username');
             exit();
         }
         if($this->invalidMail()) {
-            header('location: ../login.php?error=email');
+            header('location: ../../login.html?error=email');
             exit();
         }
         if($this->pwNotMatch()) {
-            header('location: ../login.php?error=passwordnotmatch');
+            header('location: ../../login.html?error=passwordnotmatch');
             exit();
         }
         if($this->userRegistered()) {
-            header('location: ../login.php?error=userormailtaken');
+            header('location: ../../login.html?error=userormailtaken');
             exit();
         }
         $this->setUser($this->uid, $this->address, $this->city, $this->mail, $this->birthdate, $this->pw, $this->clue);

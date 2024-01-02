@@ -10,18 +10,18 @@ class Login extends Dbh {
         );
         if (!$s->execute(array($uid))) {
             $s = null;
-            header('location: ../login.php?errorstmtfailed');
+            header('location: ../../login.html?errorstmtfailed');
             exit();
         }
         if($s->rowCount() == 0) {
             $s = null;
-            header('location: ../login.php?error=usernotfound');
+            header('location: ../../login.html?error=usernotfound');
             exit();
         }
         $result = $s->fetchAll(PDO::FETCH_ASSOC);
         if (!password_verify($pw, $result[0]['Password'])) {
             $s = null;
-            header('location: ../login.php?error=wrongpassword');
+            header('location: ../../login.html?error=wrongpassword');
             exit();
         } else {
             session_start();

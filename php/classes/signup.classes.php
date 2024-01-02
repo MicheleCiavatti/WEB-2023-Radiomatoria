@@ -10,7 +10,7 @@ class Signup extends Dbh {
         );
         if(!$s->execute(array($uid, $mail))) {
             $s = null;
-            header('location: ../login.html?error=stmtfailed');
+            header('location: ../../login.html?error=stmtfailed');
             exit();
         }
         // If rowCount() > 0 then there is already a user with that name or mail
@@ -26,7 +26,7 @@ class Signup extends Dbh {
         $hashedPw = password_hash($pw, PASSWORD_DEFAULT);
         if(!$s->execute(array($uid,'./img/default.png', $address, $city, $hashedPw, $birthdate, $mail, $clue))) {
             $s = null;
-            header('location: ../login.html?errorstmtfailed');
+            header('location: ../../login.html?errorstmtfailed');
             exit();
         }
         session_start();

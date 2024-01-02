@@ -4,4 +4,4 @@ session_start();
 session_unset();
 session_destroy();
 
-header('location: ../login.php?error=none');
+header('location: ../../login.html?error=none');
