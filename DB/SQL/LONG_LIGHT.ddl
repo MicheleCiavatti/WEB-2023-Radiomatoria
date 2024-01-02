@@ -3,7 +3,7 @@
 -- *--------------------------------------------
 -- * DB-MAIN version: 11.0.2              
 -- * Generator date: Sep 14 2021              
--- * Generation date: Tue Nov 28 14:08:04 2023 
+-- * Generation date: Fri Dec 29 13:26:30 2023 
 -- * LUN file: C:\Users\miche\OneDrive - Alma Mater Studiorum Università di Bologna\Tecnologie Web\Progetto - DB Main\LONG_LIGHT.lun 
 -- * Schema: Relational/1 
 -- ********************************************* 
@@ -12,8 +12,8 @@
 -- Database Section
 -- ________________ 
 
-create database Relational;
-use Relational;
+create database longlight;
+use longlight;
 
 
 -- Tables Section
@@ -39,11 +39,11 @@ create table COMMENTI (
      ImmagineCommento varchar(1024),
      constraint IDCOMMENTO primary key (Creatore, NrPost, Scrittore, NrCommento));
 
-create table DISPONIBILITA' (
+create table DISPONIBILITA (
      OraInizio int not null,
      MinutiInizio int not null,
      Utente varchar(50) not null,
-     constraint IDDISPONIBILITA' primary key (Utente, OraInizio, MinutiInizio));
+     constraint IDDISPONIBILITA primary key (Utente, OraInizio, MinutiInizio));
 
 create table FASCE_ORARIE (
      OraInizio int not null,
@@ -89,11 +89,10 @@ create table UTENTI (
      FotoProfilo varchar(1024) not null,
      Indirizzo varchar(100) not null,
      Città varchar(30) not null,
-     Password varchar(30) not null,
+     Password varchar(255) not null,
      DataNascita date not null,
      IndirizzoMail varchar(100) not null,
      Indizio varchar(500) not null,
-     FREQUENZA -- Object attribute not implemented --,
      constraint IDUTENTE primary key (NomeUtente));
 
 
@@ -124,11 +123,11 @@ alter table COMMENTI add constraint FKCONTENUTO
      foreign key (Creatore, NrPost)
      references POST (Creatore, NrPost);
 
-alter table DISPONIBILITA' add constraint FKDIS_UTE
+alter table DISPONIBILITA add constraint FKDIS_UTE
      foreign key (Utente)
      references UTENTI (NomeUtente);
 
-alter table DISPONIBILITA' add constraint FKDIS_FAS
+alter table DISPONIBILITA add constraint FKDIS_FAS
      foreign key (OraInizio, MinutiInizio)
      references FASCE_ORARIE (OraInizio, MinutiInizio);
 
