@@ -25,8 +25,13 @@ class Login extends Dbh {
             exit();
         } else {
             session_start();
-            $_SESSION['uid'] = $result[0]['NomeUtente'];
-            $_SESSION['img'] = $result[0]['FotoProfilo'];
+            $_SESSION['NomeUtente'] = $result[0]['NomeUtente'];
+            $_SESSION['FotoProfilo'] = $result[0]['FotoProfilo'];
+            $_SESSION['Indirizzo'] = $result[0]['Indirizzo'];
+            $_SESSION['Città'] = $result[0]['Città'];
+            $_SESSION['DataNascita'] = $result[0]['DataNascita'];
+            $_SESSION['IndirizzoMail'] = $result[0]['IndirizzoMail'];
+            $_SESSION['Indizio'] = $result[0]['Indizio']; 
             $s = null;
         }
     }

@@ -6,7 +6,7 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <title>LongLight - Home</title>
+        <title>LongLight - Profile</title>
         <meta charset="UTF-8"/>
         <link href="../css/style.css" rel="stylesheet" type="text/css"/>
     </head>
@@ -20,15 +20,23 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
         </aside>
         <nav>
             <ul>
-                <li><a href="myProfile.php">Profilo</a></li>
-                <li><a href="#">Home page</a></li>
+                <li><a href="#">Profilo</a></li>
+                <li><a href="home.php">Home page</a></li>
                 <li><a href="guide.html">Guida</a></li>
                 <li><a href="includes/logout.inc.php">Logout</a></li>
                 <li><a href="#">Notifiche</a></li>
             </ul>
         </nav>
         <main>
-            <!-- Vuoto in un template -->
+            <section>
+                <h2><?php echo $_SESSION['NomeUtente']?>' info</h2>
+                <ul>
+                    <li><?php echo $_SESSION['Indirizzo']?></li>
+                    <li><?php echo $_SESSION['Città']?></li>
+                    <li><?php echo $_SESSION['DataNascita']?></li>
+                    <li><?php echo $_SESSION['IndirizzoMail']?></li>
+                </ul>
+            </section>
         </main>
     </body>
 </html>

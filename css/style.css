@@ -13,7 +13,8 @@
 @media screen {
     body {
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        background-color: darkslategray;
+        background-color: rgb(62, 110, 110);
+        color: white;
     }
 }
 
