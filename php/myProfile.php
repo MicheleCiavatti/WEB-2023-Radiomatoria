@@ -2,6 +2,7 @@
 session_start();
 if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
     header('location: ../../login.html?error=needtologin');
+require_once './includes/profileInfo.inc.php';
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -35,6 +36,17 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
                     <li><?php echo $_SESSION['Città']?></li>
                     <li><?php echo $_SESSION['DataNascita']?></li>
                     <li><?php echo $_SESSION['IndirizzoMail']?></li>
+                </ul>
+            </section>
+            <section>
+                <h2><?php echo $_SESSION['NomeUtente']?>' frequencies</h2>
+                <ul>
+                    <?php 
+                        getFrequencies($_SESSION['NomeUtente']);
+                        foreach($_SESSION['Frequenze'] as $f):
+                    ?>
+                    <li><?= $f ?></li>
+                    <?php endforeach; ?>
                 </ul>
             </section>
         </main>
