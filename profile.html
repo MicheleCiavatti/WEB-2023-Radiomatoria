@@ -121,11 +121,11 @@
                         </tr>
                     </table>
                 </section>
-                <section>
-                    <button class="access_required" onclick="modificaProfilo($utente['NomeUtente'])">Inserisci o modifica</button>
-                    <!-- se l'utente è il proprietario del profilo -->
-                    <form action="alter_profile.php" method="post" name="alter_form">
-                        <fieldset>
+                <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                    <section>
+                        <button class="access_required" onclick="modificaProfilo($utente['NomeUtente'])">Inserisci o modifica</button>
+                        <form action="alterProfile.php" method="post" name="alter_form">
+                            <fieldset>
                             <legend>Campi pubblici</legend>
                             <table>
                                 <tr>
@@ -133,7 +133,7 @@
                                     <td><input type="text" name="user_name" id="user_name" value="$utente['NomeUtente']"/></td>
                                 </tr>
                                 <tr>
-                                    <td><label for="user_name">Immagine di profilo</label></td>
+                                    <td><label for="user_photo">Immagine di profilo</label></td>
                                     <td><input type="image" name="user_photo" id="user_photo" src="$utente['FotoProfilo']" alt=""/></td>
                                 </tr>
                                 <tr>
@@ -191,8 +191,8 @@
                                     </td>
                                 </tr>
                             </table>
-                        </fieldset>
-                        <fieldset>
+                            </fieldset>
+                            <fieldset>
                             <legend>Campi privati</legend>
                             <table>
                                 <tr>
@@ -212,20 +212,22 @@
                                     <td><input type="password" name="user_passwd2" id="user_passwd2" minlength="8"/></td>
                                 </tr>
                             </table>
-                        </fieldset>
-                        <input type="reset" value="Annulla" title="Annulla"/>
-                        <input type="submit" value="Invia"/>
-                    </form>
-                    <span id="alter_fail"></span>
-                </section>
+                            </fieldset>
+                            <input type="reset" value="Annulla" title="Annulla"/>
+                            <input type="submit" value="Invia"/>
+                        </form>
+                    </section>
+                <?php endif; ?>
             </header>
-            <section id="comandi">
-                <button class="access_required" onclick="notificaRichiesta()">Richiedi amicizia</button>
-                <button class="access_required" onclick="aggiungiSeguito()">Segui</button>
-            </section>
+            <?php if($utente['NomeUtente'] != $_SESSION['uid']): ?>
+                <section id="comandi">
+                    <button class="access_required" onclick="notify('ti ha inviato una richiesta di amicizia', $utente['NomeUtente'], true)">Richiedi amicizia</button>
+                    <button class="access_required" onclick="addFollowed($utente['NomeUtente'])">Segui</button>
+                </section>
+            <?php endif; ?>
             <section id="post_column">
                 <header>
-                    <form action="select_post.php" method="post" name="select_form">
+                    <form action="selectPost.php" method="post" name="select_form">
                         <label for="select">Seleziona post in base alla relazione col proprietario del profilo</label>
                         <select name="select" id="select" onchange="this.form.submit()">
                             <option value="" selected>Seleziona</option>
@@ -235,7 +237,7 @@
                             <option value="comment">Commentati</option>
                         </select>
                     </form>
-                    <form action="sort_post.php" method="post" name="sort_form">
+                    <form action="sortPost.php" method="post" name="sort_form">
                         <label for="sort">Ordina per</label>
                         <select name="sort" id="sort" onchange="this.form.submit()">
                             <option value="" selected>Seleziona</option>
@@ -245,7 +247,7 @@
                         </select>
                     </form>
                     <button id="add_post_button" class="access_required" onclick="mostraFormPost()">Aggiungi post</button>
-                    <form action="add_post.php" method="post" name="add_post_form">
+                    <form action="addPost.php" method="post" name="add_post_form">
                         <table>
                             <tr>
                                 <td><label for="post_img">Inserisci immagine (opzionale)</label></td>
@@ -306,7 +308,7 @@
                                     </li>
                                     <?php endforeach; ?>
                                 </ul>
-                                <form action="add_comment.php" method="post" name="add_comment_form">
+                                <form action="addComment.php" method="post" name="add_comment_form">
                                     <table>
                                         <tr>
                                             <td id="comment_post_info"></td>
@@ -335,18 +337,22 @@
                 <h2>Amici</h2>
                 <ul>
                     <?php foreach($templateparams["amici"] as $amico): ?>
-                    <li><img src="$amico['FotoProfilo']" alt=""/></li>
-                    <li><button onclick="accessProfile($amico['NomeUtente'])"><?php echo $amico["NomeUtente"] ?></button></li>
-                    <li><button class="access_required" onclick="removeFriend($amico['NomeUtente'])">Rimuovi</button></li>
-                    <?php endforeach; ?>
+                        <li><img src="$amico['FotoProfilo']" alt=""/></li>
+                        <li><button onclick="accessProfile($amico['NomeUtente'])"><?php echo $amico["NomeUtente"] ?></button></li>
+                        <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                            <li><button class="access_required" onclick="removeFriend($amico['NomeUtente'])">Rimuovi</button></li>
+                        <?php endif;
+                    endforeach; ?>
                 </ul>
                 <h2>Seguiti</h2>
                 <ul>
                     <?php foreach($templateparams["seguiti"] as $seguito): ?>
-                    <li><img src="$seguito['FotoProfilo']" alt=""/></li>
-                    <li><button onclick="accessProfile($seguito['NomeUtente'])"><?php echo $seguito["NomeUtente"] ?></button></li>
-                    <li><button class="access_required" onclick="removeFollowed($seguito['NomeUtente'])">Rimuovi</button></li>
-                    <?php endforeach; ?>
+                        <li><img src="$seguito['FotoProfilo']" alt=""/></li>
+                        <li><button onclick="accessProfile($seguito['NomeUtente'])"><?php echo $seguito["NomeUtente"] ?></button></li>
+                        <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                            <li><button class="access_required" onclick="removeFollowed($seguito['NomeUtente'])">Rimuovi</button></li>
+                        <?php endif;
+                    endforeach; ?>
                 </ul>
             </aside>
         </main>
