@@ -11,18 +11,11 @@
         </header>
         <nav>
             <ul>
-                <?php if (isset($_SESSION['uid'])): ?>
-                    <li id="pag_profilo"><a href="accessProfile($_SESSION['uid'])">Profilo</a></li>
-                <?php endif; ?>
+                <li id="pag_profilo"><a href="accessProfile($_SESSION['uid'])">Profilo</a></li>
                 <li id="pag_principale"><a href="index.html">Home page</a></li>
                 <li id="pag_guida"><a href="guida.html">Guida</a></li>
-                <?php if (isset($_SESSION['uid'])): ?>
-                    <li id="pag_notifiche"><a href="notifiche.html">Notifiche</a></li>
-                    <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
-                <?php else: ?>
-                    <li id="pag_creazione"><a href="create.html">Crea account</a></li>
-                    <li id="pag_accesso"><a href="login.html">Login</a></li>
-                <?php endif; ?>
+                <li id="pag_notifiche"><a href="notifiche.html">Notifiche</a></li>
+                <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
             </ul>
         </nav>
         <main>
@@ -30,10 +23,31 @@
             <ul id="notifications_list">
                 <?php foreach($templateParams["notifiche"] as $notifica): ?>
                     <li>
-                        <button onclick="accessProfile($notifica['UserNotifica'])"><?php echo $notifica['UserNotifica']; ?></button>
-                        <span class="$notifica['MotivoNotifica']_text"></span>   <!-- MotivoNotifica è un codice che riassume il tipo di notifica, es. req_ami per la ricezione di una richiesta di amicizia, ref_ami per il rifiuto di tale richiesta ecc. -->
-                        <button onclick="removeNotification($notifica['NrNotifica'])">Rimuovi</button>  <!-- se la notifica è una richiesta di amicizia si invia una notifica al mittente " ha rifiutato la tua richiesta di amicizia" -->
-                        <button name="friend_accept" class="$notifica['MotivoNotifica']_button" onclick="addFriend($notifica['UserNotifica'])">Accetta</button> <!-- se l'utente registrato ed il mittente della notifica non sono già amici aggiunge l'uno alla lista di amici dell'altro -->
+                        <button onclick="accessProfile($notifica['MittenteNotifica'])"><?php echo $notifica['MittenteNotifica']; ?></button>
+                        <?php if($notifica['MotivoNotifica'] == "req_ami"): ?>
+                                <span>ti ha inviato una richiesta di amicizia</span>
+                                <button name="friend_refuse" onclick="outcomeFriend($notifica['IdNotifica'], $notifica['MittenteNotifica'], 'ref_ami')">Rifiuta</button>
+                                <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['MittenteNotifica'])">Accetta</button>
+                        <?php else:
+                            switch($notifica['MotivoNotifica']):
+                                case "ref_ami": ?>    
+                                    <span>ha rifiutato la tua richiesta di amicizia</span>
+                                <?php break;
+                                case "acc_ami": ?>    
+                                    <span>ha accettato la tua richiesta di amicizia</span>
+                                <?php break;
+                                case "rem_ami": ?>
+                                    <span>ti ha rimosso dalla sua lista di amici</span>
+                                <?php break;
+                                case "add_seg": ?>
+                                    <span>ti ha aggiunto alla sua lista di seguiti</span>
+                                <?php break;
+                                case "rem_seg": ?>
+                                    <span>ti ha rimosso dalla sua lista di seguiti</span>
+                                <?php break;
+                            endswitch; ?>
+                            <button onclick="removeNotification($notifica['IdNotifica'])">Rimuovi</button>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
