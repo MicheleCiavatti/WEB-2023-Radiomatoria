@@ -21,31 +21,14 @@
         <main>
             <h2 id="notifications_total">Notifiche totali: </h2>
             <ul id="notifications_list">
-                <?php foreach($templateParams["notifiche"] as $notifica): ?>
+                <?php foreach($templateParams["NOTIFICA"] as $notifica): ?>
                     <li>
                         <button onclick="accessProfile($notifica['MittenteNotifica'])"><?php echo $notifica['MittenteNotifica']; ?></button>
-                        <?php if($notifica['MotivoNotifica'] == "req_ami"): ?>
-                                <span>ti ha inviato una richiesta di amicizia</span>
-                                <button name="friend_refuse" onclick="outcomeFriend($notifica['IdNotifica'], $notifica['MittenteNotifica'], 'ref_ami')">Rifiuta</button>
-                                <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['MittenteNotifica'])">Accetta</button>
-                        <?php else:
-                            switch($notifica['MotivoNotifica']):
-                                case "ref_ami": ?>    
-                                    <span>ha rifiutato la tua richiesta di amicizia</span>
-                                <?php break;
-                                case "acc_ami": ?>    
-                                    <span>ha accettato la tua richiesta di amicizia</span>
-                                <?php break;
-                                case "rem_ami": ?>
-                                    <span>ti ha rimosso dalla sua lista di amici</span>
-                                <?php break;
-                                case "add_seg": ?>
-                                    <span>ti ha aggiunto alla sua lista di seguiti</span>
-                                <?php break;
-                                case "rem_seg": ?>
-                                    <span>ti ha rimosso dalla sua lista di seguiti</span>
-                                <?php break;
-                            endswitch; ?>
+                        <span><?php echo $notifica['TestoNotifica']; ?></span>
+                        <?php if($notifica['Richiesta'] == true): ?>
+                            <button name="friend_refuse" onclick="outcomeNotification($notifica['IdNotifica'], $notifica['MittenteNotifica'], 'ha rifiutato la tua richiesta di amicizia')">Rifiuta</button>
+                            <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['MittenteNotifica'])">Accetta</button>
+                        <?php else: ?>
                             <button onclick="removeNotification($notifica['IdNotifica'])">Rimuovi</button>
                         <?php endif; ?>
                     </li>
