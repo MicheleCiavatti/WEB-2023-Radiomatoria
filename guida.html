@@ -15,13 +15,13 @@
                 <?php if (isset($_SESSION['uid'])): ?>
                     <li id="pag_profilo"><a href="accessProfile($_SESSION['uid'])">Profilo</a></li>
                 <?php endif; ?>
-                <li id="pag_principale"><a href="index.html">Home page</a></li>
-                <li id="pag_guida"><a href="guida.html">Guida</a></li>
+                <li id="pag_principale"><a href="home.php">Home page</a></li>
+                <li id="pag_guida"><a href="guida.php">Guida</a></li>
                 <?php if (isset($_SESSION['uid'])): ?>
                     <li id="pag_notifiche"><a href="notifiche.html">Notifiche</a></li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
-                    <li id="pag_creazione"><a href="create.html">Crea account</a></li>
+                    <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
                     <li id="pag_accesso"><a href="login.html">Login</a></li>
                 <?php endif; ?>
             </ul>
@@ -78,7 +78,7 @@ Normalmente i radioamatori vengono chiamati ad operare assieme alla Protezione C
                 <section id="invito">
                     <h2>Invito</h2>
                     <p>Speriamo che questa pagina ti abbia aiutato a vedere le tecnologie radiofoniche in una luce diversa e ti invitiamo a partecipare in questo sito come utente registrato.</p>
-                    <a href="create.html">Crea account</a>
+                    <a href="signup.html">Crea account</a>
                 </section>
             <?php endif; ?>
         </main>
