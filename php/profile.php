@@ -1,4 +1,12 @@
 <?php
+    public function accessProfile($username) {
+        $stmt->db->preare("SELECT * FROM UTENTE WHERE NomeUtente = ?");
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $templateParams["utente"] = $result;
+    }
+
     function alterProfile($name, $photo, $address, $city, $dob, $mail, $freq, $time_start, $time_end, $clue, $passwd0, $passwd1, $passwd2) {
         $stmt = $this->db->prepare("UPDATE UTENTE SET NomeUtente = ?, FotoProfilo = ?, Indirizzo = ?,
         Citta = ?, DataNascita = FROM_UNIXTIME(?), IndirizzoMail = ?, Indizio = ? WHERE NomeUtente = ?");
