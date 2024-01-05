@@ -4,7 +4,7 @@ if(isset($_POST['submit'])) {
     $uid = $_POST['uid'];
     $address = $_POST['address'];
     $city = $_POST['city'];
-    $mail = $_POST['mail'];
+    $mail = $_POST['address'];
     $birthdate = $_POST['birthdate'];
     $pw = $_POST['pw'];
     // The pwrepeat check should be done client side.

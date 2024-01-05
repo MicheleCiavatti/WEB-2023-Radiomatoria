@@ -2,13 +2,13 @@
 
 class Login extends Dbh {
 
-    protected function getUser($uid, $pw) {
+    protected function getUser($address, $pw) {
         $s = $this->connect()->prepare(
             'SELECT *
              FROM UTENTI
-             WHERE NomeUtente = ?;'
+             WHERE IndirizzoMail = ?;'
         );
-        if (!$s->execute(array($uid))) {
+        if (!$s->execute(array($address))) {
             $s = null;
             header('location: ../../login.html?errorstmtfailed');
             exit();
