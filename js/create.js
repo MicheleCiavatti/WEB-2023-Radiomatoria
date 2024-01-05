@@ -13,7 +13,7 @@ function create_result() {
                 let password = document.getElementById("passwd1");
                 userLogin(email, password);
             } else {
-                document.getElementById("create_fail").innerHTML = result;
+                document.getElementById("create_fail").innerHTML = response;
             }
         })
         .catch(err => document.getElementById("create_fail").innerHTML = err)
