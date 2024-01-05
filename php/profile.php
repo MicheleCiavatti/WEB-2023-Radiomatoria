@@ -8,9 +8,8 @@
     }
 
     function alterProfile($name, $photo, $address, $city, $dob, $mail, $freq, $time_start, $time_end, $clue, $passwd0, $passwd1, $passwd2) {
-        $stmt = $this->db->prepare("UPDATE UTENTE SET NomeUtente = ?, FotoProfilo = ?, Indirizzo = ?,
-        Citta = ?, DataNascita = FROM_UNIXTIME(?), IndirizzoMail = ?, Indizio = ? WHERE NomeUtente = ?");
-        $stmt->bind_param('ssssisss', $name, $photo, $address, $city, $dob, $mail, $clue, $utente['NomeUtente']);
+        $stmt = $this->db->prepare("UPDATE UTENTE SET FotoProfilo = ?, Indirizzo = ?, Citta = ?, DataNascita = FROM_UNIXTIME(?), Indizio = ? WHERE NomeUtente = ?");
+        $stmt->bind_param('sssiss', $photo, $address, $city, $dob, $clue, $utente['NomeUtente']);
         $stmt->execute();
 
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM FREQUENZA WHERE MHz = ?");
@@ -81,7 +80,27 @@
             $stmt->bind_param('ss', $passwd1, $utente['NomeUtente']);
             $stmt->execute();
         }
-   }
+    
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM UTENTE WHERE IndirizzoMail = ?");
+        $stmt->bind_param('s', $mail);
+        $stmt->execute();    
+        $result = $stmt->get_result();
+        if($result == 0) {
+            $stmt = $this->db->prepare("UPDATE UTENTE SET IndirizzoMail = ? WHERE NomeUtente = ?");
+            $stmt->bind_param('ss', $mail, $utente['NomeUtente']);
+            $stmt->execute();
+        }
+
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM UTENTE WHERE NomeUtente = ?");
+        $stmt->bind_param('s', $name);
+        $stmt->execute();    
+        $result = $stmt->get_result();
+        if($result == 0) {
+            $stmt = $this->db->prepare("UPDATE UTENTE SET NomeUtente = ? WHERE NomeUtente = ?");
+            $stmt->bind_param('ss', $name, $utente['NomeUtente']);
+            $stmt->execute();
+        }
+    }
 
     function removeFreq($frequenza) {
         $stmt = $this->db->prepare("DELETE FROM BANDA WHERE MHz = ? AND NomeUtente = ?");
