@@ -46,6 +46,11 @@ nav ul li a:hover {
     color: rgb(217, 53, 53);
 }
 
+aside img {
+    width: 50px;
+    border-radius: 50%;
+}
+
 main {
     margin: 15px 5% 0;
 }

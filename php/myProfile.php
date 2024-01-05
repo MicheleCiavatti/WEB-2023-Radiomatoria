@@ -48,6 +48,10 @@ require_once './includes/profileInfo.inc.php';
                     <li><?= $f ?></li>
                     <?php endforeach; ?>
                 </ul>
+                <form action="includes/addMHz.inc.php" method="post">
+                    <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
+                    <input type="submit" value="Aggiungi">
+                </form>
             </section>
         </main>
     </body>
