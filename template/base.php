@@ -35,38 +35,39 @@
             </ul>
         </nav>
         <main>
-            <section>
-                <header>
-                <form action="sortPost.php" method="post" name="sort_form">
-                    <label for="sort">Ordina per</label>
-                    <select name="sort" id="sort" onchange="this.form.submit()">
-                        <option value="" selected>Seleziona</option>
-                        <option value="data">Data</option>
-                        <option value="like">Like</option>
-                        <option value="comm">Commenti</option>
-                    </select>
-                </form>
-                <?php if (isset($_SESSION['uid'])): ?>
-                    <button id="add_post_button" class="access_required" onclick="mostraFormPost()">Aggiungi post</button>
-                    <form action="addPost.php" method="post" name="add_post_form">
-                        <table>
-                            <tr>
-                                <td><label for="post_img">Inserisci immagine (opzionale)</label></td>
-                                <td><input type="image" name="post_img" id="post_img" alt=""/></td>
-                            </tr>
-                            <tr>
-                                <td><label for="post_text">Inserisci testo</label></td>
-                                <td><textarea name="post_text" id="post_text" required></textarea></td>
-                            </tr>
-                            <tr>
-                                <td><input type="reset" value="Annulla"/></td>
-                                <td><input type="submit" value="Scrivi"/></td>
-                            </tr>
-                        </table>
+            <header>
+                <section>
+                    <form action="sortPost.php" method="post" name="sort_form">
+                        <label for="sort">Ordina per</label>
+                        <select name="sort" id="sort" onchange="this.form.submit()">
+                            <option value="" selected>Seleziona</option>
+                            <option value="data">Data</option>
+                            <option value="like">Like</option>
+                            <option value="comm">Commenti</option>
+                        </select>
                     </form>
-                <?php endif; ?>
+                    <?php if (isset($_SESSION['uid'])): ?>
+                        <button id="add_post_button" class="access_required" onclick="mostraFormPost()">Aggiungi post</button>
+                        <form action="addPost.php" method="post" name="add_post_form">
+                            <table>
+                                <tr>
+                                    <td><label for="post_img">Inserisci immagine (opzionale)</label></td>
+                                    <td><input type="image" name="post_img" id="post_img" alt=""/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="post_text">Inserisci testo</label></td>
+                                    <td><textarea name="post_text" id="post_text" required></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="reset" value="Annulla"/></td>
+                                    <td><input type="submit" value="Scrivi"/></td>
+                                </tr>
+                            </table>
+                        </form>
+                    <?php endif; ?>
+                </section>
             </header>
-            <main>
+            <article>
                 <ul>
                     <?php foreach($templateParams["post"] as $post): ?>
                     <li>
@@ -143,11 +144,9 @@
                         <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
-                    </ul>
-                </main>
-            </section>
+                </ul>
+            </article>
         </main>
-        <script src="js/generale.js" type="text/javascript"></script>
         <script src="js/index.js" type="text/javascript"></script>
     </body>
 </html>

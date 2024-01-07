@@ -20,20 +20,22 @@
         </nav>
         <main>
             <h2 id="notifications_total">Notifiche totali: </h2>
-            <ul id="notifications_list">
-                <?php foreach($templateParams["NOTIFICA"] as $notifica): ?>
-                    <li>
-                        <button onclick="accessProfile($notifica['MittenteNotifica'])"><?php echo $notifica['MittenteNotifica']; ?></button>
-                        <span><?php echo $notifica['TestoNotifica']; ?></span>
-                        <?php if($notifica['Richiesta'] == true): ?>
-                            <button name="friend_refuse" onclick="outcomeNotification($notifica['IdNotifica'], $notifica['MittenteNotifica'], 'ha rifiutato la tua richiesta di amicizia')">Rifiuta</button>
-                            <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['MittenteNotifica'])">Accetta</button>
-                        <?php else: ?>
-                            <button onclick="removeNotification($notifica['IdNotifica'])">Rimuovi</button>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+            <section>
+                <ul id="notifications_list">
+                    <?php foreach($templateParams["NOTIFICA"] as $notifica): ?>
+                        <li>
+                            <button onclick="accessProfile($notifica['MittenteNotifica'])"><?php echo $notifica['MittenteNotifica']; ?></button>
+                            <span><?php echo $notifica['TestoNotifica']; ?></span>
+                            <?php if($notifica['Richiesta'] == true): ?>
+                                <button name="friend_refuse" onclick="outcomeNotification($notifica['IdNotifica'], $notifica['MittenteNotifica'], 'ha rifiutato la tua richiesta di amicizia')">Rifiuta</button>
+                                <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['MittenteNotifica'])">Accetta</button>
+                            <?php else: ?>
+                                <button onclick="removeNotification($notifica['IdNotifica'])">Rimuovi</button>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
         </main>
         <script src="js/notifiche.js" type="text/javascript"></script>
     </body>
