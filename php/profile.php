@@ -176,24 +176,43 @@
     }
 
     function notify($text, $receiver, $request) {
-        $stmt = $this->db->prepare("INSERT INTO NOTIFICA (IdNotifica, TestoNotifica, MittenteNotifica, Richiesta) VALUES (?, ?, ?, ?)");
-        do {
-            $nid = uniqid();
-            $idcheck = $this->db->prepare("SELECT COUNT(*) FROM NOTIFICA WHERE IdNotifica = ?");
-            $idcheck->bind_param('s', $nid);
-            $idcheck->execute();
-            $result = $idcheck->get_result();
-        } while ($result > 0);
-        $stmt->bind_param('sssi', $nid, $text, $_SESSION['uid'], false);
-        $stmt->execute();
+        $blockcheck = $this->db->prepare("SELECT COUNT(*) FROM BLOCCO WHERE NomeUtente = ? AND NomeBloccato = ?");
+        $blockcheck->bind_param('ss', $receiver, $_SESSION['uid']);
+        $blockcheck->execute();
+        $result = $blockcheck->get_result();
+        if($request == true) {
+            $repeatcheck = $this->db->prepare("SELECT COUNT(*) FROM NOTIFICA WHERE MittenteNotifica = ? AND Richiesta = ?");
+            $repeatcheck->bind_param('si', $_SESSION['uid'], true);
+            $repeatcheck->execute();
+            $result += $repeatcheck->get_result();
+        }
+        if($result == 0) {
+            $stmt = $this->db->prepare("INSERT INTO NOTIFICA (IdNotifica, TestoNotifica, MittenteNotifica, Richiesta) VALUES (?, ?, ?, ?)");
+            do {
+                $nid = uniqid();
+                $idcheck = $this->db->prepare("SELECT COUNT(*) FROM NOTIFICA WHERE IdNotifica = ?");
+                $idcheck->bind_param('s', $nid);
+                $idcheck->execute();
+                $result = $idcheck->get_result();
+            } while ($result > 0);
+            $stmt->bind_param('sssi', $nid, $text, $_SESSION['uid'], false);
+            $stmt->execute();
+    
+            $stmt = $this->db->prepare("INSERT INTO CAUSA (IdNotifica, NomeUtente) VALUES (?, ?)");
+            $stmt->bind_param('ss', $nid, $_SESSION['uid']);
+            $stmt->execute();
+    
+            $stmt = $this->db->prepare("INSERT INTO RICEZIONE (IdNotifica, NomeUtente) VALUES (?, ?)");
+            $stmt->bind_param('ss', $nid, $receiver);
+            $stmt->execute();
+        }
+    }
 
-        $stmt = $this->db->prepare("INSERT INTO CAUSA (IdNotifica, NomeUtente) VALUES (?, ?)");
-        $stmt->bind_param('ss', $nid, $_SESSION['uid']);
+    function addBlocked($bloccato) {
+        $stmt = $this->db->prepare("INSERT INTO BLOCCO (NomeUtente, NomeBloccato) VALUES (?, ?)");
+        $stmt->bind_param('ss', $_SESSION['uid'], $bloccato);
         $stmt->execute();
-
-        $stmt = $this->db->prepare("INSERT INTO RICEZIONE (IdNotifica, NomeUtente) VALUES (?, ?)");
-        $stmt->bind_param('ss', $nid, $receiver);
-        $stmt->execute();
+        notify("ti ha bloccato", $bloccato, false);
     }
 
     function addFollowed($neoseguito) {
@@ -204,7 +223,7 @@
     }
 
     function removeFriend($examico) {
-        $stmt = $this->db->prepare("DELETE FROM AMICIZIA WHERE NomeUtente = $_SESSION['uid'] AND NomeAmico = ?");
+        $stmt = $this->db->prepare("DELETE FROM AMICIZIA WHERE NomeUtente = ? AND NomeAmico = ?");
         $stmt->bind_param('ss', $_SESSION['uid'], $examico);
         $stmt->execute();
         $stmt->bind_param('ss', $examico, $_SESSION['uid']);
@@ -217,6 +236,37 @@
         $stmt->bind_param('ss', $_SESSION['uid'], $exseguito);
         $stmt->execute();
         notify("ti ha rimosso dalla sua lista di seguiti", $exseguito, false);
+    }
+
+    function removeBlocked($perdonato) {
+        $stmt = $this->db->prepare("DELETE FROM BLOCCO WHERE NomeUtente = $_SESSION['uid'] AND NomeBloccato = ?");
+        $stmt->bind_param('ss', $_SESSION['uid'], $perdonato);
+        $stmt->execute();
+        notify("ha rimosso il tuo blocco", $perdonato, false);
+    }
+
+    function isFriend($nome) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM AMICIZIA WHERE NomeUtente = ? AND NomeAmico = ?");
+        $stmt->bind_param('ss', $_SESSION['uid'], $nome);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result;
+    }
+
+    function isFollowed($nome) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM FOLLOW WHERE NomeUtente = ? AND NomeSeguito = ?");
+        $stmt->bind_param('ss', $_SESSION['uid'], $nome);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result;
+    }
+
+    function isBlocked($nome) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM BLOCCO WHERE NomeUtente = ? AND NomeBloccato = ?");
+        $stmt->bind_param('ss', $_SESSION['uid'], $nome);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result;
     }
 
     function sortPost($selection) {
