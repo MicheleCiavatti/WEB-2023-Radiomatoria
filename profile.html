@@ -164,7 +164,7 @@
                                             <?php endforeach; ?>
                                                 <tr>
                                                     <td><label for="user_freq">Aggiungi</label></td>
-                                                    <td><input type="number" name="user_freq" id="user_freq"/></td>
+                                                    <td><input type="number" name="user_freq" step="any" min="0" id="user_freq"/></td>
                                                 </tr>
                                         </table>
                                     </td>
@@ -222,8 +222,21 @@
             <?php if(isset($_SESSION['uid']) && $utente['NomeUtente'] != $_SESSION['uid']): ?>
                 <section id="comandi">
                     <h3>Comandi</h3>
-                    <button class="access_required" onclick="notify('ti ha inviato una richiesta di amicizia', $utente['NomeUtente'], true)">Richiedi amicizia</button>
-                    <button class="access_required" onclick="addFollowed($utente['NomeUtente'])">Segui</button>
+                    <?php if(isFriend($utente['NomeUtente'])): ?>
+                        <button class="access_required" onclick="removeFriend($utente['NomeUtente'])">Rescindi amicizia</button>
+                    <?php else: ?>
+                        <button class="access_required" onclick="notify('ti ha inviato una richiesta di amicizia', $utente['NomeUtente'], true)">Richiedi amicizia</button>
+                    <?php endif;
+                    if(isFollowed($utente['NomeUtente'])): ?>
+                        <button class="access_required" onclick="removeFollowed($utente['NomeUtente'])">Lascia</button>
+                    <?php else: ?>
+                        <button class="access_required" onclick="addFollowed($utente['NomeUtente'])">Segui</button>
+                    <?php endif;
+                    if(isBlocked($utente['NomeUtente'])): ?>
+                        <button class="access_required" onclick="removeBlocked($utente['NomeUtente'])">Rilascia blocco</button>
+                    <?php else: ?>
+                        <button class="access_required" onclick="addBlocked($utente['NomeUtente'])">Blocca</button>
+                    <?php endif; ?>
                 </section>
             <?php endif; ?>
             <section id="post_column">
@@ -368,6 +381,16 @@
                         <?php endif;
                     endforeach; ?>
                 </ul>
+                <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                    <h3>Bloccati</h2>
+                    <ul>
+                        <?php foreach($templateparams["bloccati"] as $bloccato): ?>
+                            <li><img src="$bloccato['FotoProfilo']" alt=""/></li>
+                            <li><button onclick="accessProfile($bloccato['NomeUtente'])"><?php echo $bloccato["NomeUtente"] ?></button></li>
+                            <li><button class="access_required" onclick="removeBlocked($bloccato['NomeUtente'])">Perdona</button></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </aside>
         </main>
         <script src="js/profile.js" type="text/javascript"></script>
