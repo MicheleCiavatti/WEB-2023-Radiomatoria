@@ -11,12 +11,12 @@
         </header>
         <nav>
             <ul>
-                <?php if (isset($_SESSION['uid'])): ?>
-                    <li id="pag_profilo"><a href="accessProfile($_SESSION['uid'])">Profilo</a></li>
+                <?php if (cookiesSet()): ?>
+                    <li id="pag_profilo"><a href="accessProfile(readCookie('NomeUtente'))">Profilo</a></li>
                 <?php endif; ?>
                 <li id="pag_principale"><a href="index.html">Home page</a></li>
                 <li id="pag_guida"><a href="guida.html">Guida</a></li>
-                <?php if (isset($_SESSION['uid'])): ?>
+                <?php if (cookiesSet()): ?>
                     <li id="pag_notifiche"><a href="notifiche.html">Notifiche</a></li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
@@ -53,7 +53,7 @@
                             <td>Frequenze preferite (MegaHertz)</td>
                             <td>
                                 <ul id="lista_frequenze">
-                                    <?php foreach($templateparams["frequenze"] as $frequenza): ?>
+                                    <?php foreach($utente["frequenze"] as $frequenza): ?>
                                     <li><?php echo $frequenza["megahertz"]; ?></li>
                                     <?php endforeach; ?>
                                 </ul>
@@ -112,7 +112,7 @@
                             </td>
                             <td>
                                 <ul id="lista_orari">
-                                    <?php foreach($templateparams["orari"] as $intervallo): ?>
+                                    <?php foreach($utente["orari"] as $intervallo): ?>
                                     <li><?php echo $intervallo["oraInizio"] + "-" + $intervallo["oraFine"]; ?></li>
                                     <?php tabellaOrari($intervallo["oraInizio"].getHours(), $intervallo["oraFine"].getHours());
                                     endforeach; ?>
@@ -121,7 +121,7 @@
                         </tr>
                     </table>
                 </section>
-                <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
                     <section>
                         <button class="access_required" onclick="modificaProfilo($utente['NomeUtente'])">Inserisci o modifica</button>
                         <form action="alterProfile.php" method="post" name="alter_form">
@@ -156,7 +156,7 @@
                                     <td>
                                         <table>
                                             <caption>Frequenze preferite (aggiungere progressivemente in MegaHertz)</caption>
-                                            <?php foreach($templateparams["frequenze"] as $frequenza): ?>
+                                            <?php foreach($utente["frequenze"] as $frequenza): ?>
                                                 <tr>
                                                     <td><?php echo $frequenza["megahertz"]; ?></td>
                                                     <td><button onclick="removeFreq($frequenza['megahertz'])">Rimuovi</button></td>
@@ -173,7 +173,7 @@
                                     <td>
                                         <table>
                                             <caption>Orari in radio (non si accettano sovrapposizioni)</caption>
-                                            <?php foreach($templateparams["orari"] as $intervallo): ?>
+                                            <?php foreach($utente["orari"] as $intervallo): ?>
                                                 <tr>
                                                     <td><?php echo $intervallo["oraInizio"] + "-" + $intervallo["oraFine"]; ?></td>
                                                     <td><button onclick="removeInterval($intervallo['oraInizio'])">Rimuovi</button></td>
@@ -197,7 +197,7 @@
                             <table>
                                 <tr>
                                     <td><label for="user_clue">Indizio per recupero password</label></td>
-                                    <td><input type="text" name="user_clue" id="user_clue" value="$utente['Indizio']"/></td>
+                                    <td><input type="text" name="user_clue" id="user_clue" value="<?php echo $utente['Indizio']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_passwd0">Vecchia password</label></td>
@@ -219,7 +219,7 @@
                     </section>
                 <?php endif; ?>
             </header>
-            <?php if(isset($_SESSION['uid']) && $utente['NomeUtente'] != $_SESSION['uid']): ?>
+            <?php if(cookiesSet() && $utente['NomeUtente'] != readCookie('NomeUtente')): ?>
                 <section id="comandi">
                     <h3>Comandi</h3>
                     <?php if(isFriend($utente['NomeUtente'])): ?>
@@ -241,17 +241,15 @@
             <?php endif; ?>
             <section id="post_column">
                 <header>
-                    <form action="selectPost.php" method="post" name="select_form">
-                        <label for="select">Seleziona post in base alla relazione col proprietario del profilo</label>
-                        <select name="select" id="select" onchange="this.form.submit()">
-                            <option value="" selected>Seleziona</option>
+                    <form action="selectPostProfile.php" method="post" name="select_form_profile">
+                        <label for="relation">Seleziona post in base alla relazione col proprietario del profilo</label>
+                        <select name="relation" id="relation" onchange="this.form.submit()">
+                            <option value="none" selected>Nessuna</option>
                             <option value="create" >Creati</option>
                             <option value="like">Apprezzati</option>
                             <option value="dislike">Disapprovati</option>
                             <option value="comment">Commentati</option>
                         </select>
-                    </form>
-                    <form action="sortPost.php" method="post" name="sort_form">
                         <label for="sort">Ordina per</label>
                         <select name="sort" id="sort" onchange="this.form.submit()">
                             <option value="" selected>Seleziona</option>
@@ -259,8 +257,10 @@
                             <option value="like">Like</option>
                             <option value="comm">Commenti</option>
                         </select>
+                        <label for="order">In ordine decrescente</label>
+                        <input type="checkbox" name="order" id="order" checked/>
                     </form>
-                    <?php if (isset($_SESSION['uid'])): ?>
+                    <?php if (readCookie('NomeUtente')): ?>
                         <button id="add_post_button" class="access_required" onclick="mostraFormPost()">Aggiungi post</button>
                         <form action="addPost.php" method="post" name="add_post_form">
                             <table>
@@ -282,13 +282,13 @@
                 </header>
                 <article>
                     <ul>
-                        <?php foreach($templateParams["post"] as $post): ?>
+                        <?php foreach($post_list as $post): ?>
                             <li>
                             <table>
                                 <tr>
-                                    <td><button onclick="accessProfile()"></button><?php echo $post["UserPost"]; ?></td>
+                                    <td><button onclick="accessProfile($post['UserPost'])"></button><?php echo $post["UserPost"]; ?></td>
                                     <td><?php echo $post["DataPost"]; ?></td>
-                                    <?php if ($post["UserPost"] == $_SESSION['uid']): ?>
+                                    <?php if ($post["UserPost"] == readCookie('NomeUtente')): ?>
                                         <td><button onclick="removePost($post['NrPost'])" class="access_required">Rimuovi</button></td>
                                     <?php endif; ?>
                                 </tr>
@@ -296,23 +296,23 @@
                                 <tr><td><img src="$post['ImmaginePost']" alt=""/></td></tr>
                                 <tr>
                                     <td><?php echo $post["LikePost"]; ?></td>
-                                    <td><button name="$post['NrPost']_like_button" class="preference_button" onclick="<?php if (isset($_SESSION['uid'])): ?>like($post['NrPost'])<?php endif; ?>">Like</button></td>
+                                    <td><button name="$post['NrPost']_like_button" class="preference_button" onclick="<?php if (readCookie('NomeUtente')): ?>like($post['NrPost'])<?php endif; ?>">Like</button></td>
                                     <td><?php echo $post["DislikePost"]; ?></td>
-                                    <td><button name="$post['NrPost']_dislike_button" class="preference_button" onclick="<?php if (isset($_SESSION['uid'])): ?>dislike($post['NrPost'])<?php endif; ?>">Dislike</button></td>
-                                    <?php if (isset($_SESSION['uid'])): ?>
+                                    <td><button name="$post['NrPost']_dislike_button" class="preference_button" onclick="<?php if (readCookie('NomeUtente')): ?>dislike($post['NrPost'])<?php endif; ?>">Dislike</button></td>
+                                    <?php if (readCookie('NomeUtente')): ?>
                                         <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti($post['NrPost'], $post['UserPost'], $post['DataPost'], '')">Commenta</button></td>
                                     <?php endif; ?>
                                 </tr>
                                 <tr><td><button onclick="mostraCommentiPost($post['NrPost'])">Mostra commenti</button></td></tr>
                             </table>
                             <ul id="$post['NrPost']_comment_list">
-                                <?php foreach($templateparams["commenti"] as $commento): ?>
+                                <?php foreach($post['NrPost'] as $commento): ?>
                                     <li>
                                         <table>
                                             <tr>
                                                 <td><button onclick="accessProfile($commento['UserCommento'])"><?php echo $commento["UserCommento"]; ?></button></td>
                                                 <td><?php echo $commento["DataCommento"]; ?></td>
-                                                <?php if($commento['UserCommento'] == $_SESSION['uid']): ?>
+                                                <?php if($commento['UserCommento'] == readCookie('NomeUtente')): ?>
                                                     <td><button onclick="removeComment($commento['NrCommento'])" class="access_required">Rimuovi</button></td>
                                                 <?php endif; ?>
                                             </tr>
@@ -321,11 +321,11 @@
                                             <tr>
                                                 <td><?php echo $commento["LikeCommento"]; ?></td>
                                                 <td><button id="$commento['NrCommento']_like_button" class="preference_button"
-                                                onclick="<?php if (isset($_SESSION['uid'])): ?>like($commento['NrCommento'])<?php endif; ?>">Like</button></td>
+                                                onclick="<?php if (readCookie('NomeUtente')): ?>like($commento['NrCommento'])<?php endif; ?>">Like</button></td>
                                                 <td><?php echo $commento["DislikeCommento"]; ?></td>
                                                 <td><button id="$commento['NrCommento']_dislike_button" class="preference_button"
-                                                onclick="<?php if (isset($_SESSION['uid'])): ?>dislike($commento['NrCommento'])<?php endif; ?>">Dislike</button></td>
-                                                <?php if (isset($_SESSION['uid'])): ?>
+                                                onclick="<?php if (readCookie('NomeUtente')): ?>dislike($commento['NrCommento'])<?php endif; ?>">Dislike</button></td>
+                                                <?php if readCookie('NomeUtente'): ?>
                                                     <td><button onclick="mostraFormCommenti($post['NrPost'], $post['UserPost'], $post['DataPost'], '@' + $commento['UserCommento'])">Rispondi</button></td>
                                                 <?php endif; ?>
                                             </tr>
@@ -333,7 +333,7 @@
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <?php if (isset($_SESSION['uid'])): ?>
+                            <?php if (cookiesSet()): ?>
                                 <form action="addComment.php" method="post" name="add_comment_form">
                                     <table>
                                         <tr>
@@ -363,28 +363,28 @@
             <aside>
                 <h2>Amici</h2>
                 <ul>
-                    <?php foreach($templateparams["amici"] as $amico): ?>
+                    <?php foreach($utente["amici"] as $amico): ?>
                         <li><img src="$amico['FotoProfilo']" alt=""/></li>
                         <li><button onclick="accessProfile($amico['NomeUtente'])"><?php echo $amico["NomeUtente"] ?></button></li>
-                        <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                        <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
                             <li><button class="access_required" onclick="removeFriend($amico['NomeUtente'])">Rimuovi</button></li>
                         <?php endif;
                     endforeach; ?>
                 </ul>
                 <h2>Seguiti</h2>
                 <ul>
-                    <?php foreach($templateparams["seguiti"] as $seguito): ?>
+                    <?php foreach($utente["seguiti"] as $seguito): ?>
                         <li><img src="$seguito['FotoProfilo']" alt=""/></li>
                         <li><button onclick="accessProfile($seguito['NomeUtente'])"><?php echo $seguito["NomeUtente"] ?></button></li>
-                        <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                        <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
                             <li><button class="access_required" onclick="removeFollowed($seguito['NomeUtente'])">Rimuovi</button></li>
                         <?php endif;
                     endforeach; ?>
                 </ul>
-                <?php if($utente['NomeUtente'] == $_SESSION['uid']): ?>
+                <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
                     <h3>Bloccati</h2>
                     <ul>
-                        <?php foreach($templateparams["bloccati"] as $bloccato): ?>
+                        <?php foreach($utente["bloccati"] as $bloccato): ?>
                             <li><img src="$bloccato['FotoProfilo']" alt=""/></li>
                             <li><button onclick="accessProfile($bloccato['NomeUtente'])"><?php echo $bloccato["NomeUtente"] ?></button></li>
                             <li><button class="access_required" onclick="removeBlocked($bloccato['NomeUtente'])">Perdona</button></li>
