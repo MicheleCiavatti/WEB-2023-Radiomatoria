@@ -1,12 +1,4 @@
 <?php
-    public function accessProfile($username) {
-        $stmt->db->preare("SELECT * FROM UTENTE WHERE NomeUtente = ?");
-        $stmt->bind_param('s', $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $templateParams["utente"] = $result;
-    }
-
     function alterProfile($name, $photo, $address, $city, $dob, $mail, $freq, $time_start, $time_end, $clue, $passwd0, $passwd1, $passwd2) {
         $stmt = $this->db->prepare("UPDATE UTENTE SET FotoProfilo = ?, Indirizzo = ?, Citta = ?, DataNascita = FROM_UNIXTIME(?), Indizio = ? WHERE NomeUtente = ?");
         $stmt->bind_param('sssiss', $photo, $address, $city, $dob, $clue, $utente['NomeUtente']);
@@ -134,45 +126,72 @@
         }
     }
 
-    function selectPost($selection) {
-        switch($selection) {
+    function selectPostProfile($relation_selection, $sort_selection, $order) {
+        $query = "SELECT * FROM POST LEFT JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost INNER JOIN COMMENTO
+        ON CONTENUTO.NrCommento = COMMENTO.NrCommento LEFT JOIN INTERAZIONE ON POST.NrPost = INTERAZIONE.NrPost";
+        $bind = 0;
+        switch($relation_selection) {
             case "create" {
-                $stmt = $this->db->prepare("SELECT * FROM CREAZIONE INNER JOIN POST ON CREAZIONE.NrPost = POST.NrPost INNER JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost
-                INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento WHERE CREAZIONE.NomeUtente = ?");                
-                $stmt->bind_param('s', $utente['NomeUtente'])
+                $query .= " INNER JOIN CREAZIONE ON POST.NrPost = CREAZIONE.NrPost WHERE CREAZIONE.NomeUtente = ?";
+                break;
             }
             case "like" {
-                $stmt = $this->db->prepare("SELECT * FROM INTERAZIONE INNER JOIN POST ON INTERAZIONE.NrPost = POST.NrPost INNER JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost
-                INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?");                
-                $stmt->bind_param('si', $utente['NomeUtente'], true);
-            }
-            case "dislike" {
-                $stmt = $this->db->prepare("SELECT * FROM INTERAZIONE INNER JOIN POST ON INTERAZIONE.NrPost = POST.NrPost INNER JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost
-                INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?");                
-                $stmt->bind_param('si', $utente['NomeUtente'], false);
+                case "dislike" {
+                    $query .= " WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
+                    $bind += 1;
+                    break;
+                }
             }
             case "comment" {
-                $stmt = $this->db->prepare("SELECT * FROM POST INNER JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento
-                INNER JOIN SCRITTURA ON COMMENTO.NrCommento = SCRITTURA.NrCommento WHERE SCRITTURA.NomeUtente = ?");                
-                $stmt->bind_param('s', $utente['NomeUtente'])
+                $query .= " INNER JOIN SCRITTURA ON COMMENTO.NrCommento = SCRITTURA.NrCommento WHERE SCRITTURA.NomeUtente = ?";
+                break;
             }
         }
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $templateParams["post"] = $result;
-        toDecorate($result);
-    }
-
-    function toDecorate($result) {
-        $stmt = $this->db->prepare("SELECT ElementId FROM INTERAZIONE WHERE NomeUtente = ? AND Tipo = ?");
-        $stmt->bind_param('si', $_SESSION['uid'], true);
-        $stmt->execute();
-        $element_id_like = $stmt->get_result();
-
-        $stmt->bind_param('si', $_SESSION['uid'], false);
+        $decor = "SELECT INTERAZIONE.ElementID FROM (" + $query + ") WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
+        $stmt = $this->db->prepare($decor);
+        $stmt->bind_param('si', readCookie('NomeUtente'), false);
         $stmt->execute();
         $element_id_dislike = $stmt->get_result();
-        decorate($element_id_like, $element_id_dislike);
+        $stmt->bind_param('si', readCookie('NomeUtente'), true);
+        $stmt->execute();
+        $element_id_like = $stmt->get_result();
+        switch($sort_selection) {
+            case "data" {
+                $query .= " ORDER BY DataPost";                
+                break;
+            }
+            case "like" {
+                $query .= " GROUP BY NrPost HAVING INTERAZIONE.Tipo = ? ORDER BY COUNT(INTERAZIONE.Tipo)";  
+                $bind += 1;              
+                break;
+            }
+            case "comm" {
+                $query .= " GROUP BY NrPost ORDER BY COUNT(CONTENUTO.NrCommento)";                
+                break;
+            }
+        }
+        if ($order == true) {
+            $query .= " DESC";
+        }
+        $stmt = $this->db->prepare($query);
+        if ($bind == 2) {
+            if($relation_selection == "dislike") {
+                $stmt->bind_param('sii', $utente['NomeUtente'], false, true);
+            } else {
+                $stmt->bind_param('sii', $utente['NomeUtente'], true, true);
+            }
+        } else if($bind == 1) {
+            if($relation_selection == "dislike") {
+                $stmt->bind_param('si', $utente['NomeUtente'], false);
+            } else {
+                $stmt->bind_param('si', $utente['NomeUtente'], true);
+            }
+        } else {
+            $stmt->bind_param('s', $utente['NomeUtente']);
+        }
+        $stmt->execute();
+        $post_list = $stmt->get_result();
+        toDecorate($post_list);
     }
 
     function notify($text, $receiver, $request) {
@@ -208,18 +227,18 @@
         }
     }
 
-    function addBlocked($bloccato) {
-        $stmt = $this->db->prepare("INSERT INTO BLOCCO (NomeUtente, NomeBloccato) VALUES (?, ?)");
-        $stmt->bind_param('ss', $_SESSION['uid'], $bloccato);
-        $stmt->execute();
-        notify("ti ha bloccato", $bloccato, false);
-    }
-
     function addFollowed($neoseguito) {
         $stmt = $this->db->prepare("INSERT INTO FOLLOW (NomeUtente, NomeSeguito) VALUES (?, ?)");
         $stmt->bind_param('ss', $_SESSION['uid'], $neoseguito);
         $stmt->execute();
         notify("ti ha aggiunto alla sua lista di seguiti", $neoseguito, false);
+    }
+
+    function addBlocked($bloccato) {
+        $stmt = $this->db->prepare("INSERT INTO BLOCCO (NomeUtente, NomeBloccato) VALUES (?, ?)");
+        $stmt->bind_param('ss', $_SESSION['uid'], $bloccato);
+        $stmt->execute();
+        notify("ti ha bloccato", $bloccato, false);
     }
 
     function removeFriend($examico) {
@@ -267,96 +286,5 @@
         $stmt->execute();
         $result = $stmt->get_result();
         return $result;
-    }
-
-    function sortPost($selection) {
-        switch($selection) {
-            case "data" {
-                $stmt = $this->db->prepare("SELECT * FROM POST INNER JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost
-                INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento ORDER BY DataPost DESC");                
-            }
-            case "like" {
-                $stmt = $this->db->prepare("SELECT * FROM POST INNER JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost
-                INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento INNER JOIN INTERAZIONE ON POST.NrPost =
-                INTERAZIONE.NrPost WHERE INTERAZIONE.Tipo IS true GROUP BY NrPost ORDER BY COUNT(INTERAZIONE.Tipo) DESC");                
-            }
-            case "comm" {
-                $stmt = $this->db->prepare("SELECT * FROM POST INNER JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost 
-                INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento GROUP BY NrPost ORDER BY COUNT(CONTENUTO.NrCommento) DESC");                
-            }
-        }
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $templateParams["post"] = $result;
-        toDecorate($result);
-    }
-    
-    function addPost($post_img, $post_text) {
-        $stmt = $this->db->prepare("INSERT INTO POST (NrPost, DataPost, TestoPost, ImmaginePost) VALUES (?, NOW(), ?, ?)");
-        do {
-            $pid = uniqid();
-            $idcheck = $this->db->prepare("SELECT COUNT(*) FROM CONTENUTO WHERE NrPost = ? OR NrCommento = ?");
-            $idcheck->bind_param('s', $pid, $pid);
-            $idcheck->execute();
-            $result = $idcheck->get_result();
-        } while ($result > 0);
-        $now = new Date();
-        $stmt->bind_param('sss', $pid, $post_img, $post_text);
-        $stmt->execute();
-        $stmt = $this->db->prepare("INSERT INTO CREAZIONE (NomeUtente, NrPost) VALUES (?, ?)");
-        $stmt->bind_param('ss', $_SESSION['uid'], $pid);
-        $stmt->execute();
-    }
-    
-    function removePost($pid) {
-        $stmt = $this->db->prepare("SELECT NrCommento FROM CONTENUTO WHERE NrPost = ?");
-        $stmt->bind_param('s', $pid);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        foreach($result as $comment) {
-            removeComment($comment);
-        }
-        $stmt = $this->db->prepare("DELETE FROM POST, CREAZIONE, INTERAZIONE WHERE NrPost = ?");
-        $stmt->bind_param('s', $pid);
-        $stmt->execute();
-    }
-
-    function addComment($pid, $cimg, $ctext) {
-        $stmt = $this->db->prepare("INSERT INTO COMMENTO
-        (NrCommento, DataCommento, ImmagineCommento, TestoCommento) VALUES (?, NOW(), ?, ?)");
-        do {
-            $cid = uniqid();
-            $idcheck = $this->db->prepare("SELECT COUNT(*) FROM CONTENUTO WHERE NrPost = ? OR NrCommento = ?");
-            $idcheck->bind_param('s', $pid, $pid);
-            $idcheck->execute();
-            $result = $idcheck->get_result();
-        } while ($result > 0);
-        $now = new Date();
-        $stmt->bind_param('sss', $cid, $cimg, $ctext);
-        $stmt->execute();
-        $stmt = $this->db->prepare("INSERT INTO CONTENUTO (NrPost, NrCommento) VALUES (?, ?)");
-        $stmt->bind_param('ss', $pid, $cid);
-        $stmt->execute();
-        $stmt = $this->db->prepare("INSERT INTO SCRITTURA (NomeUtente, NrCommento) VALUES (?, ?)");
-        $stmt->bind_param('ss', $_SESSION['uid'], $cid);
-        $stmt->execute();
-    }
-
-    function removeComment($cid) {
-        $stmt = $this->db->prepare("DELETE FROM COMMENTO, SCRITTURA, INTERAZIONE, CONTENUTO WHERE NrCommento = ?");
-        $stmt->bind_param('s', $cid);
-        $stmt->execute();
-    }
-
-    function addLikeOrDislike($element_id, $type) {
-        $stmt = $this->db->prepare("INSERT INTO INTERAZIONE (NomeUtente, ElementId, Tipo) VALUES (?, ?, ?)");
-        $stmt->bind_param('ssi', $_SESSION['uid'], $element_id, $type);
-        $stmt->execute();
-    }
-
-    function removeLikeOrDislike($element_id) {
-        $stmt = $this->db->prepare("DELETE FROM INTERAZIONE WHERE NomeUtente = ? AND ElementId = ?");
-        $stmt->bind_param('ss', $_SESSION['uid'], $element_id);
-        $stmt->execute();
     }
 ?>
