@@ -1,6 +1,6 @@
 function modificaProfilo(nome_utente) {
     const alter_form = document.getElementsByName('alter_form');
-    if(nome_utente == $_SESSION["uid"]) {
+    if(nome_utente == readCookie('NomeUtente')) {
         if(alter_form.hidden == true) {
             alter_form.hidden = false;
         } else {
