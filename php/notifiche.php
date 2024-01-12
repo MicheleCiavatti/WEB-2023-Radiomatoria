@@ -35,7 +35,7 @@
 
     function addFriend($nid, $senderid) {
         outcomeNotification($nid, $senderid, "ha accettato la tua richiesta di amicizia");
-        $stmt = $this->db->prepare("INSERT INTO AMICIZIA VALUES (? ?)");
+        $stmt = $this->db->prepare("INSERT INTO AMICIZIA (NomeUtente, NomeAmico) VALUES (? ?)");
         $stmt->bind_param('ss', $_SESSION['uid'], $senderid);
         $stmt->execute();
         $stmt->bind_param('ss', $senderid, $_SESSION['uid']);
