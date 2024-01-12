@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <title>Notifiche</title>
+        <meta charset="UTF-8"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <header>
+            <h1>Long Light</h1>
+        </header>
+        <nav>
+            <ul>
+                <?php if (isset($_SESSION['uid'])): ?>
+                    <li id="pag_profilo"><a href="accessProfile($_SESSION['uid'])">Profilo</a></li>
+                <?php endif; ?>
+                <li id="pag_principale"><a href="index.html">Home page</a></li>
+                <li id="pag_guida"><a href="guida.html">Guida</a></li>
+                <?php if (isset($_SESSION['uid'])): ?>
+                    <li id="pag_notifiche"><a href="notifiche.html">Notifiche</a></li>
+                    <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
+                <?php else: ?>
+                    <li id="pag_creazione"><a href="create.html">Crea account</a></li>
+                    <li id="pag_accesso"><a href="login.html">Login</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+        <main>
+            <h2 id="notifications_total">Notifiche totali: </h2>
+            <ul id="notifications_list">
+                <?php foreach($templateParams["notifiche"] as $notifica): ?>
+                    <li>
+                        <button onclick="accessProfile($notifica['UserNotifica'])"><?php echo $notifica['UserNotifica']; ?></button>
+                        <span class="$notifica['MotivoNotifica']_text"></span>   <!-- MotivoNotifica è un codice che riassume il tipo di notifica, es. req_ami per la ricezione di una richiesta di amicizia, ref_ami per il rifiuto di tale richiesta ecc. -->
+                        <button onclick="removeNotification($notifica['NrNotifica'])">Rimuovi</button>  <!-- se la notifica è una richiesta di amicizia si invia una notifica al mittente " ha rifiutato la tua richiesta di amicizia" -->
+                        <button name="friend_accept" class="$notifica['MotivoNotifica']_button" onclick="addFriend($notifica['UserNotifica'])">Accetta</button> <!-- se l'utente registrato ed il mittente della notifica non sono già amici aggiunge l'uno alla lista di amici dell'altro -->
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </main>
+        <script src="js/notifiche.js" type="text/javascript"></script>
+    </body>
+</html>
