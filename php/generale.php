@@ -1,8 +1,9 @@
 <?php
 
     public function accessProfile($username) {
-        $stmt->db->prepare("SELECT * FROM UTENTE WHERE NomeUtente = ?");  //aggiungere frequenze, orari, amici e bloccati
-        $stmt->bind_param('s', $username);
+        $stmt->db->prepare("SELECT UTENTE.*, BANDA.frequenza AS frequenze, (DISPONIBILITA.OraInizio, DISPONIBILITA.OraFine) AS orari, AMICIZIA.NomeAmico AS amici, FOLLOW.NomeSeguito AS seguiti, BLOCCO.NomeBloccato AS bloccati
+        FROM UTENTE, AMICIZIA, FOLLOW, BLOCCO, BANDA, DISPONIBILITA WHERE UTENTE.NomeUtente = ? AND AMICIZIA.NomeUtente = ? AND FOLLOW.NomeUtente = ? AND BLOCCO.NomeUtente = ? AND BANDA.NomeUtente = ? AND DISPONIBILITA.NomeUtente = ?");
+        $stmt->bind_param('ssssss', $username, $username, $username, $username, $username, $username);
         $stmt->execute();
         $utente = $stmt->get_result();
         switchToProfile();
