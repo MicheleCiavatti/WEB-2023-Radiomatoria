@@ -75,3 +75,7 @@ function decorate(element_id_like, element_id_dislike) {
         active_like.style.color = "magenta";
     })
 }
+
+function switchToProfile() {
+    window.location.href = "profile.html";
+}
