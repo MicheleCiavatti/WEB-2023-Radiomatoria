@@ -37,11 +37,11 @@ function like(element_id) {
         if(document.getElementById(element_id + '_dislike_button').textContent.charAt(7)=='d') {
             dislike(element_id);
         }
-        addLike(element_id);
+        addLikeOrDislike(element_id, true);
         like_button.innerHTML += 'd';
         like_button.style.color = "cyan";
     } else {
-        removeLike(element_id);
+        removeLikeOrDislike(element_id);
         like_button.innerHTML = "Like"
         like_button.style.color = "black";
     }
@@ -53,11 +53,11 @@ function dislike(element_id) {
         if(document.getElementById(element_id + '_like_button').textContent.charAt(4)=='d') {
             like(element_id);
         }
-        addDislike(element_id);
+        addLikeOrDislike(element_id, false);
         dislike_button.innerHTML += 'd';
         dislike_button.style.color = "magenta";
     } else {
-        removeDislike(element_id);
+        removeLikeOrDislike(element_id);
         dislike_button.innerHTML = "Dislike"
         dislike_button.style.color = "black";
     }
@@ -74,8 +74,4 @@ function decorate(element_id_like, element_id_dislike) {
         active_like.innerHTML += 'd';
         active_like.style.color = "magenta";
     })
-}
-
-function switchToProfile() {
-    window.location.href = "profile.php";
 }

@@ -17,3 +17,8 @@ function readCookie(cookieName) {
     
     return null;
 }
+
+function accessProfile(username) {
+    window.location.href = "profile.php";
+    document.getElementsByTagName("body").onload("<?php ../php/profileAccess(" + username + "); ?>");
+}
