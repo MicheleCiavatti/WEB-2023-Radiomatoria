@@ -58,7 +58,7 @@ create table INTERAZIONI (
      Creatore varchar(50) not null,
      ElementId int not null,
      Tipo char not null,
-     constraint IDINTERAZIONI primary key (Creatore, NrPost));
+     constraint IDINTERAZIONI primary key (Creatore, ElementId));
 
 create table NOTIFICHE (
      Ricevente varchar(50) not null,
