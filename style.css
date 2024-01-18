@@ -117,3 +117,8 @@ section > button {
 aside > ul {
     background-color: navajowhite;
 }
+
+footer {
+    background-color: lemonchiffon;
+    font-weight: lighter;
+}
