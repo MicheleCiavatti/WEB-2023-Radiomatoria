@@ -21,8 +21,8 @@
                     <li id="pag_notifiche"><a href="notifiche.php">Notifiche</a></li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
-                    <li id="pag_creazione"><a href="signup.php">Crea account</a></li>
-                    <li id="pag_accesso"><a href="login.php">Login</a></li>
+                    <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
+                    <li id="pag_accesso"><a href="login.html">Login</a></li>
                 <?php endif; ?>
             </ul>
         </nav>
