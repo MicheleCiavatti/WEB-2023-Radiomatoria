@@ -62,12 +62,8 @@ function dislike(element_id) {
         dislike_button.style.color = "black";
     }
 }
-//hide e decorate vengono chiamate al caricamento della pagina
+
 function decorate(element_id_like, element_id_dislike) {
-/* element_id_like è un inner join tra $[templateParams("post")]
-ed una query che ritorna una lista di id di post/commenti su cui l'utente registrato ha messo like;
-element_id_dislike è un inner join tra $[templateParams("post")]
-ed una query che ritorna una lista di id di post/commenti su cui l'utente registrato ha messo dislike */
     element_id_like.foreach((element) => {
         let active_like = document.getElementById(element + '_like_button');
         active_like.innerHTML += 'd';
@@ -78,16 +74,4 @@ ed una query che ritorna una lista di id di post/commenti su cui l'utente regist
         active_like.innerHTML += 'd';
         active_like.style.color = "magenta";
     })
-}
-
-function hide() {
-    const forms = document.getElementsByTagName("form");
-    const restricted_buttons = document.getElementsByClassName("access_required");
-    const preference_buttons = document.getElementsByClassName("preference_button");
-    forms.hidden = true;
-    if (isset($_SESSION["uid"])) {
-        restricted_buttons.hidden = true;
-        restricted_buttons.disabled = true;
-        preference_buttons.disabled = true;
-    }
 }
