@@ -77,5 +77,5 @@ function decorate(element_id_like, element_id_dislike) {
 }
 
 function switchToProfile() {
-    window.location.href = "profile.html";
+    window.location.href = "profile.php";
 }
