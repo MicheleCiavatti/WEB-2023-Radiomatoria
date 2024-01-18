@@ -13,7 +13,7 @@ function login_result() {
             body: new URLSearchParams(new FormData(login_form))
         }).then((response) => response.text())
         .then((response) => {
-            if(isUserLoggedIn()) {
+            if(cookiesSet()) {
                 accessProfile(response);
             } else {
                 document.getElementById("login_fail").innerHTML = response;
