@@ -42,7 +42,7 @@ create table DISPONIBILITA (
      OraInizio time not null,
      OraFine time not null,
      Utente varchar(50) not null,
-     constraint IDDISPONIBILITA primary key (Utente, OraInizio, MinutiInizio));
+     constraint IDDISPONIBILITA primary key (Utente, OraInizio, OraFine));
 
 create table FOLLOW (
      Followed varchar(50) not null,
