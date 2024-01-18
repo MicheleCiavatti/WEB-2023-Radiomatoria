@@ -87,7 +87,7 @@
                             <tr>
                                 <td><button onclick="accessProfile(<?php echo $post['Creatore']; ?>)"></button><?php echo $post["Creatore"]; ?></td>
                                 <td><?php echo $post["DataPost"]; ?></td>
-                                <?php if ($post["Creatore"] == readCookie('NomeUtente')): ?>
+                                <?php if ($post["UserPost"] == readCookie('NomeUtente')): ?>
                                     <td><button onclick="removePost($post['NrPost'])" class="access_required">Rimuovi</button></td>
                                 <?php endif; ?>
                             </tr>
@@ -95,9 +95,9 @@
                             <tr><td><img src="<?php echo $post['ImmaginePost']; ?>" alt=""/></td></tr>
                             <tr>
                                 <td><?php echo $post["LikePost"]; ?></td>
-                                <td><button name="<?php echo $post['NrPost']; ?>_like_button" class="preference_button" onclick="<?php if(cookiesSet()): ?>like(<?php echo $post['NrPost']; ?>)<?php endif; ?>">Like</button></td>
+                                <td><button name="<?php echo $post['NrPost']; ?>_like_button" class="preference_button" onclick="<?php if(cookiesSet()): ?>like(<?php echo $post['NrPost'] ?>)<?php endif; ?>">Like</button></td>
                                 <td><?php echo $post["DislikePost"]; ?></td>
-                                <td><button name="<?php echo $post['NrPost']; ?>_dislike_button" class="preference_button" onclick="<?php if(cookiesSet()): ?>dislike(<?php echo $post['NrPost']; ?>)<?php endif; ?>">Dislike</button></td>
+                                <td><button name="<?php echo $post['NrPost']; ?>_dislike_button" class="preference_button" onclick="<?php if(cookiesSet()): ?>dislike(<?php echo $post['NrPost'] ?>)<?php endif; ?>">Dislike</button></td>
                                 <?php if(cookiesSet()): ?>
                                     <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti($post['NrPost'], $post['Creatore'], $post['DataPost'], '')">Commenta</button></td>
                                 <?php endif; ?>
@@ -106,12 +106,10 @@
                         </table>
                         <ul id="<?php echo $post['NrPost']; ?>_comment_list">
                             <?php 
-                                $query = "SELECT COMMENTO.*, COUNT(CASE WHEN INTERAZIONE.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
-                                SCRITTURA.NomeUtente AS UserCommento
-                                FROM (CONTENUTO INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento LEFT JOIN INTERAZIONE ON COMMENTO.NrCommento = INTERAZIONE.ElementId)
-                                INNER JOIN SCRITTURA ON CONTENUTO.NrCommento = SCRITTURA.NrCommento WHERE CONTENUTO.NrPost = ? ORDER BY COMMENTO.DataCommento DESC";
+                                $query = "SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
+                                FROM COMMENTI LEFT JOIN INTERAZIONI ON COMMENTI.NrCommento = INTERAZIONI.ElementId WHERE COMMENTI.NrPost = ? ORDER BY COMMENTI.DataCommento DESC";
                                 $stmt = $this->db->prepare($query);
-                                $stmt->bind_param('ssi', $post['NrPost']);
+                                $stmt->bind_param('i', $post['NrPost']);
                                 $stmt->execute();
                                 $commenti = $stmt->get_result();
                                 foreach($commenti as $commento):
@@ -119,7 +117,7 @@
                                 <li>
                                     <table>
                                         <tr>
-                                            <td><button onclick="accessProfile(<?php echo $commento['UserCommento']; ?>)"><?php echo $commento["UserCommento"]; ?></button></td>
+                                            <td><button onclick="accessProfile(<?php echo $commento['Creatore']; ?>)"><?php echo $commento["Creatore"]; ?></button></td>
                                             <td><?php echo $commento["DataCommento"]; ?></td>
                                             <?php if($commento['Creatore'] == readCookie('NomeUtente')): ?>
                                                 <td><button onclick="removeComment(<?php echo $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
