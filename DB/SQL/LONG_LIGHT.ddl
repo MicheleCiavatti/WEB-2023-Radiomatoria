@@ -128,10 +128,6 @@ alter table FOLLOW add constraint FKFollowed
      foreign key (Followed)
      references UTENTI (NomeUtente);
 
-alter table INTERAZIONI add constraint FKINT_UTE
-     foreign key (Interagente)
-     references UTENTI (NomeUtente);
-
 alter table INTERAZIONI add constraint FKINT_POS
      foreign key (Creatore, NrPost)
      references POST (Creatore, NrPost);
