@@ -1,3 +1,8 @@
+<?php
+session_start();
+if (!cookiesSet())
+    header('location: login.html?error=needtologin');
+?>
 <!DOCTYPE html>
 <html lang="it">
     <head>
