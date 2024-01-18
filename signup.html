@@ -1,3 +1,8 @@
+<?php
+session_start();
+if (cookiesSet())
+    header('location: index.html?error=needtologout');
+?>
 <!DOCTYPE html>
 <html lang="it">
     <head>
