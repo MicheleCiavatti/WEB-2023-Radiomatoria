@@ -31,16 +31,6 @@ VALUES ('MicheleC', 'AlessandroC');
 INSERT INTO AMICIZIA
 VALUES ('AlessandroC', 'DanieleC');
 
-/*----------------------------CREAZIONE FREQUENZE--------------------------*/
-INSERT INTO FREQUENZE
-VALUES (99.4);
-
-INSERT INTO FREQUENZE
-VALUES (87.5);
-
-INSERT INTO FREQUENZE
-VALUES (88.6);
-
 /*-----------------------------CREAZIONE BANDE-----------------------------*/
 INSERT INTO BANDE
 VALUES ('MicheleC', 99.4);
@@ -51,27 +41,14 @@ VALUES ('AlessandroC', 87.5);
 INSERT INTO BANDE
 VALUES ('DanieleC', 88.6);
 
-/*--------------------------CREAZIONE FASCE_ORARIE--------------------------*/
-INSERT INTO FASCE_ORARIE
-VALUES (8, 30, 12, 30);
-
-INSERT INTO FASCE_ORARIE
-VALUES (8, 0, 12, 0);
-
-INSERT INTO FASCE_ORARIE
-VALUES (9, 0, 12, 0);
-
-INSERT INTO FASCE_ORARIE
-VALUES (10, 30, 12, 0);
-
 /*-------------------------CREAZIONE DISPONIBILITA'-------------------------*/
 INSERT INTO DISPONIBILITA
-VALUES (8, 30, 'MicheleC');
+VALUES (8:30:0, 21:40:0, 'MicheleC');
 
 INSERT INTO DISPONIBILITA
-VALUES (10, 30, 'AlessandroC');
+VALUES (7:45:0, 22:10:0, 'AlessandroC');
 
 INSERT INTO DISPONIBILITA
-VALUES (8, 0, 'DanieleC');
+VALUES (8:0:0, 10:0:0, 'DanieleC');
 
 
