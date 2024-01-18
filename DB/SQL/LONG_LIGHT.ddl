@@ -36,7 +36,7 @@ create table COMMENTI (
      DataCommento date not null,
      TestoCommento varchar(500) not null,
      ImmagineCommento varchar(1024),
-     constraint IDCOMMENTO primary key (Creatore, NrPost, Scrittore, NrCommento));
+     constraint IDCOMMENTO primary key (Creatore, NrPost, NrCommento));
 
 create table DISPONIBILITA (
      OraInizio time not null,
