@@ -286,9 +286,9 @@
                             <li>
                             <table>
                                 <tr>
-                                    <td><button onclick="accessProfile($post['UserPost'])"></button><?php echo $post["UserPost"]; ?></td>
+                                    <td><button onclick="accessProfile($post['Creatore'])"></button><?php echo $post["Creatore"]; ?></td>
                                     <td><?php echo $post["DataPost"]; ?></td>
-                                    <?php if ($post["UserPost"] == readCookie('NomeUtente')): ?>
+                                    <?php if ($post["Creatore"] == readCookie('NomeUtente')): ?>
                                         <td><button onclick="removePost($post['NrPost'])" class="access_required">Rimuovi</button></td>
                                     <?php endif; ?>
                                 </tr>
@@ -300,19 +300,17 @@
                                     <td><?php echo $post["DislikePost"]; ?></td>
                                     <td><button name="$post['NrPost']_dislike_button" class="preference_button" onclick="<?php if (readCookie('NomeUtente')): ?>dislike($post['NrPost'])<?php endif; ?>">Dislike</button></td>
                                     <?php if (readCookie('NomeUtente')): ?>
-                                        <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti($post['NrPost'], $post['UserPost'], $post['DataPost'], '')">Commenta</button></td>
+                                        <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti($post['NrPost'], $post['Creatore'], $post['DataPost'], '')">Commenta</button></td>
                                     <?php endif; ?>
                                 </tr>
                                 <tr><td><button onclick="mostraCommentiPost($post['NrPost'])">Mostra commenti</button></td></tr>
                             </table>
                             <ul id="<?php echo $post['NrPost']; ?>_comment_list">
                                 <?php 
-                                    $query = "SELECT COMMENTO.*, COUNT(CASE WHEN INTERAZIONE.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
-                                    SCRITTURA.NomeUtente AS UserCommento
-                                    FROM (CONTENUTO INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento LEFT JOIN INTERAZIONE ON COMMENTO.NrCommento = INTERAZIONE.ElementId)
-                                    INNER JOIN SCRITTURA ON CONTENUTO.NrCommento = SCRITTURA.NrCommento WHERE CONTENUTO.NrPost = ? ORDER BY COMMENTO.DataCommento DESC";
+                                    $query = "SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONE.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
+                                    FROM COMMENTI LEFT JOIN INTERAZIONI ON COMMENTI.NrCommento = INTERAZIONI.ElementId WHERE COMMENTI.NrPost = ? ORDER BY COMMENTI.DataCommento DESC";
                                     $stmt = $this->db->prepare($query);
-                                    $stmt->bind_param('ssi', $post['NrPost']);
+                                    $stmt->bind_param('i', $post['NrPost']);
                                     $stmt->execute();
                                     $commenti = $stmt->get_result();
                                     foreach($commenti as $commento):
@@ -320,9 +318,9 @@
                                     <li>
                                         <table>
                                             <tr>
-                                                <td><button onclick="accessProfile($commento['UserCommento'])"><?php echo $commento["UserCommento"]; ?></button></td>
+                                                <td><button onclick="accessProfile($commento['Creatore'])"><?php echo $commento["Creatore"]; ?></button></td>
                                                 <td><?php echo $commento["DataCommento"]; ?></td>
-                                                <?php if($commento['UserCommento'] == readCookie('NomeUtente')): ?>
+                                                <?php if($commento['Creatore'] == readCookie('NomeUtente')): ?>
                                                     <td><button onclick="removeComment($commento['NrCommento'])" class="access_required">Rimuovi</button></td>
                                                 <?php endif; ?>
                                             </tr>
@@ -336,7 +334,7 @@
                                                 <td><button id="$commento['NrCommento']_dislike_button" class="preference_button"
                                                 onclick="<?php if (readCookie('NomeUtente')): ?>dislike($commento['NrCommento'])<?php endif; ?>">Dislike</button></td>
                                                 <?php if readCookie('NomeUtente'): ?>
-                                                    <td><button onclick="mostraFormCommenti($post['NrPost'], $post['UserPost'], $post['DataPost'], '@' + $commento['UserCommento'])">Rispondi</button></td>
+                                                    <td><button onclick="mostraFormCommenti($post['NrPost'], $post['Creatore'], $post['DataPost'], '@' + $commento['Creatore'])">Rispondi</button></td>
                                                 <?php endif; ?>
                                             </tr>
                                         </table>
@@ -376,9 +374,9 @@
                 <ul>
                     <?php foreach($amici as $amico): ?>
                         <li><img src="$amico['FotoProfilo']" alt=""/></li>
-                        <li><button onclick="accessProfile($amico['NomeUtente'])"><?php echo $amico["NomeUtente"] ?></button></li>
+                        <li><button onclick="accessProfile($amico['Amico2'])"><?php echo $amico["NomeUtente"] ?></button></li>
                         <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
-                            <li><button class="access_required" onclick="removeFriend($amico['NomeUtente'])">Rimuovi</button></li>
+                            <li><button class="access_required" onclick="removeFriend($amico['Amico2'])">Rimuovi</button></li>
                         <?php endif;
                     endforeach; ?>
                 </ul>
@@ -386,9 +384,9 @@
                 <ul>
                     <?php foreach($seguiti as $seguito): ?>
                         <li><img src="$seguito['FotoProfilo']" alt=""/></li>
-                        <li><button onclick="accessProfile($seguito['NomeUtente'])"><?php echo $seguito["NomeUtente"] ?></button></li>
+                        <li><button onclick="accessProfile($seguito['Followed'])"><?php echo $seguito["NomeUtente"] ?></button></li>
                         <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
-                            <li><button class="access_required" onclick="removeFollowed($seguito['NomeUtente'])">Rimuovi</button></li>
+                            <li><button class="access_required" onclick="removeFollowed($seguito['Followed'])">Rimuovi</button></li>
                         <?php endif;
                     endforeach; ?>
                 </ul>
@@ -397,8 +395,8 @@
                     <ul>
                         <?php foreach($bloccati as $bloccato): ?>
                             <li><img src="$bloccato['FotoProfilo']" alt=""/></li>
-                            <li><button onclick="accessProfile($bloccato['NomeUtente'])"><?php echo $bloccato["NomeUtente"] ?></button></li>
-                            <li><button class="access_required" onclick="removeBlocked($bloccato['NomeUtente'])">Perdona</button></li>
+                            <li><button onclick="accessProfile($bloccato['Bloccato'])"><?php echo $bloccato["Bloccato"] ?></button></li>
+                            <li><button class="access_required" onclick="removeBlocked($bloccato['Bloccato'])">Perdona</button></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
