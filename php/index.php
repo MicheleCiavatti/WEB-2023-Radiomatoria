@@ -1,46 +1,54 @@
 <?php
 
 function selectPostHome($origin_selection, $sort_selection, $order) {
-    $query = "SELECT * FROM POST LEFT JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost INNER JOIN COMMENTO ON
-    CONTENUTO.NrCommento = COMMENTO.NrCommento LEFT JOIN INTERAZIONE ON POST.NrPost = INTERAZIONE.NrPost WHERE POST.UserPost";
+    $username = readCookie('NomeUtente');
+    $query = "SELECT POST.*, COUNT(CASE WHEN INTERAZIONE.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikePost,
+    CREAZIONE.NomeUtente AS UserPost FROM ((POST INNER JOIN CREAZIONE ON POST.NrPost = CREAZIONE.NrPost) LEFT JOIN INTERAZIONE ON POST.NrPost = INTERAZIONE.ElementId)";
+    if($sort_selection == "comm") {
+        $query .= " LEFT JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost";                
+    }
+
+    $decor = "SELECT INTERAZIONE.ElementID FROM INTERAZIONE WHERE (INTERAZIONE.ElementId IN (SELECT CREAZIONE.NrPost FROM CREAZIONE WHERE CREAZIONE.NomeUtente";
+
+    $query .= " WHERE CREAZIONE.NomeUtente";
     switch($origin_selection) {
         case "strangers" {
-            $query .= " NOT IN ((SELECT NomeAmico, NomeSeguito,
+            $condition .= " NOT IN ((SELECT NomeAmico, NomeSeguito,
             NomeBloccato FROM AMICIZIA, FOLLOW, BLOCCO WHERE NomeUtente = ?), ?)";
             break;
         }
         case "friends" {
-            $query .= " IN (SELECT NomeAmico FROM AMICIZIA WHERE NomeUtente = ?)";
+            $condition .= " IN (SELECT NomeAmico FROM AMICIZIA WHERE NomeUtente = ?)";
             break;
         }
         case "followed" {
-            $query .= " IN (SELECT NomeSeguito FROM FOLLOW WHERE NomeUtente = ?)";
+            $condition .= " IN (SELECT NomeSeguito FROM FOLLOW WHERE NomeUtente = ?)";
             break;
         }
         case "mine" {
-            $query .= " = ?";
+            $condition .= " = ?";
             break;
         }
     }
-    $decor = "SELECT INTERAZIONE.ElementID FROM (" + $query + ") WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
-    $stmt = $this->db->prepare($decor);
-    $stmt->bind_param('si', readCookie('NomeUtente'), false);
-    $stmt->execute();
-    $element_id_dislike = $stmt->get_result();
-    $stmt->bind_param('si', readCookie('NomeUtente'), true);
-    $stmt->execute();
-    $element_id_like = $stmt->get_result();
+
+    $decor .= $condition;
+    $decor .= "), (SELECT SCRITTURA.NrCommento FROM SCRITTURA WHERE SCRITTURA.NomeUtente";
+    $decor .= $condition;
+    $decor .= ")) AND INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
+
+    $query .= $condition;
+    $query .= " GROUP BY POST.NrPost ORDER BY";
     switch($sort_selection) {
         case "data" {
-            $query .= " ORDER BY DataPost";                
+            $query .= " POST.DataPost";                
             break;
         }
         case "like" {
-            $query .= " GROUP BY NrPost HAVING INTERAZIONE.Tipo = true ORDER BY COUNT(INTERAZIONE.Tipo)";                
+            $query .= " LikePost";                
             break;
         }
         case "comm" {
-            $query .= " GROUP BY NrPost ORDER BY COUNT(CONTENUTO.NrCommento)";                
+            $query .= " COUNT(CONTENUTO.NrCommento)";                
             break;
         }
     }
@@ -48,14 +56,26 @@ function selectPostHome($origin_selection, $sort_selection, $order) {
         $query .= " DESC";
     }
     $stmt = $this->db->prepare($query);
+    $deco = $this->db->prepare($decor);
     if ($origin_selection == "strangers") {
-        $stmt->bind_param('ss', readCookie('NomeUtente'), readCookie('NomeUtente'));
-    } else {
-        $stmt->bind_param('s', readCookie('NomeUtente'));
+        $stmt->bind_param('ss', $username, $username);
+        $deco->bind_param('sssssi', $username, $username, $username, $username, $username, false);
+        $deco->execute();
+        $element_id_dislike = $deco->get_result();
+        $deco->bind_param('sssssi', $username, $username, $username, $username, $username, true);
+        $deco->execute();
+        $element_id_like = $deco->get_result();
+        } else {
+        $stmt->bind_param('s', $username);
+        $deco->bind_param('sssi', $username, $username, $username, false);
+        $deco->execute();
+        $element_id_dislike = $deco->get_result();
+        $deco->bind_param('sssi', $username, $username, $username, true);
+        $deco->execute();
+        $element_id_like = $deco->get_result();
     }
     $stmt->execute();
-    $post_list = $stmt->get_result();   //aggiungere like e dislike a post e commenti
-    decorate($element_id_like, $element_id_dislike);
+    $post_list = $stmt->get_result();
 }
 
 ?>

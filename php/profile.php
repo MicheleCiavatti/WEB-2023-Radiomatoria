@@ -127,46 +127,75 @@
     }
 
     function selectPostProfile($relation_selection, $sort_selection, $order) {
-        $query = "SELECT * FROM POST LEFT JOIN CONTENUTO ON POST.NrPost = CONTENUTO.NrPost INNER JOIN COMMENTO
-        ON CONTENUTO.NrCommento = COMMENTO.NrCommento LEFT JOIN INTERAZIONE ON POST.NrPost = INTERAZIONE.NrPost";
+        $username = readCookie('NomeUtente');
+        $query = "SELECT POST.*, COUNT(CASE WHEN INTERAZIONE.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikePost,
+        CREAZIONE.NomeUtente AS UserPost FROM ((POST INNER JOIN CREAZIONE ON POST.NrPost = CREAZIONE.NrPost) LEFT JOIN INTERAZIONE ON POST.NrPost = INTERAZIONE.ElementId)";
         $bind = 0;
+
+        $decor = "SELECT INTERAZIONE.ElementID FROM INTERAZIONE WHERE INTERAZIONE.ElementId IN
+        (SELECT CONTENUTO.NrCommento FROM SCRITTURA INNER JOIN CONTENUTO ON SCRITTURA.NrCommento = CONTENUTO.NrCommento";
+    
         switch($relation_selection) {
             case "create" {
-                $query .= " INNER JOIN CREAZIONE ON POST.NrPost = CREAZIONE.NrPost WHERE CREAZIONE.NomeUtente = ?";
+                $condition .= " WHERE CREAZIONE.NomeUtente = ?";
                 break;
             }
             case "like" {
                 case "dislike" {
-                    $query .= " WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
+                    $condition .= " WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
                     $bind += 1;
                     break;
                 }
             }
             case "comment" {
-                $query .= " INNER JOIN SCRITTURA ON COMMENTO.NrCommento = SCRITTURA.NrCommento WHERE SCRITTURA.NomeUtente = ?";
+                $condition .= " INNER JOIN SCRITTURA ON CONTENUTO.NrCommento = SCRITTURA.NrCommento WHERE SCRITTURA.NomeUtente = ?";
                 break;
             }
         }
-        $decor = "SELECT INTERAZIONE.ElementID FROM (" + $query + ") WHERE INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
-        $stmt = $this->db->prepare($decor);
-        $stmt->bind_param('si', readCookie('NomeUtente'), false);
-        $stmt->execute();
-        $element_id_dislike = $stmt->get_result();
-        $stmt->bind_param('si', readCookie('NomeUtente'), true);
-        $stmt->execute();
-        $element_id_like = $stmt->get_result();
+
+        $decor .= $condition;
+        $decor .= "), (SELECT SCRITTURA.NrCommento FROM SCRITTURA WHERE SCRITTURA.NomeUtente";
+        $decor .= $condition;
+        $decor .= ")) AND INTERAZIONE.NomeUtente = ? AND INTERAZIONE.Tipo = ?";
+                
+        $deco = $this->db->prepare($decor);
+        if ($relation_selection == "dislike") {
+            $deco->bind_param('sisisi', $username, false, $username, false, $username, false);
+            $deco->execute();
+            $element_id_dislike = $deco->get_result();
+            $deco->bind_param('sisisi', $username, false, $username, false, $username, true);
+            $deco->execute();
+            $element_id_like = $deco->get_result();
+        } else if ($relation_selection == "like") {
+            $deco->bind_param('sisisi', $username, true, $username, true, $username, false);
+            $deco->execute();
+            $element_id_dislike = $deco->get_result();
+            $deco->bind_param('sisisi', $username, true, $username, true, $username, true);
+            $deco->execute();
+            $element_id_like = $deco->get_result();
+        } else {
+            $deco->bind_param('sssi', $username, $username, $username, false);
+            $deco->execute();
+            $element_id_dislike = $deco->get_result();
+            $deco->bind_param('sssi', $username, $username, $username, true);
+            $deco->execute();
+            $element_id_like = $deco->get_result();
+        }
+
+        $query .= $condition;
+        $query .= " GROUP BY POST.NrPost";
         switch($sort_selection) {
             case "data" {
                 $query .= " ORDER BY DataPost";                
                 break;
             }
             case "like" {
-                $query .= " GROUP BY NrPost HAVING INTERAZIONE.Tipo = ? ORDER BY COUNT(INTERAZIONE.Tipo)";  
+                $query .= " HAVING INTERAZIONE.Tipo = ? ORDER BY COUNT(INTERAZIONE.Tipo)";  
                 $bind += 1;              
                 break;
             }
             case "comm" {
-                $query .= " GROUP BY NrPost ORDER BY COUNT(CONTENUTO.NrCommento)";                
+                $query .= " ORDER BY COUNT(CONTENUTO.NrCommento)";                
                 break;
             }
         }
@@ -191,7 +220,6 @@
         }
         $stmt->execute();
         $post_list = $stmt->get_result();
-        toDecorate($post_list);
     }
 
     function notify($text, $receiver, $request) {
