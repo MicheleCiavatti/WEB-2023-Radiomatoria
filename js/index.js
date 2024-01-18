@@ -1,22 +1,3 @@
-function cookiesSet() {
-    return !isempty(document.cookie);
-}
-
-function readCookie(cookieName) {
-    let cookies = document.cookie;
-    let cookieArray = cookies.split("; ");
- 
-    for (let i = 0; i < cookieArray.length; i++) {
-       let cookie = cookieArray[i];
-       let [name, value] = cookie.split("=");
-      
-       if (name === cookieName) {
-          return decodeURIComponent(value);
-       }
-    }
-    return null;
-}
-
 function mostraFormPost() {
     const add_post = document.getElementsByName('add_post_form');
     if (add_post.hidden == true) {
