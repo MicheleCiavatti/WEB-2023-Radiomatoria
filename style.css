@@ -70,6 +70,7 @@ td {
 
 section {
     padding-bottom: 1px;
+    padding-left: 5px;
 }
 
 section p {
@@ -85,7 +86,7 @@ section > a {
     border: 1px solid black;
     border-radius: 8px;
     text-decoration: none;
-    margin-left: 10px    
+    margin-left: 10px;
 }
 
 dl {
@@ -96,4 +97,23 @@ img, figcaption {
     float: right;
     max-height: 256px;
     max-width: 256px;
+}
+
+button {
+    margin: 5px 10px 5px 5px;
+}
+
+section > h3 {
+    display: inline-block;
+    margin: 10px;
+}
+
+section > button {
+    border: none;
+    color: chocolate;
+    font-size: medium;
+}
+
+aside > ul {
+    background-color: navajowhite;
 }
