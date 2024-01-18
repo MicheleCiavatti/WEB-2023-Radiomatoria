@@ -32,7 +32,6 @@ create table BANDE (
 create table COMMENTI (
      Creatore varchar(50) not null,
      NrPost int not null,
-     Scrittore varchar(50) not null,
      NrCommento int not null,
      DataCommento date not null,
      TestoCommento varchar(500) not null,
@@ -40,31 +39,24 @@ create table COMMENTI (
      constraint IDCOMMENTO primary key (Creatore, NrPost, Scrittore, NrCommento));
 
 create table DISPONIBILITA (
-     OraInizio int not null,
-     MinutiInizio int not null,
+     OraInizio time not null,
+     OraFine time not null,
      Utente varchar(50) not null,
      constraint IDDISPONIBILITA primary key (Utente, OraInizio, MinutiInizio));
-
-create table FASCE_ORARIE (
-     OraInizio int not null,
-     MinutiInizio int not null,
-     OraFine int not null,
-     MinutiFine int not null,
-     constraint IDFASCIA_ORARIA primary key (OraInizio, MinutiInizio));
 
 create table FOLLOW (
      Followed varchar(50) not null,
      Follower varchar(50) not null,
      constraint IDFOLLOW primary key (Follower, Followed));
 
-create table FREQUENZE (
-     MHz float(10) not null,
-     constraint IDFREQUENZA primary key (MHz));
+create table BLOCCO (
+     Bloccato varchar(50) not null,
+     Bloccante varchar(50) not null,
+     constraint IDFOLLOW primary key (Bloccante, Bloccato));
 
 create table INTERAZIONI (
      Creatore varchar(50) not null,
-     NrPost int not null,
-     Interagente varchar(50) not null,
+     ElementId int not null,
      Tipo char not null,
      constraint IDINTERAZIONI primary key (Interagente, Creatore, NrPost));
 
@@ -74,6 +66,7 @@ create table NOTIFICHE (
      IdNotifica int not null,
      TestoNotifica varchar(300) not null,
      Richiesta char not null,
+     Lettura char not null,
      constraint IDNOTIFICA primary key (Mandante, Ricevente, IdNotifica));
 
 create table POST (
@@ -107,16 +100,16 @@ alter table AMICIZIA add constraint FKAmico2
      foreign key (Amico2)
      references UTENTI (NomeUtente);
 
-alter table BANDE add constraint FKBAN_FRE
-     foreign key (MHz)
-     references FREQUENZE (MHz);
+alter table BLOCCO add constraint FKBloccante
+     foreign key (Bloccante)
+     references UTENTI (NomeUtente);
+
+alter table BLOCCO add constraint FKBloccato
+     foreign key (Bloccato)
+     references UTENTI (NomeUtente);
 
 alter table BANDE add constraint FKBAN_UTE
      foreign key (NomeUtente)
-     references UTENTI (NomeUtente);
-
-alter table COMMENTI add constraint FKSCRITTURA
-     foreign key (Scrittore)
      references UTENTI (NomeUtente);
 
 alter table COMMENTI add constraint FKCONTENUTO
@@ -126,10 +119,6 @@ alter table COMMENTI add constraint FKCONTENUTO
 alter table DISPONIBILITA add constraint FKDIS_UTE
      foreign key (Utente)
      references UTENTI (NomeUtente);
-
-alter table DISPONIBILITA add constraint FKDIS_FAS
-     foreign key (OraInizio, MinutiInizio)
-     references FASCE_ORARIE (OraInizio, MinutiInizio);
 
 alter table FOLLOW add constraint FKFollower
      foreign key (Follower)
