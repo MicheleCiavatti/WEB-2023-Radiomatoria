@@ -20,5 +20,5 @@ function readCookie(cookieName) {
 
 function accessProfile(username) {
     window.location.href = "profile.php";
-    document.getElementsByTagName("body").onload("<?php ../php/profileAccess(" + username + "); ?>");
+    document.getElementsByTagName("body").onload("<?php profileAccess(" + username + "); ?>");
 }
