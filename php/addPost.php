@@ -2,7 +2,7 @@
     function addPost($post_img, $post_text) {
         $stmt = $this->db->prepare("INSERT INTO POST (Creatore, NrPost, DataPost, TestoPost, ImmaginePost) VALUES (?, NOW(), ?, ?)");
         do {
-            $pid = uniqid();
+            $pid = hexdec(uniqid());
             $idcheck = $this->db->prepare("SELECT COUNT(*) FROM COMMENTI WHERE NrPost = ? OR NrCommento = ?");
             $idcheck->bind_param('ii', $pid, $pid);
             $idcheck->execute();
