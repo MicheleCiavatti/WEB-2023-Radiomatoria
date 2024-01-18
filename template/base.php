@@ -104,8 +104,18 @@
                             </tr>
                             <tr><td><button onclick="mostraCommentiPost(<?php echo $post['NrPost']; ?>)">Mostra commenti</button></td></tr>
                         </table>
-                        <ul id="$post['NrPost']_comment_list">
-                            <?php foreach($post["NrPost"] as $commento): ?>
+                        <ul id="<?php echo $post['NrPost']; ?>_comment_list">
+                            <?php 
+                                $query = "SELECT COMMENTO.*, COUNT(CASE WHEN INTERAZIONE.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
+                                SCRITTURA.NomeUtente AS UserCommento
+                                FROM (CONTENUTO INNER JOIN COMMENTO ON CONTENUTO.NrCommento = COMMENTO.NrCommento LEFT JOIN INTERAZIONE ON COMMENTO.NrCommento = INTERAZIONE.ElementId)
+                                INNER JOIN SCRITTURA ON CONTENUTO.NrCommento = SCRITTURA.NrCommento WHERE CONTENUTO.NrPost = ? ORDER BY COMMENTO.DataCommento DESC";
+                                $stmt = $this->db->prepare($query);
+                                $stmt->bind_param('ssi', $post['NrPost']);
+                                $stmt->execute();
+                                $commenti = $stmt->get_result();
+                                foreach($commenti as $commento):
+                            ?>
                                 <li>
                                     <table>
                                         <tr>
@@ -155,10 +165,12 @@
                             </form>
                         <?php endif; ?>
                         </li>
-                    <?php endforeach; ?>
+                    <?php endforeach;
+                    decorate($element_id_like, $element_id_dislike); ?>
                 </ul>
             </article>
         </main>
         <script src="js/index.js" type="text/javascript"></script>
+        <script src="js/generale.js" type="text/javascript"></script>
     </body>
 </html>
