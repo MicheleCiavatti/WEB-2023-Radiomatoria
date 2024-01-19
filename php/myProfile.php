@@ -1,8 +1,7 @@
 <?php
-session_start();
+require_once './includes/profileInfo.inc.php';
 if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
     header('location: ../../login.html?error=needtologin');
-require_once './includes/profileInfo.inc.php';
 ?>
 <!DOCTYPE html>
 <html lang="it">
