@@ -1,3 +1,15 @@
+<?php
+    require_once './php/profileAccess.php';
+    $data = profileAccess('AlessandroC'); //TEST
+    $utente = $data[0];
+    $frequenze = $data[1];
+    $orari = $data[2];
+    $amici = $data[3];
+    $seguiti = $data[4];
+    $bloccati = $data[5];
+    $post_list = [];
+    setcookie("NomeUtente", "AlessandroC",0,"/"); //TEST
+?>
 <!DOCTYPE html>
 <html lang="it">
     <head>
@@ -11,12 +23,12 @@
         </header>
         <nav>
             <ul>
-                <?php if (cookiesSet()): ?>
-                    <li id="pag_profilo"><a href="accessProfile(readCookie('NomeUtente'))">Profilo</a></li>
+                <?php if (isset($_COOKIE['NomeUtente'])): ?>
+                    <li id="pag_profilo"><a href="accessProfile($_COOKIE['NomeUtente'])">Profilo</a></li>
                 <?php endif; ?>
                 <li id="pag_principale"><a href="index.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                <?php if (cookiesSet()): ?>
+                <?php if (isset($_COOKIE['NomeUtente'])): ?>
                     <li id="pag_notifiche"><a href="notifiche.php">Notifiche</a></li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
@@ -39,7 +51,7 @@
                         </tr>
                         <tr>
                             <td>Comune</td>
-                            <td><?php echo $utente["Citta"] ?></td>
+                            <td><?php echo $utente["Città"] ?></td>
                         </tr>
                         <tr>
                             <td>Data di nascita</td>
@@ -53,8 +65,9 @@
                             <td>Frequenze preferite (MegaHertz)</td>
                             <td>
                                 <ul id="lista_frequenze">
-                                    <?php foreach($frequenze as $frequenza): ?>
-                                    <li><?php echo $frequenza["MHz"]; ?></li>
+                                    <?php foreach($frequenze as $frequenza): 
+                                    $frequenza = (array) $frequenza; ?>
+                                    <li><?php echo $frequenza[0]; ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
@@ -113,7 +126,7 @@
                             <td>
                                 <ul id="lista_orari">
                                     <?php foreach($orari as $intervallo): ?>
-                                    <li><?php echo $intervallo["oraInizio"] + "-" + $intervallo["oraFine"]; ?></li>
+                                    <li><?php echo $intervallo[0] . " – " . $intervallo[1]; ?></li>
                                     <?php tabellaOrari($intervallo["oraInizio"].getHours(), $intervallo["oraFine"].getHours());
                                     endforeach; ?>
                                 </ul>
@@ -121,7 +134,7 @@
                         </tr>
                     </table>
                 </section>
-                <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
+                <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
                     <section>
                         <button class="access_required" onclick="modificaProfilo($utente['NomeUtente'])">Inserisci o modifica</button>
                         <form action="alterProfile.php" method="post" name="alter_form">
@@ -130,36 +143,37 @@
                             <table>
                                 <tr>
                                     <td><label for="user_name">Nome utente</label></td>
-                                    <td><input type="text" name="user_name" id="user_name" value="$utente['NomeUtente']"/></td>
+                                    <td><input type="text" name="user_name" id="user_name" value="<?php echo $utente['NomeUtente']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_photo">Immagine di profilo</label></td>
-                                    <td><input type="image" name="user_photo" id="user_photo" src="$utente['FotoProfilo']" alt=""/></td>
+                                    <td><input type="image" name="user_photo" id="user_photo" src="<?php echo $utente['FotoProfilo']; ?>" alt=""/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_address">Indirizzo (di casa)</label></td>
-                                    <td><input type="text" name="user_address" id="user_address" value="$utente['Indirizzo']"/></td>
+                                    <td><input type="text" name="user_address" id="user_address" value="<?php echo $utente['Indirizzo']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_city">Comune di residenza</label></td>
-                                    <td><input type="text" name="user_city" id="user_city" value="$utente['Citta']"/></td>
+                                    <td><input type="text" name="user_city" id="user_city" value="<?php echo $utente['Città']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_dob">Data di nascita</label></td>
-                                    <td><input type="date" name="user_dob" id="user_dob" value="$utente['DataNascita']"/></td>
+                                    <td><input type="date" name="user_dob" id="user_dob" value="<?php echo $utente['DataNascita']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_mail">Recapito e-mail</label></td>
-                                    <td><input type="email" name="user_mail" id="user_mail" value="$utente['IndirizzoMail']"/></td>
+                                    <td><input type="email" name="user_mail" id="user_mail" value="<?php echo $utente['IndirizzoMail']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <table>
                                             <caption>Frequenze preferite (aggiungere progressivemente in MegaHertz)</caption>
-                                            <?php foreach($frequenze as $frequenza): ?>
+                                            <?php foreach($frequenze as $frequenza): 
+                                            $frequenza = (array) $frequenza; ?>
                                                 <tr>
-                                                    <td><?php echo $frequenza["MHz"]; ?></td>
-                                                    <td><button onclick="removeFreq($frequenza['MHz'])">Rimuovi</button></td>
+                                                    <td><?php echo $frequenza[0]; ?></td>
+                                                    <td><button onclick="removeFreq(<?php echo $frequenza[0]; ?>)">Rimuovi</button></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                                 <tr>
@@ -175,8 +189,8 @@
                                             <caption>Orari in radio (non si accettano sovrapposizioni)</caption>
                                             <?php foreach($orari as $intervallo): ?>
                                                 <tr>
-                                                    <td><?php echo $intervallo["oraInizio"] + "-" + $intervallo["oraFine"]; ?></td>
-                                                    <td><button onclick="removeInterval($intervallo['oraInizio'])">Rimuovi</button></td>
+                                                    <td><?php echo $intervallo[0] . "–" . $intervallo[1]; ?></td>
+                                                    <td><button onclick="removeInterval($intervallo[0])">Rimuovi</button></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                                 <tr>
@@ -193,25 +207,25 @@
                             </table>
                             </fieldset>
                             <fieldset>
-                            <legend>Campi privati</legend>
-                            <table>
-                                <tr>
-                                    <td><label for="user_clue">Indizio per recupero password</label></td>
-                                    <td><input type="text" name="user_clue" id="user_clue" value="<?php echo $utente['Indizio']; ?>"/></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="user_passwd0">Vecchia password</label></td>
-                                    <td><input type="password" name="user_passwd0" id="user_passwd0" minlength="8"/></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="user_passwd1">Nuova password</label></td>
-                                    <td><input type="password" name="user_passwd1" id="user_passwd1" minlength="8"/></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="user_passwd2">Conferma nuova password</label></td>
-                                    <td><input type="password" name="user_passwd2" id="user_passwd2" minlength="8"/></td>
-                                </tr>
-                            </table>
+                                <legend>Campi privati</legend>
+                                <table>
+                                    <tr>
+                                        <td><label for="user_clue">Indizio per recupero password</label></td>
+                                        <td><input type="text" name="user_clue" id="user_clue" value="<?php echo $utente['Indizio']; ?>"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="user_passwd0">Vecchia password</label></td>
+                                        <td><input type="password" name="user_passwd0" id="user_passwd0" minlength="8"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="user_passwd1">Nuova password</label></td>
+                                        <td><input type="password" name="user_passwd1" id="user_passwd1" minlength="8"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="user_passwd2">Conferma nuova password</label></td>
+                                        <td><input type="password" name="user_passwd2" id="user_passwd2" minlength="8"/></td>
+                                    </tr>
+                                </table>
                             </fieldset>
                             <input type="reset" value="Annulla" title="Annulla"/>
                             <input type="submit" value="Invia"/>
@@ -219,7 +233,7 @@
                     </section>
                 <?php endif; ?>
             </header>
-            <?php if(cookiesSet() && $utente['NomeUtente'] != readCookie('NomeUtente')): ?>
+            <?php if(isset($_COOKIE['NomeUtente']) && $utente['NomeUtente'] != $_COOKIE['NomeUtente']): ?>
                 <section id="comandi">
                     <h3>Comandi</h3>
                     <?php if(isFriend($utente['NomeUtente'])): ?>
@@ -260,7 +274,7 @@
                         <label for="order">In ordine decrescente</label>
                         <input type="checkbox" name="order" id="order" checked/>
                     </form>
-                    <?php if (readCookie('NomeUtente')): ?>
+                    <?php if (isset($_COOKIE['NomeUtente'])): ?>
                         <button id="add_post_button" class="access_required" onclick="mostraFormPost()">Aggiungi post</button>
                         <form action="addPost.php" method="post" name="add_post_form">
                             <table>
@@ -286,21 +300,21 @@
                             <li>
                             <table>
                                 <tr>
-                                    <td><button onclick="accessProfile($post['Creatore'])"></button><?php echo $post["Creatore"]; ?></td>
+                                    <td><button onclick="accessProfile(<?php echo $post['Creatore']; ?>)"></button><?php echo $post["Creatore"]; ?></td>
                                     <td><?php echo $post["DataPost"]; ?></td>
-                                    <?php if ($post["Creatore"] == readCookie('NomeUtente')): ?>
-                                        <td><button onclick="removePost($post['NrPost'])" class="access_required">Rimuovi</button></td>
+                                    <?php if ($post["Creatore"] == $_COOKIE['NomeUtente']): ?>
+                                        <td><button onclick="removePost(<?php echo $post['NrPost']; ?>)" class="access_required">Rimuovi</button></td>
                                     <?php endif; ?>
                                 </tr>
                                 <tr><td><?php echo $post["TestoPost"]; ?></td></tr>
-                                <tr><td><img src="$post['ImmaginePost']" alt=""/></td></tr>
+                                <tr><td><img src="<?php echo $post['ImmaginePost']; ?>" alt=""/></td></tr>
                                 <tr>
                                     <td><?php echo $post["LikePost"]; ?></td>
-                                    <td><button name="$post['NrPost']_like_button" class="preference_button" onclick="<?php if (readCookie('NomeUtente')): ?>like($post['NrPost'])<?php endif; ?>">Like</button></td>
+                                    <td><button name="<?php echo $post['NrPost']; ?>_like_button" class="preference_button" onclick="<?php if ($_COOKIE['NomeUtente']): ?>like(<?php echo $post['NrPost']; ?>)<?php endif; ?>">Like</button></td>
                                     <td><?php echo $post["DislikePost"]; ?></td>
-                                    <td><button name="$post['NrPost']_dislike_button" class="preference_button" onclick="<?php if (readCookie('NomeUtente')): ?>dislike($post['NrPost'])<?php endif; ?>">Dislike</button></td>
-                                    <?php if (readCookie('NomeUtente')): ?>
-                                        <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti($post['NrPost'], $post['Creatore'], $post['DataPost'], '')">Commenta</button></td>
+                                    <td><button name="<?php echo $post['NrPost']; ?>_dislike_button" class="preference_button" onclick="<?php if ($_COOKIE['NomeUtente']): ?>dislike(<?php echo $post['NrPost']; ?>)<?php endif; ?>">Dislike</button></td>
+                                    <?php if ($_COOKIE['NomeUtente']): ?>
+                                        <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti(<?php echo $post['NrPost']; ?>, <?php echo $post['Creatore']; ?>, <?php echo $post['DataPost']; ?>, '')">Commenta</button></td>
                                     <?php endif; ?>
                                 </tr>
                                 <tr><td><button onclick="mostraCommentiPost($post['NrPost'])">Mostra commenti</button></td></tr>
@@ -318,30 +332,30 @@
                                     <li>
                                         <table>
                                             <tr>
-                                                <td><button onclick="accessProfile($commento['Creatore'])"><?php echo $commento["Creatore"]; ?></button></td>
+                                                <td><button onclick="accessProfile(<?php echo $commento['Creatore']; ?>)"><?php echo $commento["Creatore"]; ?></button></td>
                                                 <td><?php echo $commento["DataCommento"]; ?></td>
-                                                <?php if($commento['Creatore'] == readCookie('NomeUtente')): ?>
-                                                    <td><button onclick="removeComment($commento['NrCommento'])" class="access_required">Rimuovi</button></td>
+                                                <?php if($commento['Creatore'] == $_COOKIE['NomeUtente']): ?>
+                                                    <td><button onclick="removeComment(<?php echo $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
                                                 <?php endif; ?>
                                             </tr>
                                             <tr><td><?php echo $commento["TestoCommento"]; ?></td></tr>
-                                            <tr><td><img src="$commento['ImmagineCommento']" alt=""/></td></tr>
+                                            <tr><td><img src="<?php echo $commento['ImmagineCommento']; ?>" alt=""/></td></tr>
                                             <tr>
                                                 <td><?php echo $commento["LikeCommento"]; ?></td>
-                                                <td><button id="$commento['NrCommento']_like_button" class="preference_button"
-                                                onclick="<?php if (readCookie('NomeUtente')): ?>like($commento['NrCommento'])<?php endif; ?>">Like</button></td>
+                                                <td><button id="<?php echo $commento['NrCommento']; ?>_like_button" class="preference_button"
+                                                onclick="<?php if ($_COOKIE['NomeUtente']): ?>like(<?php echo $commento['NrCommento']; ?>)<?php endif; ?>">Like</button></td>
                                                 <td><?php echo $commento["DislikeCommento"]; ?></td>
-                                                <td><button id="$commento['NrCommento']_dislike_button" class="preference_button"
-                                                onclick="<?php if (readCookie('NomeUtente')): ?>dislike($commento['NrCommento'])<?php endif; ?>">Dislike</button></td>
-                                                <?php if readCookie('NomeUtente'): ?>
-                                                    <td><button onclick="mostraFormCommenti($post['NrPost'], $post['Creatore'], $post['DataPost'], '@' + $commento['Creatore'])">Rispondi</button></td>
+                                                <td><button id="<?php echo $commento['NrCommento']; ?>_dislike_button" class="preference_button"
+                                                onclick="<?php if ($_COOKIE['NomeUtente']): ?>dislike(<?php echo $commento['NrCommento']; ?>)<?php endif; ?>">Dislike</button></td>
+                                                <?php if (isset($_COOKIE['NomeUtente'])): ?>
+                                                    <td><button onclick="mostraFormCommenti(<?php echo $post['NrPost']; ?>, <?php echo $post['Creatore']; ?>, <?php echo $post['DataPost']; ?>, '@' + <?php echo $commento['Creatore']; ?>)">Rispondi</button></td>
                                                 <?php endif; ?>
                                             </tr>
                                         </table>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <?php if (cookiesSet()): ?>
+                            <?php if (isset($_COOKIE['NomeUtente'])): ?>
                                 <form action="addComment.php" method="post" name="add_comment_form">
                                     <table>
                                         <tr>
@@ -373,30 +387,30 @@
                 <h2>Amici</h2>
                 <ul>
                     <?php foreach($amici as $amico): ?>
-                        <li><img src="$amico['FotoProfilo']" alt=""/></li>
-                        <li><button onclick="accessProfile($amico['Amico2'])"><?php echo $amico["NomeUtente"] ?></button></li>
-                        <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
-                            <li><button class="access_required" onclick="removeFriend($amico['Amico2'])">Rimuovi</button></li>
+                        <li><img src="<?php echo $amico[1]; ?>" alt=""/></li>
+                        <li><button onclick="accessProfile(<?php echo $amico[0]; ?>)"><?php echo $amico[0]; ?></button></li>
+                        <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
+                            <li><button class="access_required" onclick="removeFriend($amico[0])">Rimuovi</button></li>
                         <?php endif;
                     endforeach; ?>
                 </ul>
                 <h2>Seguiti</h2>
                 <ul>
                     <?php foreach($seguiti as $seguito): ?>
-                        <li><img src="$seguito['FotoProfilo']" alt=""/></li>
-                        <li><button onclick="accessProfile($seguito['Followed'])"><?php echo $seguito["NomeUtente"] ?></button></li>
-                        <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
-                            <li><button class="access_required" onclick="removeFollowed($seguito['Followed'])">Rimuovi</button></li>
+                        <li><img src="<?php echo $seguito[1]; ?>" alt=""/></li>
+                        <li><button onclick="accessProfile(<?php echo $seguito[0]; ?>)"><?php echo $seguito[0]; ?></button></li>
+                        <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
+                            <li><button class="access_required" onclick="removeFollowed($seguito[0])">Rimuovi</button></li>
                         <?php endif;
                     endforeach; ?>
                 </ul>
-                <?php if($utente['NomeUtente'] == readCookie('NomeUtente')): ?>
+                <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
                     <h3>Bloccati</h2>
                     <ul>
                         <?php foreach($bloccati as $bloccato): ?>
-                            <li><img src="$bloccato['FotoProfilo']" alt=""/></li>
-                            <li><button onclick="accessProfile($bloccato['Bloccato'])"><?php echo $bloccato["Bloccato"] ?></button></li>
-                            <li><button class="access_required" onclick="removeBlocked($bloccato['Bloccato'])">Perdona</button></li>
+                            <li><img src="<?php echo $bloccato[1]; ?>" alt=""/></li>
+                            <li><button onclick="accessProfile(<?php echo $bloccato[0]; ?>)"><?php echo $bloccato[0]; ?></button></li>
+                            <li><button class="access_required" onclick="removeBlocked($bloccato[0])">Perdona</button></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
