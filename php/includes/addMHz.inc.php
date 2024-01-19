@@ -13,6 +13,7 @@ if (isset($_POST['frequency'])) {
     if (!$s->execute(array($uid, $f))) {
         $s = null;
         header('location: ../myProfile.php?error=stmtfailed');
-    };
+        exit();
+    }
     header('location: ../myProfile.php?error=none');
 }

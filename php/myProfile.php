@@ -29,7 +29,7 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
         </nav>
         <main>
             <section>
-                <h2><?php echo $_SESSION['NomeUtente']?>' info</h2>
+                <h2><?php echo $_SESSION['NomeUtente']?>'s info</h2>
                 <ul>
                     <li><?php echo $_SESSION['Indirizzo']?></li>
                     <li><?php echo $_SESSION['Città']?></li>
@@ -37,8 +37,9 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
                     <li><?php echo $_SESSION['IndirizzoMail']?></li>
                 </ul>
             </section>
+            <!--HANDLIING USER FREQUENCIES: both retrieving and inserting-->
             <section>
-                <h2><?php echo $_SESSION['NomeUtente']?>' frequencies</h2>
+                <h2><?php echo $_SESSION['NomeUtente']?>'s frequencies</h2>
                 <ul>
                     <?php 
                         getFrequencies($_SESSION['NomeUtente']);
@@ -49,6 +50,23 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
                 </ul>
                 <form action="includes/addMHz.inc.php" method="post">
                     <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
+                    <input type="submit" value="Aggiungi">
+                </form>
+            </section>
+            <!--HANDLING USER TIME SLOTS: both retrieving and inserting-->
+            <section>
+                <h2><?php echo $_SESSION['NomeUtente']?>'s time slots</h2>
+                <ul>
+                    <?php
+                        getTimeSlots($_SESSION['NomeUtente']);
+                        foreach($_SESSION['Orari'] as $t):
+                    ?>
+                    <li><?= $t[0] ?> - <?= $t[1] ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <form action="includes/addTimeSlot.inc.php" method="post">
+                    <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
+                    <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
                     <input type="submit" value="Aggiungi">
                 </form>
             </section>
