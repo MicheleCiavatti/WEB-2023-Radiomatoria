@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require __DIR__ . "/../classes/dbh.classes.php";
+    require_once __DIR__ . "/../classes/dbh.classes.php";
     
     function getFrequencies($uid) {
         $dbh = new Dbh;

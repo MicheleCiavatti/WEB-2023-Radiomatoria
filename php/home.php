@@ -1,5 +1,6 @@
 <?php
 session_start();
+/*Check for user logged: if we want to allow a user not logged to access this page, this need to be changed*/
 if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
     header('location: ../../login.html?error=needtologin');
 ?>
@@ -20,9 +21,9 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
         </aside>
         <nav>
             <ul>
-                <li><a href="../profile.php">Profilo</a></li>
+                <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                 <li><a href="#">Home page</a></li>
-                <li><a href="guide.html">Guida</a></li>
+                <li><a href="guide.php">Guida</a></li>
                 <li><a href="includes/logout.inc.php">Logout</a></li>
                 <li><a href="#">Notifiche</a></li>
             </ul>
