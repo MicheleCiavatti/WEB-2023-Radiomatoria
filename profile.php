@@ -38,24 +38,24 @@
                 <section>
                     <table>
                         <tr>
-                            <td><img src="<?php echo $utente['FotoProfilo'] ?>" alt=""/></td>
-                            <td><?php echo $utente["NomeUtente"] ?></td>
+                            <td><img src="<?= $utente['FotoProfilo'] ?>" alt=""/></td>
+                            <td><?= $utente["NomeUtente"] ?></td>
                         </tr>
                         <tr>
                             <td>Indirizzo</td>
-                            <td><?php echo $utente["Indirizzo"] ?></td>
+                            <td><?= $utente["Indirizzo"] ?></td>
                         </tr>
                         <tr>
                             <td>Comune</td>
-                            <td><?php echo $utente["Città"] ?></td>
+                            <td><?= $utente["Città"] ?></td>
                         </tr>
                         <tr>
                             <td>Data di nascita</td>
-                            <td><?php echo $utente["DataNascita"] ?></td>
+                            <td><?= $utente["DataNascita"] ?></td>
                         </tr>
                         <tr>
                             <td>E-mail</td>
-                            <td><?php echo $utente["IndirizzoMail"] ?></td>
+                            <td><?= $utente["IndirizzoMail"] ?></td>
                         </tr>
                         <tr>
                             <td>Frequenze preferite (MegaHertz)</td>
@@ -63,16 +63,16 @@
                                 <ul id="lista_frequenze">
                                     <?php foreach($frequenze as $frequenza): 
                                     $frequenza = (array) $frequenza; ?>
-                                    <li><?php echo $frequenza[0]; ?></li>
+                                    <li><?= $frequenza[0]; ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <table>
+                                <table onload="oraCorrente()">
                                     <caption>Orari di presenza in radio</caption>
-                                    <tr id="intestazione_orari" onload="oraCorrente()">
+                                    <tr id="intestazione_orari">
                                         <th></th>
                                         <th>1</th>
                                         <th>2</th>
@@ -122,7 +122,7 @@
                             <td>
                                 <ul id="lista_orari">
                                     <?php foreach($orari as $intervallo): ?>
-                                        <li onload="tabellaOrari(<?php echo $intervallo[0]; ?>, <?php echo $intervallo[1]; ?>)"><?php echo $intervallo[0] . " – " . $intervallo[1]; ?></li>
+                                        <li onload="tabellaOrari(<?= $intervallo[0]; ?>, <?= $intervallo[1]; ?>)"><?= $intervallo[0] . " – " . $intervallo[1]; ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
@@ -138,27 +138,27 @@
                             <table>
                                 <tr>
                                     <td><label for="user_name">Nome utente</label></td>
-                                    <td><input type="text" name="user_name" id="user_name" value="<?php echo $utente['NomeUtente']; ?>"/></td>
+                                    <td><input type="text" name="user_name" id="user_name" value="<?= $utente['NomeUtente']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_photo">Immagine di profilo</label></td>
-                                    <td><input type="image" name="user_photo" id="user_photo" src="<?php echo $utente['FotoProfilo']; ?>" alt=""/></td>
+                                    <td><input type="image" name="user_photo" id="user_photo" src="<?= $utente['FotoProfilo']; ?>" alt=""/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_address">Indirizzo (di casa)</label></td>
-                                    <td><input type="text" name="user_address" id="user_address" value="<?php echo $utente['Indirizzo']; ?>"/></td>
+                                    <td><input type="text" name="user_address" id="user_address" value="<?= $utente['Indirizzo']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_city">Comune di residenza</label></td>
-                                    <td><input type="text" name="user_city" id="user_city" value="<?php echo $utente['Città']; ?>"/></td>
+                                    <td><input type="text" name="user_city" id="user_city" value="<?= $utente['Città']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_dob">Data di nascita</label></td>
-                                    <td><input type="date" name="user_dob" id="user_dob" value="<?php echo $utente['DataNascita']; ?>"/></td>
+                                    <td><input type="date" name="user_dob" id="user_dob" value="<?= $utente['DataNascita']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td><label for="user_mail">Recapito e-mail</label></td>
-                                    <td><input type="email" name="user_mail" id="user_mail" value="<?php echo $utente['IndirizzoMail']; ?>"/></td>
+                                    <td><input type="email" name="user_mail" id="user_mail" value="<?= $utente['IndirizzoMail']; ?>"/></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -167,8 +167,8 @@
                                             <?php foreach($frequenze as $frequenza): 
                                             $frequenza = (array) $frequenza; ?>
                                                 <tr>
-                                                    <td><?php echo $frequenza[0]; ?></td>
-                                                    <td><button onclick="removeFreq(<?php echo $frequenza[0]; ?>)">Rimuovi</button></td>
+                                                    <td><?= $frequenza[0]; ?></td>
+                                                    <td><button onclick="removeFreq(<?= $frequenza[0]; ?>)">Rimuovi</button></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                                 <tr>
@@ -184,7 +184,7 @@
                                             <caption>Orari in radio (non si accettano sovrapposizioni)</caption>
                                             <?php foreach($orari as $intervallo): ?>
                                                 <tr>
-                                                    <td><?php echo $intervallo[0] . "–" . $intervallo[1]; ?></td>
+                                                    <td><?= $intervallo[0] . "–" . $intervallo[1]; ?></td>
                                                     <td><button onclick="removeInterval($intervallo[0])">Rimuovi</button></td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -206,7 +206,7 @@
                                 <table>
                                     <tr>
                                         <td><label for="user_clue">Indizio per recupero password</label></td>
-                                        <td><input type="text" name="user_clue" id="user_clue" value="<?php echo $utente['Indizio']; ?>"/></td>
+                                        <td><input type="text" name="user_clue" id="user_clue" value="<?= $utente['Indizio']; ?>"/></td>
                                     </tr>
                                     <tr>
                                         <td><label for="user_passwd0">Vecchia password</label></td>
@@ -295,26 +295,26 @@
                             <li>
                             <table>
                                 <tr>
-                                    <td><button onclick="accessProfile(<?php echo $post['Creatore']; ?>)"></button><?php echo $post["Creatore"]; ?></td>
-                                    <td><?php echo $post["DataPost"]; ?></td>
+                                    <td><button onclick="accessProfile(<?= $post['Creatore']; ?>)"></button><?= $post["Creatore"]; ?></td>
+                                    <td><?= $post["DataPost"]; ?></td>
                                     <?php if ($post["Creatore"] == $_COOKIE['NomeUtente']): ?>
-                                        <td><button onclick="removePost(<?php echo $post['NrPost']; ?>)" class="access_required">Rimuovi</button></td>
+                                        <td><button onclick="removePost(<?= $post['NrPost']; ?>)" class="access_required">Rimuovi</button></td>
                                     <?php endif; ?>
                                 </tr>
-                                <tr><td><?php echo $post["TestoPost"]; ?></td></tr>
-                                <tr><td><img src="<?php echo $post['ImmaginePost']; ?>" alt=""/></td></tr>
+                                <tr><td><?= $post["TestoPost"]; ?></td></tr>
+                                <tr><td><img src="<?= $post['ImmaginePost']; ?>" alt=""/></td></tr>
                                 <tr>
-                                    <td><?php echo $post["LikePost"]; ?></td>
-                                    <td><button name="<?php echo $post['NrPost']; ?>_like_button" class="preference_button" onclick="<?php if ($_COOKIE['NomeUtente']): ?>like(<?php echo $post['NrPost']; ?>)<?php endif; ?>">Like</button></td>
-                                    <td><?php echo $post["DislikePost"]; ?></td>
-                                    <td><button name="<?php echo $post['NrPost']; ?>_dislike_button" class="preference_button" onclick="<?php if ($_COOKIE['NomeUtente']): ?>dislike(<?php echo $post['NrPost']; ?>)<?php endif; ?>">Dislike</button></td>
+                                    <td><?= $post["LikePost"]; ?></td>
+                                    <td><button name="<?= $post['NrPost']; ?>_like_button" class="preference_button" onclick="<?php if ($_COOKIE['NomeUtente']): ?>like(<?= $post['NrPost']; ?>)<?php endif; ?>">Like</button></td>
+                                    <td><?= $post["DislikePost"]; ?></td>
+                                    <td><button name="<?= $post['NrPost']; ?>_dislike_button" class="preference_button" onclick="<?php if ($_COOKIE['NomeUtente']): ?>dislike(<?= $post['NrPost']; ?>)<?php endif; ?>">Dislike</button></td>
                                     <?php if ($_COOKIE['NomeUtente']): ?>
-                                        <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti(<?php echo $post['NrPost']; ?>, <?php echo $post['Creatore']; ?>, <?php echo $post['DataPost']; ?>, '')">Commenta</button></td>
+                                        <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti(<?= $post['NrPost']; ?>, <?= $post['Creatore']; ?>, <?= $post['DataPost']; ?>, '')">Commenta</button></td>
                                     <?php endif; ?>
                                 </tr>
                                 <tr><td><button onclick="mostraCommentiPost($post['NrPost'])">Mostra commenti</button></td></tr>
                             </table>
-                            <ul id="<?php echo $post['NrPost']; ?>_comment_list">
+                            <ul id="<?= $post['NrPost']; ?>_comment_list">
                                 <?php 
                                     $query = "SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONE.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
                                     FROM COMMENTI LEFT JOIN INTERAZIONI ON COMMENTI.NrCommento = INTERAZIONI.ElementId WHERE COMMENTI.NrPost = ? ORDER BY COMMENTI.DataCommento DESC";
@@ -327,23 +327,23 @@
                                     <li>
                                         <table>
                                             <tr>
-                                                <td><button onclick="accessProfile(<?php echo $commento['Creatore']; ?>)"><?php echo $commento["Creatore"]; ?></button></td>
-                                                <td><?php echo $commento["DataCommento"]; ?></td>
+                                                <td><button onclick="accessProfile(<?= $commento['Creatore']; ?>)"><?= $commento["Creatore"]; ?></button></td>
+                                                <td><?= $commento["DataCommento"]; ?></td>
                                                 <?php if($commento['Creatore'] == $_COOKIE['NomeUtente']): ?>
-                                                    <td><button onclick="removeComment(<?php echo $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
+                                                    <td><button onclick="removeComment(<?= $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
                                                 <?php endif; ?>
                                             </tr>
-                                            <tr><td><?php echo $commento["TestoCommento"]; ?></td></tr>
-                                            <tr><td><img src="<?php echo $commento['ImmagineCommento']; ?>" alt=""/></td></tr>
+                                            <tr><td><?= $commento["TestoCommento"]; ?></td></tr>
+                                            <tr><td><img src="<?= $commento['ImmagineCommento']; ?>" alt=""/></td></tr>
                                             <tr>
-                                                <td><?php echo $commento["LikeCommento"]; ?></td>
-                                                <td><button id="<?php echo $commento['NrCommento']; ?>_like_button" class="preference_button"
-                                                onclick="<?php if ($_COOKIE['NomeUtente']): ?>like(<?php echo $commento['NrCommento']; ?>)<?php endif; ?>">Like</button></td>
-                                                <td><?php echo $commento["DislikeCommento"]; ?></td>
-                                                <td><button id="<?php echo $commento['NrCommento']; ?>_dislike_button" class="preference_button"
-                                                onclick="<?php if ($_COOKIE['NomeUtente']): ?>dislike(<?php echo $commento['NrCommento']; ?>)<?php endif; ?>">Dislike</button></td>
+                                                <td><?= $commento["LikeCommento"]; ?></td>
+                                                <td><button id="<?= $commento['NrCommento']; ?>_like_button" class="preference_button"
+                                                onclick="<?php if ($_COOKIE['NomeUtente']): ?>like(<?= $commento['NrCommento']; ?>)<?php endif; ?>">Like</button></td>
+                                                <td><?= $commento["DislikeCommento"]; ?></td>
+                                                <td><button id="<?= $commento['NrCommento']; ?>_dislike_button" class="preference_button"
+                                                onclick="<?php if ($_COOKIE['NomeUtente']): ?>dislike(<?= $commento['NrCommento']; ?>)<?php endif; ?>">Dislike</button></td>
                                                 <?php if (isset($_COOKIE['NomeUtente'])): ?>
-                                                    <td><button onclick="mostraFormCommenti(<?php echo $post['NrPost']; ?>, <?php echo $post['Creatore']; ?>, <?php echo $post['DataPost']; ?>, '@' + <?php echo $commento['Creatore']; ?>)">Rispondi</button></td>
+                                                    <td><button onclick="mostraFormCommenti(<?= $post['NrPost']; ?>, <?= $post['Creatore']; ?>, <?= $post['DataPost']; ?>, '@' + <?= $commento['Creatore']; ?>)">Rispondi</button></td>
                                                 <?php endif; ?>
                                             </tr>
                                         </table>
@@ -381,8 +381,8 @@
                 <h2>Amici</h2>
                 <ul>
                     <?php foreach($amici as $amico): ?>
-                        <li><img src="<?php echo $amico[1]; ?>" alt=""/></li>
-                        <li><button onclick="accessProfile(<?php echo $amico[0]; ?>)"><?php echo $amico[0]; ?></button></li>
+                        <li><img src="<?= $amico[1]; ?>" alt=""/></li>
+                        <li><button onclick="accessProfile(<?= $amico[0]; ?>)"><?= $amico[0]; ?></button></li>
                         <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
                             <li><button class="access_required" onclick="removeFriend($amico[0])">Rimuovi</button></li>
                         <?php endif;
@@ -391,8 +391,8 @@
                 <h2>Seguiti</h2>
                 <ul>
                     <?php foreach($seguiti as $seguito): ?>
-                        <li><img src="<?php echo $seguito[1]; ?>" alt=""/></li>
-                        <li><button onclick="accessProfile(<?php echo $seguito[0]; ?>)"><?php echo $seguito[0]; ?></button></li>
+                        <li><img src="<?= $seguito[1]; ?>" alt=""/></li>
+                        <li><button onclick="accessProfile(<?= $seguito[0]; ?>)"><?= $seguito[0]; ?></button></li>
                         <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
                             <li><button class="access_required" onclick="removeFollowed($seguito[0])">Rimuovi</button></li>
                         <?php endif;
@@ -402,8 +402,8 @@
                     <h3>Bloccati</h2>
                     <ul>
                         <?php foreach($bloccati as $bloccato): ?>
-                            <li><img src="<?php echo $bloccato[1]; ?>" alt=""/></li>
-                            <li><button onclick="accessProfile(<?php echo $bloccato[0]; ?>)"><?php echo $bloccato[0]; ?></button></li>
+                            <li><img src="<?= $bloccato[1]; ?>" alt=""/></li>
+                            <li><button onclick="accessProfile(<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></button></li>
                             <li><button class="access_required" onclick="removeBlocked($bloccato[0])">Perdona</button></li>
                         <?php endforeach; ?>
                     </ul>
