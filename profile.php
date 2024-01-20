@@ -3,7 +3,15 @@
     $post_list = [];
     $element_id_like = [];
     $element_id_dislike = [];
-    setcookie("NomeUtente", "AlessandroC",0,"/"); //TEST
+
+    $username = $_GET['id'];
+    $data = profileAccess($username);
+    $utente = $data[0];
+    $frequenze = $data[1];
+    $orari = $data[2];
+    $amici = $data[3];
+    $seguiti = $data[4];
+    $bloccati = $data[5];
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -19,7 +27,7 @@
         <nav>
             <ul>
                 <?php if (isset($_COOKIE['NomeUtente'])): ?>
-                    <li id="pag_profilo"><a href="accessProfile($_COOKIE['NomeUtente'])">Profilo</a></li>
+                    <li id="pag_profilo"><a href="profile.php?id=<?= $_COOKIE['NomeUtente']; ?>">Profilo</a></li>
                 <?php endif; ?>
                 <li id="pag_principale"><a href="index.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
@@ -294,7 +302,7 @@
                             <li>
                             <table>
                                 <tr>
-                                    <td><button onclick="accessProfile(<?= $post['Creatore']; ?>)"></button><?= $post["Creatore"]; ?></td>
+                                    <td><a href="profile.php?id=<?= $post['Creatore']; ?>)"><?= $post["Creatore"]; ?></a></td>
                                     <td><?= $post["DataPost"]; ?></td>
                                     <?php if ($post["Creatore"] == $_COOKIE['NomeUtente']): ?>
                                         <td><button onclick="removePost(<?= $post['NrPost']; ?>)" class="access_required">Rimuovi</button></td>
@@ -326,7 +334,7 @@
                                     <li>
                                         <table>
                                             <tr>
-                                                <td><button onclick="accessProfile(<?= $commento['Creatore']; ?>)"><?= $commento["Creatore"]; ?></button></td>
+                                                <td><a href="profile.php?id=<?= $commento['Creatore']; ?>)"><?= $commento["Creatore"]; ?></a></td>
                                                 <td><?= $commento["DataCommento"]; ?></td>
                                                 <?php if($commento['Creatore'] == $_COOKIE['NomeUtente']): ?>
                                                     <td><button onclick="removeComment(<?= $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
@@ -381,7 +389,7 @@
                 <ul>
                     <?php foreach($amici as $amico): ?>
                         <li><img src="<?= $amico[1]; ?>" alt=""/></li>
-                        <li><button onclick="accessProfile(<?= $amico[0]; ?>)"><?= $amico[0]; ?></button></li>
+                        <li><a href="profile.php?id=<?= $amico[0]; ?>)"><?= $amico[0]; ?></a></li>
                         <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
                             <li><button class="access_required" onclick="removeFriend($amico[0])">Rimuovi</button></li>
                         <?php endif;
@@ -391,7 +399,7 @@
                 <ul>
                     <?php foreach($seguiti as $seguito): ?>
                         <li><img src="<?= $seguito[1]; ?>" alt=""/></li>
-                        <li><button onclick="accessProfile(<?= $seguito[0]; ?>)"><?= $seguito[0]; ?></button></li>
+                        <li><a href="profile.php?id=<?= $seguito[0]; ?>)"><?= $seguito[0]; ?></a></li>
                         <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
                             <li><button class="access_required" onclick="removeFollowed($seguito[0])">Rimuovi</button></li>
                         <?php endif;
@@ -402,7 +410,7 @@
                     <ul>
                         <?php foreach($bloccati as $bloccato): ?>
                             <li><img src="<?= $bloccato[1]; ?>" alt=""/></li>
-                            <li><button onclick="accessProfile(<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></button></li>
+                            <li><a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a></li>
                             <li><button class="access_required" onclick="removeBlocked($bloccato[0])">Perdona</button></li>
                         <?php endforeach; ?>
                     </ul>
@@ -411,6 +419,5 @@
         </main>
         <script src="js/profile.js" type="text/javascript"></script>
         <script src="js/index.js" type="text/javascript"></script>
-        <script src="js/generale.js" type="text/javascript"></script>
     </body>
 </html>

@@ -15,13 +15,13 @@
                 if(isset($_COOKIE['NomeUtente'])):
             ?>
                 <img id="FotoProfilo" src="<?= $_COOKIE['FotoProfilo'] ?>" alt=""/>
-                <button id="NomeUtente" onclick="accessProfile(<?= $_COOKIE['NomeUtente']; ?>)"><?= $_COOKIE['NomeUtente']; ?></button>
+                <a id="NomeUtente" href="profile.php?id=<?= $_COOKIE['NomeUtente']; ?>"><?= $_COOKIE['NomeUtente']; ?></a>
             <?php endif; ?>
         </aside>
         <nav>
             <ul>
                 <?php if(isset($_COOKIE['NomeUtente'])): ?>
-                    <li id="pag_profilo"><a href="accessProfile(<?= $_COOKIE['NomeUtente']; ?>)">Profilo</a></li>
+                    <li id="pag_profilo"><a href="profile.php?id=<?= $_COOKIE['NomeUtente']; ?>">Profilo</a></li>
                 <?php endif; ?>
                 <li id="pag_principale"><a href="index.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
@@ -85,7 +85,7 @@
                     <li>
                         <table>
                             <tr>
-                                <td><button onclick="accessProfile(<?= $post['Creatore']; ?>)"></button><?= $post["Creatore"]; ?></td>
+                                <td><a href="profile.php?id=<?= $post['Creatore']; ?>)"></a><?= $post["Creatore"]; ?></td>
                                 <td><?= $post["DataPost"]; ?></td>
                                 <?php if ($post["UserPost"] == $_COOKIE['NomeUtente']): ?>
                                     <td><button onclick="removePost($post['NrPost'])" class="access_required">Rimuovi</button></td>
@@ -117,7 +117,7 @@
                                 <li>
                                     <table>
                                         <tr>
-                                            <td><button onclick="accessProfile(<?= $commento['Creatore']; ?>)"><?= $commento["Creatore"]; ?></button></td>
+                                            <td><a href="profile.php?id=<?= $commento['Creatore']; ?>)"><?= $commento["Creatore"]; ?></a></td>
                                             <td><?= $commento["DataCommento"]; ?></td>
                                             <?php if($commento['Creatore'] == $_COOKIE['NomeUtente']): ?>
                                                 <td><button onclick="removeComment(<?= $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
@@ -168,6 +168,5 @@
             </article>
         </main>
         <script src="js/index.js" type="text/javascript"></script>
-        <script src="js/generale.js" type="text/javascript"></script>
     </body>
 </html>
