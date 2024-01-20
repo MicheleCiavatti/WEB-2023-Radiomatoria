@@ -12,25 +12,25 @@
         <aside>
             <?php 
                 session_start();
-                if(cookiesSet()):
+                if(isset($_COOKIE['NomeUtente'])):
             ?>
-                <img id="FotoProfilo" src="<?php echo readCookie('FotoProfilo') ?>" alt=""/>
-                <button id="NomeUtente" onclick="accessProfile(<?php echo readCookie('NomeUtente'); ?>)"><?php echo readCookie('NomeUtente'); ?></button>
+                <img id="FotoProfilo" src="<?= $_COOKIE['FotoProfilo'] ?>" alt=""/>
+                <button id="NomeUtente" onclick="accessProfile(<?= $_COOKIE['NomeUtente']; ?>)"><?= $_COOKIE['NomeUtente']; ?></button>
             <?php endif; ?>
         </aside>
         <nav>
             <ul>
-                <?php if(cookiesSet()): ?>
-                    <li id="pag_profilo"><a href="accessProfile(<?php echo readCookie('NomeUtente'); ?>)">Profilo</a></li>
+                <?php if(isset($_COOKIE['NomeUtente'])): ?>
+                    <li id="pag_profilo"><a href="accessProfile(<?= $_COOKIE['NomeUtente']; ?>)">Profilo</a></li>
                 <?php endif; ?>
                 <li id="pag_principale"><a href="index.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                <?php if(cookiesSet()): ?>
+                <?php if(isset($_COOKIE['NomeUtente'])): ?>
                     <li id="pag_notifiche"><a href="notifiche.php">Notifiche</a></li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
-                    <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
-                    <li id="pag_accesso"><a href="login.html">Login</a></li>
+                    <li id="pag_creazione"><a href="signup.php">Crea account</a></li>
+                    <li id="pag_accesso"><a href="login.php">Login</a></li>
                 <?php endif; ?>
             </ul>
         </nav>
@@ -38,7 +38,7 @@
             <header>
                 <section>
                     <form action="selectPostHome.php" method="post" name="select_form_home">
-                        <?php if(cookiesSet()): ?>
+                        <?php if(isset($_COOKIE['NomeUtente'])): ?>
                             <label for="origin">Seleziona post in base all'autore</label>
                             <select name="origin" id="origin">
                                 <option value="all" selected>Tutti</option>
@@ -58,7 +58,7 @@
                         <label for="order">In ordine decrescente</label>
                         <input type="checkbox" name="order" id="order" checked/>
                     </form>
-                    <?php if(cookiesSet()): ?>
+                    <?php if(isset($_COOKIE['NomeUtente'])): ?>
                         <button id="add_post_button" class="access_required" onclick="mostraFormPost()">Aggiungi post</button>
                         <form action="addPost.php" method="post" name="add_post_form">
                             <table>
@@ -80,31 +80,31 @@
                 </section>
             </header>
             <article>
-                <ul>
+                <ul onload="decorate($element_id_like, $element_id_dislike)">
                     <?php foreach($post_list as $post): ?>
                     <li>
                         <table>
                             <tr>
-                                <td><button onclick="accessProfile(<?php echo $post['Creatore']; ?>)"></button><?php echo $post["Creatore"]; ?></td>
-                                <td><?php echo $post["DataPost"]; ?></td>
-                                <?php if ($post["UserPost"] == readCookie('NomeUtente')): ?>
+                                <td><button onclick="accessProfile(<?= $post['Creatore']; ?>)"></button><?= $post["Creatore"]; ?></td>
+                                <td><?= $post["DataPost"]; ?></td>
+                                <?php if ($post["UserPost"] == $_COOKIE['NomeUtente']): ?>
                                     <td><button onclick="removePost($post['NrPost'])" class="access_required">Rimuovi</button></td>
                                 <?php endif; ?>
                             </tr>
-                            <tr><td><?php echo $post["TestoPost"]; ?></td></tr>
-                            <tr><td><img src="<?php echo $post['ImmaginePost']; ?>" alt=""/></td></tr>
+                            <tr><td><?= $post["TestoPost"]; ?></td></tr>
+                            <tr><td><img src="<?= $post['ImmaginePost']; ?>" alt=""/></td></tr>
                             <tr>
-                                <td><?php echo $post["LikePost"]; ?></td>
-                                <td><button name="<?php echo $post['NrPost']; ?>_like_button" class="preference_button" onclick="<?php if(cookiesSet()): ?>like(<?php echo $post['NrPost'] ?>)<?php endif; ?>">Like</button></td>
-                                <td><?php echo $post["DislikePost"]; ?></td>
-                                <td><button name="<?php echo $post['NrPost']; ?>_dislike_button" class="preference_button" onclick="<?php if(cookiesSet()): ?>dislike(<?php echo $post['NrPost'] ?>)<?php endif; ?>">Dislike</button></td>
-                                <?php if(cookiesSet()): ?>
+                                <td><?= $post["LikePost"]; ?></td>
+                                <td><button name="<?= $post['NrPost']; ?>_like_button" class="preference_button" onclick="<?php if(isset($_COOKIE['NomeUtente'])): ?>like(<?= $post['NrPost'] ?>)<?php endif; ?>">Like</button></td>
+                                <td><?= $post["DislikePost"]; ?></td>
+                                <td><button name="<?= $post['NrPost']; ?>_dislike_button" class="preference_button" onclick="<?php if(isset($_COOKIE['NomeUtente'])): ?>dislike(<?= $post['NrPost'] ?>)<?php endif; ?>">Dislike</button></td>
+                                <?php if(isset($_COOKIE['NomeUtente'])): ?>
                                     <td><button id="add_comment_button" class="access_required" onclick="mostraFormCommenti($post['NrPost'], $post['Creatore'], $post['DataPost'], '')">Commenta</button></td>
                                 <?php endif; ?>
                             </tr>
-                            <tr><td><button onclick="mostraCommentiPost(<?php echo $post['NrPost']; ?>)">Mostra commenti</button></td></tr>
+                            <tr><td><button onclick="mostraCommentiPost(<?= $post['NrPost']; ?>)">Mostra commenti</button></td></tr>
                         </table>
-                        <ul id="<?php echo $post['NrPost']; ?>_comment_list">
+                        <ul id="<?= $post['NrPost']; ?>_comment_list">
                             <?php 
                                 $query = "SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
                                 FROM COMMENTI LEFT JOIN INTERAZIONI ON COMMENTI.NrCommento = INTERAZIONI.ElementId WHERE COMMENTI.NrPost = ? ORDER BY COMMENTI.DataCommento DESC";
@@ -117,22 +117,22 @@
                                 <li>
                                     <table>
                                         <tr>
-                                            <td><button onclick="accessProfile(<?php echo $commento['Creatore']; ?>)"><?php echo $commento["Creatore"]; ?></button></td>
-                                            <td><?php echo $commento["DataCommento"]; ?></td>
-                                            <?php if($commento['Creatore'] == readCookie('NomeUtente')): ?>
-                                                <td><button onclick="removeComment(<?php echo $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
+                                            <td><button onclick="accessProfile(<?= $commento['Creatore']; ?>)"><?= $commento["Creatore"]; ?></button></td>
+                                            <td><?= $commento["DataCommento"]; ?></td>
+                                            <?php if($commento['Creatore'] == $_COOKIE['NomeUtente']): ?>
+                                                <td><button onclick="removeComment(<?= $commento['NrCommento']; ?>)" class="access_required">Rimuovi</button></td>
                                             <?php endif; ?>
                                         </tr>
-                                        <tr><td><?php echo $commento["TestoCommento"]; ?></td></tr>
-                                        <tr><td><img src="<?php echo $commento['ImmagineCommento']; ?>" alt=""/></td></tr>
+                                        <tr><td><?= $commento["TestoCommento"]; ?></td></tr>
+                                        <tr><td><img src="<?= $commento['ImmagineCommento']; ?>" alt=""/></td></tr>
                                         <tr>
-                                            <td><?php echo $commento["LikeCommento"]; ?></td>
-                                            <td><button id="<?php echo $commento['NrCommento']; ?>_like_button" class="preference_button"
-                                            onclick="<?php if(cookiesSet()): ?>like(<?php echo $commento['NrCommento']; ?>)<?php endif; ?>">Like</button></td>
-                                            <td><?php echo $commento["DislikeCommento"]; ?></td>
-                                            <td><button id="<?php echo $commento['NrCommento']; ?>_dislike_button" class="preference_button"
-                                            onclick="<?php if(cookiesSet()): ?>dislike(<?php echo $commento['NrCommento']; ?>)<?php endif; ?>">Dislike</button></td>
-                                            <?php if(cookiesSet()): ?>
+                                            <td><?= $commento["LikeCommento"]; ?></td>
+                                            <td><button id="<?= $commento['NrCommento']; ?>_like_button" class="preference_button"
+                                            onclick="<?php if(isset($_COOKIE['NomeUtente'])): ?>like(<?= $commento['NrCommento']; ?>)<?php endif; ?>">Like</button></td>
+                                            <td><?= $commento["DislikeCommento"]; ?></td>
+                                            <td><button id="<?= $commento['NrCommento']; ?>_dislike_button" class="preference_button"
+                                            onclick="<?php if(isset($_COOKIE['NomeUtente'])): ?>dislike(<?= $commento['NrCommento']; ?>)<?php endif; ?>">Dislike</button></td>
+                                            <?php if(isset($_COOKIE['NomeUtente'])): ?>
                                                 <td><button onclick="mostraFormCommenti($post['NrPost'], $post['Creatore'], $post['DataPost'], '@' + $commento['Creatore'])">Rispondi</button></td>
                                             <?php endif; ?>
                                         </tr>
@@ -140,7 +140,7 @@
                                 </li>
                             <?php endforeach; ?>
                         </ul>
-                        <?php if(cookiesSet()): ?>
+                        <?php if(isset($_COOKIE['NomeUtente'])): ?>
                             <form action="addComment.php" method="post" name="add_comment_form">
                                 <table>
                                     <tr>
@@ -163,8 +163,7 @@
                             </form>
                         <?php endif; ?>
                         </li>
-                    <?php endforeach;
-                    decorate($element_id_like, $element_id_dislike); ?>
+                    <?php endforeach; ?>
                 </ul>
             </article>
         </main>
