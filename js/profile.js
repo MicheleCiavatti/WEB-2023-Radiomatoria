@@ -1,23 +1,23 @@
-function modificaProfilo(nome_utente) {
+function modificaProfilo() {
     const alter_form = document.getElementsByName('alter_form');
-    if(nome_utente == readCookie('NomeUtente')) {
-        if(alter_form.hidden == true) {
-            alter_form.hidden = false;
-        } else {
-            alter_form.hidden = true;
-        }
+    if(alter_form.hidden == true) {
+        alter_form.hidden = false;
+    } else {
+        alter_form.hidden = true;
     }
 }
 
 const riga1 = document.getElementById("riga_orari_mattina");
 const riga2 = document.getElementById("riga_orari_sera");
 
-function tabellaOrari(oraInizio, oraFine) {
-    for(let i=oraInizio; i<oraFine; i++) {
-        if(i<=12) {
-            riga1.children.item(i).style.background = "green";
+function tabellaOrari(inizio, fine) {
+    let oraInizio = inizio.getHours();
+    let oraFine = fine.getHours();
+    for(let i=oraInizio; i!=oraFine; i=(i+1)%24) {
+        if(i<12) {
+            riga1.children.item(i+1).style.background = "green";
         } else {
-            riga2.children.item(i-12).style.background = "green";
+            riga2.children.item(i-11).style.background = "green";
         }
     }
 }

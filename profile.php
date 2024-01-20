@@ -1,14 +1,10 @@
 <?php
     require_once './php/profileAccess.php';
-    $data = profileAccess('AlessandroC'); //TEST
-    $utente = $data[0];
-    $frequenze = $data[1];
-    $orari = $data[2];
-    $amici = $data[3];
-    $seguiti = $data[4];
-    $bloccati = $data[5];
     $post_list = [];
+    $element_id_like = [];
+    $element_id_dislike = [];
     setcookie("NomeUtente", "AlessandroC",0,"/"); //TEST
+    $data = profileAccess('AlessandroC'); $utente = $data[0]; $frequenze = $data[1]; $orari = $data[2]; $amici = $data[3]; $seguiti = $data[4]; $bloccati = $data[5]; //TEST COMPLETO
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -76,7 +72,7 @@
                             <td>
                                 <table>
                                     <caption>Orari di presenza in radio</caption>
-                                    <tr id="intestazione_orari">
+                                    <tr id="intestazione_orari" onload="oraCorrente()">
                                         <th></th>
                                         <th>1</th>
                                         <th>2</th>
@@ -126,17 +122,16 @@
                             <td>
                                 <ul id="lista_orari">
                                     <?php foreach($orari as $intervallo): ?>
-                                    <li><?php echo $intervallo[0] . " – " . $intervallo[1]; ?></li>
-                                    <?php tabellaOrari($intervallo["oraInizio"].getHours(), $intervallo["oraFine"].getHours());
-                                    endforeach; ?>
+                                        <li onload="tabellaOrari(<?php echo $intervallo[0]; ?>, <?php echo $intervallo[1]; ?>)"><?php echo $intervallo[0] . " – " . $intervallo[1]; ?></li>
+                                    <?php endforeach; ?>
                                 </ul>
                             </td>
                         </tr>
                     </table>
                 </section>
                 <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
-                    <section>
-                        <button class="access_required" onclick="modificaProfilo($utente['NomeUtente'])">Inserisci o modifica</button>
+                    <section onload="modificaProfilo()">
+                        <button class="access_required" onclick="modificaProfilo()">Inserisci o modifica</button>
                         <form action="alterProfile.php" method="post" name="alter_form">
                             <fieldset>
                             <legend>Campi pubblici</legend>
@@ -266,7 +261,7 @@
                         </select>
                         <label for="sort">Ordina per</label>
                         <select name="sort" id="sort" onchange="this.form.submit()">
-                            <option value="" selected>Seleziona</option>
+                            <option value="none" selected>Seleziona</option>
                             <option value="data">Data</option>
                             <option value="like">Like</option>
                             <option value="comm">Commenti</option>
@@ -295,7 +290,7 @@
                     <?php endif; ?>
                 </header>
                 <article>
-                    <ul>
+                    <ul onload="decorate($element_id_like, $element_id_dislike)">
                         <?php foreach($post_list as $post): ?>
                             <li>
                             <table>
@@ -378,8 +373,7 @@
                                 </form>
                             <?php endif; ?>
                             </li>
-                        <?php endforeach;
-                        decorate($element_id_like, $element_id_dislike); ?>
+                        <?php endforeach; ?>
                     </ul>
                 </article>
             </section>
