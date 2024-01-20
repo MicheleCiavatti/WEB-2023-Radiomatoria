@@ -27,10 +27,10 @@ function oraCorrente() {
     let tempo_corrente = new Date();
     let ora_corrente = tempo_corrente.getHours();
     if(ora_corrente<=12) {
-        intestazione.children.item(ora_corrente.getHours()).style.color = "green";
+        intestazione.children.item(ora_corrente).style.color = "green";
         riga1.children.item(0).style.color = "green";
     } else {
-        intestazione.children.item(ora_corrente.getHours()-12).style.color = "green";
+        intestazione.children.item(ora_corrente-12).style.color = "green";
         riga2.children.item(0).style.color = "green";
     }
 }
