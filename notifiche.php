@@ -16,7 +16,7 @@ if (!cookiesSet())
         </header>
         <nav>
             <ul>
-                <li id="pag_profilo"><a href="accessProfile(readCookie('NomeUtente'))">Profilo</a></li>
+                <li id="pag_profilo"><a href="profile.php?id=<?= $_COOKIE['NomeUtente']; ?>">Profilo</a></li>
                 <li id="pag_principale"><a href="index.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
                 <li id="pag_notifiche"><a href="notifiche.php">Notifiche </a></li>
@@ -30,8 +30,8 @@ if (!cookiesSet())
                 <ul id="unread_notifications_list">
                     <?php foreach($notifiche_non_lette as $notifica): ?>
                         <li onclick="readNotification($notifica['IdNotifica'])">
-                            <button onclick="accessProfile($notifica['Mandante'])"><?php echo $notifica['MittenteNotifica']; ?></button>
-                            <span><?php echo $notifica['TestoNotifica']; ?></span>
+                            <a href="profile.php?id=<?= $notifica['Mandante'] ?>"><?= $notifica['Mandante']; ?></a>
+                            <span><?= $notifica['TestoNotifica']; ?></span>
                             <?php if($notifica['Richiesta'] == true): ?>
                                 <button name="friend_refuse" onclick="outcomeNotification($notifica['IdNotifica'], $notifica['Mandante'], 'ha rifiutato la tua richiesta di amicizia')">Rifiuta</button>
                                 <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['Mandante'])">Accetta</button>
@@ -47,8 +47,8 @@ if (!cookiesSet())
                 <ul id="read_notifications_list">
                     <?php foreach($notifiche_lette as $notifica): ?>
                         <li>
-                            <button onclick="accessProfile($notifica['Mandante'])"><?php echo $notifica['MittenteNotifica']; ?></button>
-                            <span><?php echo $notifica['TestoNotifica']; ?></span>
+                            <a href="profile.php?id=<?= $notifica['Mandante'] ?>"><?= $notifica['Mandante']; ?></a>
+                            <span><?= $notifica['TestoNotifica']; ?></span>
                             <?php if($notifica['Richiesta'] == true): ?>
                                 <button name="friend_refuse" onclick="outcomeNotification($notifica['IdNotifica'], $notifica['Mandante'], 'ha rifiutato la tua richiesta di amicizia')">Rifiuta</button>
                                 <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['Mandante'])">Accetta</button>
@@ -61,6 +61,5 @@ if (!cookiesSet())
             </section>
         </main>
         <script src="js/notifiche.js" type="text/javascript"></script>
-        <script src="js/generale.js" type="text/javascript"></script>
     </body>
 </html>
