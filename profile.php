@@ -4,7 +4,6 @@
     $element_id_like = [];
     $element_id_dislike = [];
     setcookie("NomeUtente", "AlessandroC",0,"/"); //TEST
-    $data = profileAccess('AlessandroC'); $utente = $data[0]; $frequenze = $data[1]; $orari = $data[2]; $amici = $data[3]; $seguiti = $data[4]; $bloccati = $data[5]; //TEST COMPLETO
 ?>
 <!DOCTYPE html>
 <html lang="it">
