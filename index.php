@@ -87,7 +87,7 @@
                             <tr>
                                 <td><a href="profile.php?id=<?= $post['Creatore']; ?>)"></a><?= $post["Creatore"]; ?></td>
                                 <td><?= $post["DataPost"]; ?></td>
-                                <?php if ($post["UserPost"] == $_COOKIE['NomeUtente']): ?>
+                                <?php if ($post["Creatore"] == $_COOKIE['NomeUtente']): ?>
                                     <td><button onclick="removePost($post['NrPost'])" class="access_required">Rimuovi</button></td>
                                 <?php endif; ?>
                             </tr>
