@@ -106,12 +106,14 @@
                         </table>
                         <ul id="<?= $post['NrPost']; ?>_comment_list">
                             <?php 
-                                $query = "SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END) AS DislikeCommento,
-                                FROM COMMENTI LEFT JOIN INTERAZIONI ON COMMENTI.NrCommento = INTERAZIONI.ElementId WHERE COMMENTI.NrPost = ? ORDER BY COMMENTI.DataCommento DESC";
-                                $stmt = $this->db->prepare($query);
-                                $stmt->bind_param('i', $post['NrPost']);
-                                $stmt->execute();
-                                $commenti = $stmt->get_result();
+                                $stmt = $dbh->connect()->prepare("SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONE.Tipo THEN 1 END)
+                                AS DislikeCommento FROM COMMENTI LEFT JOIN INTERAZIONI ON COMMENTI.NrCommento = INTERAZIONI.ElementId WHERE COMMENTI.NrPost = ? ORDER BY COMMENTI.DataCommento DESC");
+                                if(!$stmt->execute(array($post['NrPost']))) {
+                                    $stmt = null;
+                                    header('location: ../../login.html?error=stmtfailed');
+                                    exit();
+                                }
+                                $commenti = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 foreach($commenti as $commento):
                             ?>
                                 <li>
