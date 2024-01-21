@@ -136,7 +136,7 @@
 
     function selectPostProfile($relation_selection, $sort_selection, $order) {
         $dbh = new Dbh;
-        $query = "SELECT POST.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikePost,
+        $query = "SELECT POST.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikePost
         FROM (POST LEFT JOIN INTERAZIONI ON POST.NrPost = INTERAZIONI.ElementId) LEFT JOIN COMMENTI ON POST.NrPost = COMMENTI.NrPost";
 
         $decor = "SELECT INTERAZIONI.ElementId FROM (INTERAZIONI LEFT JOIN POST ON INTERAZIONI.ElementId = POST.NrPost) LEFT JOIN COMMENTI ON INTERAZIONI.ElementId = COMMENTI.NrCommento";

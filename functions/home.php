@@ -3,7 +3,7 @@
 function selectPostHome($origin_selection, $sort_selection, $order) {
     $username = $_COOKIE['NomeUtente'];
     $dbh = new Dbh;
-    $query = "SELECT POST.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikePost,
+    $query = "SELECT POST.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikePost
     FROM (POST LEFT JOIN INTERAZIONI ON POST.NrPost = INTERAZIONI.ElementId)";
     if($sort_selection == "comm") {
         $query .= " LEFT JOIN COMMENTI ON POST.NrPost = COMMENTI.NrPost";                
