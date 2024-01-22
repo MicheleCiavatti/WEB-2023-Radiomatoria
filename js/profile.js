@@ -1,3 +1,21 @@
+function removeFrequency(f_to_remove, username) {
+    let element = document.querySelector('#f' + f_to_remove);
+    element.parentNode.removeChild(element);
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'functions/removeFrequency.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Frequenza rimossa con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione della frequenza:', xhr.status);
+        }
+    };
+    let data = encodeURI('f_to_remove=' + encodeURIComponent(f_to_remove) + '&username=' + encodeURIComponent(username));
+    xhr.send(data);
+}
+
 function modificaProfilo() {
     const alter_form = document.getElementsByName('alter_form');
     if(alter_form.hidden == true) {
