@@ -172,18 +172,15 @@ function selectPostProfile($relation_selection, $sort_selection, $order) {
     $decor = "SELECT INTERAZIONI.ElementId FROM (INTERAZIONI LEFT JOIN POST ON INTERAZIONI.ElementId = POST.NrPost) LEFT JOIN COMMENTI ON INTERAZIONI.ElementId = COMMENTI.NrCommento";
 
     switch($relation_selection) {
-        case "create" {
+        case "create":
             $condition .= " WHERE POST.Creatore = ?";
             break;
-        }
-        case "like" {
-            case "dislike" {
+        case "like" :
+            case "dislike" :
                 $condition .= " WHERE INTERAZIONI.NomeUtente = ? AND INTERAZIONI.Tipo = ?";
                 $bind += 1;
                 break;
-            }
-        }
-        case "comment" {
+        case "comment" :
             $condition .= " WHERE COMMENTI.Creatore = ?";
             break;
         }
@@ -219,19 +216,16 @@ function selectPostProfile($relation_selection, $sort_selection, $order) {
     $query .= $condition;
     $query .= " GROUP BY POST.NrPost";
     switch($sort_selection) {
-        case "data" {
+        case "data":
             $query .= " ORDER BY DataPost";                
             break;
-        }
-        case "like" {
+        case "like":
             $query .= " HAVING INTERAZIONI.Tipo = ? ORDER BY COUNT(INTERAZIONI.Tipo)";  
             $bind += 1;              
             break;
-        }
-        case "comm" {
+        case "comm":
             $query .= " ORDER BY COUNT(COMMENTI.NrCommento)";                
             break;
-        }
     }
     if ($order == true) {
         $query .= " DESC";
@@ -254,7 +248,6 @@ function selectPostProfile($relation_selection, $sort_selection, $order) {
     }
     $stmt->execute();
     $post_list = $stmt->get_result();
-}
 
 function notify($text, $receiver, $request) {
     $blockcheck = $this->db->prepare("SELECT COUNT(*) FROM BLOCCO WHERE Bloccante = ? AND Bloccato = ?");

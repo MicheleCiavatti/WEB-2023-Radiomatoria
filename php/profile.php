@@ -420,8 +420,8 @@
                 <?php endif; ?>
             </aside>
         </main>
-        <script src="js/profile.js" type="text/javascript"></script>
-        <script src="js/index.js" type="text/javascript"></script>
-        <script src="js/generale.js" type="text/javascript"></script>
+        <script src="../js/profile.js" type="text/javascript"></script>
+        <script src="../js/index.js" type="text/javascript"></script>
+        <script src="../js/generale.js" type="text/javascript"></script>
     </body>
 </html>
