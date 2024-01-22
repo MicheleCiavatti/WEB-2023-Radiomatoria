@@ -33,7 +33,7 @@ $notifiche_lette = $data[1];
                 <h3>Da leggere</h3>
                 <ul id="unread_notifications_list">
                     <?php foreach($notifiche_non_lette as $notifica): ?>
-                        <li onclick="readNotification($notifica['IdNotifica'])">
+                        <li id="nid<?= $notifica['IdNotifica'] ?>" onclick="readNotification($notifica['IdNotifica'])">
                             <a href="profile.php?id=<?= $notifica['Mandante'] ?>"><?= $notifica['Mandante']; ?></a>
                             <span><?= $notifica['TestoNotifica']; ?></span>
                             <?php if($notifica['Richiesta'] == true): ?>
