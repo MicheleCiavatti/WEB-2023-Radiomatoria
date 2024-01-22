@@ -1,7 +1,11 @@
 <?php
 session_start();
-if (!cookiesSet())
+if (!isset($_COOKIE['NomeUtente'])) {
     header('location: login.html?error=needtologin');
+}
+$data = list_notifications();
+$notifiche_non_lette = $data[0];
+$notifiche_lette = $data[1];
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -10,7 +14,7 @@ if (!cookiesSet())
         <meta charset="UTF-8"/>
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload="list_notifications()">
+    <body>
         <header>
             <h1>Long Light</h1>
         </header>
