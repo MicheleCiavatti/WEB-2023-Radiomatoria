@@ -60,10 +60,11 @@
                     <?php
                         foreach($frequenze as $f):
                     ?>
-                    <li id="f<?= $f?>"><?= $f ?></li>
+                    <li id="f<?= $f?>"><?= $f ?>
                     <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
                         <button type="button" onclick="removeFrequency('<?= $f?>', '<?= $utente['NomeUtente']?>')">Rimuovi</button>
                     <?php endif; ?>
+                    </li>
                     <?php endforeach; ?>
                 </ul>
                 <form action="includes/addMHz.inc.php" method="post">
