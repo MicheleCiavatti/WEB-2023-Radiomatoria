@@ -107,6 +107,10 @@
                         <label for="new_clue">Nuovo indizio:<input name="new_clue" required></label>
                         <input type="submit" value="Modifica indizio">
                     </form>
+                    <form action="includes/changePW.inc.php" method="post">
+                        <label for="new_pw">Nuova password:<input name="new_pw" type="password" minlength="8" required></label>
+                        <input type="submit" value="Modifica password">
+                    </form>
                 </section>
             <?php endif; ?>
         </main>
