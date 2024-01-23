@@ -1,3 +1,20 @@
+function selectPostHome() {
+    const select_form = document.getElementById("select_form_home");
+
+    select_form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        fetch(select_form.action, {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(select_form))
+        }).then((response) => {
+            document.getElementById("post_list").innerHTML = "<?php $post_list = " + response[0] + ";  require_once 'post_list.php' ?>";
+            document.querySelectorAll("[id$=_comment_list]").hidden = true;
+            decorate(response[1], response[2]);
+        })
+        .catch(err => console.error('Errore durante estrazione post:', err));
+    })
+}
+
 function mostraFormPost() {
     const add_post = document.getElementsByName('add_post_form');
     if (add_post.hidden == true) {
@@ -74,4 +91,8 @@ function decorate(element_id_like, element_id_dislike) {
         active_like.innerHTML += 'd';
         active_like.style.color = "magenta";
     })
+}
+
+function hide() {
+    document.getElementsByTagName("form").hidden = true;
 }
