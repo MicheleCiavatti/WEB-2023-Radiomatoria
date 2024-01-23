@@ -1,5 +1,4 @@
 <?php
-    session_start();
     require_once "../classes/dbh.classes.php";
 
     function list_notifications() {
