@@ -71,10 +71,12 @@
                     <?php endforeach; ?>
                 </ul>
                 <!-- Form for adding frequencies -->
-                <form action="includes/addMHz.inc.php" method="post">
-                    <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
-                    <input type="submit" value="Aggiungi">
-                </form>
+                <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                    <form action="includes/addMHz.inc.php" method="post">
+                        <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
+                        <input type="submit" value="Aggiungi">
+                    </form>
+                <?php endif; ?>
             </section>
             <!-- HANDLING USER TIME SLOTS: both inserting and removing -->
             <section>
@@ -91,12 +93,14 @@
                     </li>
                     <?php endforeach; ?>
                 </ul>
-                    <!-- Form for adding time slots -->
-                <form action="includes/addTimeSlot.inc.php" method="post">
-                    <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
-                    <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
-                    <input type="submit" value="Aggiungi">
-                </form>
+                <!-- Form for adding time slots -->
+                <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                    <form action="includes/addTimeSlot.inc.php" method="post">
+                        <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
+                        <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
+                        <input type="submit" value="Aggiungi">
+                    </form>
+                <?php endif; ?>
             </section>
             <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                 <section>
@@ -113,6 +117,14 @@
                     </form>
                 </section>
             <?php endif; ?>
+            <section>
+                <h2>Amici</h2>
+                <ul>
+                    <?php foreach($amici as $amico):?>
+                        <li><a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a></li> <!-- Would be nice to see the propic of the friend, but it doesn't work -->
+                    <?php endforeach;?>
+                </ul>
+            </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
     </body>
