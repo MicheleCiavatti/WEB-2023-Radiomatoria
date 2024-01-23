@@ -5,6 +5,7 @@
     $element_id_dislike = [];
     $username = $_GET['id']; //Get user owner of the profile
     $data = profileAccess($username); 
+    /*Adding user's info in local variables*/
     $utente = $data[0]; //Contains user info
     $frequenze = $data[1]; 
     $orari = $data[2]; 
@@ -54,35 +55,43 @@
                     <li>Indirizzo e-mail: <?php echo $utente['IndirizzoMail']?></li>
                 </ul>
             </section>
-            <!--HANDLING USER FREQUENCIES: both retrieving and inserting-->
+            <!--HANDLING USER FREQUENCIES: both inserting and removing-->
             <section>
                 <ul>
                     <?php
                         foreach($frequenze as $f):
                     ?>
-                    <li id="f<?= $f?>"><?= $f ?>
-                    <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                        <button type="button" onclick="removeFrequency('<?= $f?>', '<?= $utente['NomeUtente']?>')">Rimuovi</button>
-                    <?php endif; ?>
+                    <!-- Frequency displaying and removing done via AJAX -->
+                    <li id="f<?= str_replace('.', '_', $f)?>">
+                        <?= $f ?>
+                        <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                            <button type="button" onclick="removeFrequency('<?= $f?>', '<?= $utente['NomeUtente']?>', '<?= '#f' . str_replace('.', '_', $f)?>')">Rimuovi</button>
+                        <?php endif; ?>
                     </li>
                     <?php endforeach; ?>
                 </ul>
+                <!-- Form for adding frequencies -->
                 <form action="includes/addMHz.inc.php" method="post">
                     <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
                     <input type="submit" value="Aggiungi">
                 </form>
             </section>
-            <!--HANDLING USER TIME SLOTS: both retrieving and inserting-->
+            <!-- HANDLING USER TIME SLOTS: both inserting and removing -->
             <section>
-                <h2><?php echo $_SESSION['NomeUtente']?>'s time slots</h2>
                 <ul>
                     <?php
-                        getTimeSlots($_SESSION['NomeUtente']);
-                        foreach($_SESSION['Orari'] as $t):
+                        foreach($orari as $intervallo):
                     ?>
-                    <li><?= $t[0] ?> - <?= $t[1] ?></li>
+                    <!-- Time slots displaying and removing done via AJAX -->
+                    <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>">
+                        <?= $intervallo[0] ?> - <?= $intervallo[1]?>
+                        <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                            <button type="button" onclick="removeTimeInterval('<?= $utente['NomeUtente']?>', '<?= $intervallo[0]?>', '<?= $intervallo[1]?>', '<?= '#ts' . str_replace(':', '_', $intervallo[0] . $intervallo[1])?>')">Rimuovi</button> 
+                        <?php endif; ?>
+                    </li>
                     <?php endforeach; ?>
                 </ul>
+                    <!-- Form for adding time slots -->
                 <form action="includes/addTimeSlot.inc.php" method="post">
                     <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
                     <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
