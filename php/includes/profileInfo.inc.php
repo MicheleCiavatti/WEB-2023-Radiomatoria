@@ -74,4 +74,19 @@
     
         return array($utente, $frequenze, $orari, $amici, $seguiti, $bloccati);
     }
+
+function isFriend($user, $other) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM AMICIZIA
+         WHERE Amico1 = ? AND Amico2 = ?;'
+    );
+    if (!$s->execute(array($user, $other))) {
+        $s = null;
+        header('location: ../profile.php?id=' . $other . '&error=stmtfailed');
+        exit();
+    }
+    return $s->rowCount() > 0;
+}
     

@@ -46,6 +46,17 @@
             <header>
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
                 <p><?= $utente["NomeUtente"] ?></p>
+                <ul>
+                    <li>
+                        <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
+                            <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
+                                <button type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
+                            <?php else: ?>
+                                <button type="button" value="Manda amicizia">Richiedi amicizia</button>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </li>
+                </ul>
             </header>
             <section>
                 <ul>
@@ -122,6 +133,14 @@
                 <ul>
                     <?php foreach($amici as $amico):?>
                         <li><a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a></li> <!-- Would be nice to see the propic of the friend, but it doesn't work -->
+                    <?php endforeach;?>
+                </ul>
+            </section>
+            <section>
+                <h2>Following</h2>
+                <ul>
+                    <?php foreach($seguiti as $seguito):?>
+                        <li><a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a></li> <!-- Would be nice to see the propic of the followed, but it doesn't work -->
                     <?php endforeach;?>
                 </ul>
             </section>
