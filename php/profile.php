@@ -98,6 +98,17 @@
                     <input type="submit" value="Aggiungi">
                 </form>
             </section>
+            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                <section>
+                    <ul>
+                        <li>Indizio: <?= $utente['Indizio']?></li>
+                    </ul>
+                    <form action="includes/changeClue.inc.php" method="post">
+                        <label for="new_clue">Nuovo indizio:<input name="new_clue" required></label>
+                        <input type="submit" value="Modifica indizio">
+                    </form>
+                </section>
+            <?php endif; ?>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
     </body>
