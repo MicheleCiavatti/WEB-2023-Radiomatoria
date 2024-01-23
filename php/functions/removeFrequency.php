@@ -5,7 +5,6 @@ $dbh = new Dbh;
 
 if (isset($_GET['username']) && isset($_GET['f_to_remove'])) {
     $f = $_GET['f_to_remove'];
-    error_log("Variabili arrivate: " . $_GET['username'] . " e " . $f);
     $s = $dbh->connect()->prepare(
         'DELETE
          FROM BANDE
