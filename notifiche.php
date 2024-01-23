@@ -3,6 +3,7 @@ session_start();
 if (!isset($_COOKIE['NomeUtente'])) {
     header('location: login.html?error=needtologin');
 }
+require_once './php/list_notifications.php';
 $data = list_notifications();
 $notifiche_non_lette = $data[0];
 $notifiche_lette = $data[1];
