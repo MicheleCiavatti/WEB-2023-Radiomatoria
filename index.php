@@ -1,3 +1,7 @@
+<?php
+    require_once './php/generale.php';
+    require_once './php/selectPostHome.php';
+?>
 <!DOCTYPE html>
 <html lang="it">
     <head>
@@ -37,7 +41,7 @@
         <main>
             <header>
                 <section>
-                    <form action="selectPostHome.php" method="post" id="select_form_home">
+                    <form action="selectPostHome.php" method="post" name="select_form_home" id="select_form">
                         <?php if(isset($_COOKIE['NomeUtente'])): ?>
                             <label for="origin">Seleziona post in base all'autore</label>
                             <select name="origin" id="origin">

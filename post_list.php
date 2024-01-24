@@ -1,5 +1,5 @@
                     <?php foreach($post_list as $post): ?>
-                    <li>
+                    <li id="post<?= $post['NrPost'] ?>">
                         <table>
                             <tr>
                                 <td><a href="profile.php?id=<?= $post['Creatore']; ?>)"></a><?= $post["Creatore"]; ?></td>
@@ -33,7 +33,7 @@
                                 $commenti = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 foreach($commenti as $commento):
                             ?>
-                                <li>
+                                <li id="commento<?= $commento['NrCommento'] ?>">
                                     <table>
                                         <tr>
                                             <td><a href="profile.php?id=<?= $commento['Creatore']; ?>)"><?= $commento["Creatore"]; ?></a></td>
