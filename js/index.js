@@ -1,5 +1,5 @@
-function selectPostHome() {
-    const select_form = document.getElementById("select_form_home");
+function selectPost() {
+    const select_form = document.getElementById("select_form");
 
     select_form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -13,6 +13,82 @@ function selectPostHome() {
         })
         .catch(err => console.error('Errore durante estrazione post:', err));
     })
+}
+
+function removePost(pid) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'php/home/removePost.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    post_to_remove = document.getElementById('post' + pid);
+    post_to_remove.parentElement.removeChild(post_to_remove);
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            comments_to_remove = xhr.response;
+            comments_to_remove.array.forEach(element => {
+                removeComment(element[0]);
+            });
+            location.reload();
+            console.log('Post rimosso con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante rimozione post:', xhr.status);
+        }
+    };
+    let data = encodeURI('pid=' + encodeURIComponent(pid));
+    xhr.send(data);
+}
+
+function removeComment(cid) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'php/home/removeComment.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    comment_to_remove = document.getElementById('comment' + cid);
+    if(isset(comment_to_remove)) {
+        comment_to_remove.parentElement.removeChild(comment_to_remove);
+    }
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            location.reload();
+            console.log('Commento rimosso con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante rimozione commento:', xhr.status);
+        }
+    };
+    let data = encodeURI('cid=' + encodeURIComponent(cid));
+    xhr.send(data);
+}
+
+function addLikeOrDislike(element_id, type) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'php/home/addLikeOrDislike.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Reazione aggiunta con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante aggiunta reazione:', xhr.status);
+        }
+    };
+    let data = encodeURI('element_id=' + encodeURIComponent(element_id), '&type=' + encodeURIComponent(type));
+    xhr.send(data);
+}
+
+function removeLikeOrDislike(element_id) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'php/home/removeLikeOrDislike.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Reazione rimossa con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante rimozione reazione:', xhr.status);
+        }
+    };
+    let data = encodeURI('element_id=' + encodeURIComponent(element_id));
+    xhr.send(data);
 }
 
 function mostraFormPost() {
