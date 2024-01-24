@@ -40,7 +40,8 @@ nav {
 
 nav ul li {
     display: inline-block;
-    width: 12%;
+    width: 22%;
+    max-width: 220px;
     background-color: rgb(87, 53, 53);
     text-align: center;
     margin: 10px 0 0;
