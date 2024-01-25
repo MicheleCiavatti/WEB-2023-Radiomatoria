@@ -18,6 +18,9 @@ function removeFreq(f_to_remove) {
     xhr.send(data);
 }
 
+const riga1 = document.getElementById("riga_orari_mattina");
+const riga2 = document.getElementById("riga_orari_sera");
+
 function removeInterval(ora_inizio, ora_fine) {
     let elements = document.getElementsByName('i' + ora_inizio + '-' + ora_fine);
     elements.forEach((element) => {
@@ -29,7 +32,15 @@ function removeInterval(ora_inizio, ora_fine) {
     
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            //location.reload();    PER LA TABELLA; SE SI USA ELIMINARE removeChild(element)
+            let oraInizio = ora_inizio.getHours();
+            let oraFine = ora_fine.getHours();
+            for(let i=oraInizio; i!=oraFine; i=(i+1)%24) {
+                if(i<12) {
+                    riga1.children.item(i+1).style.background = "none";
+                } else {
+                    riga2.children.item(i-11).style.background = "none";
+                }
+            }
             console.log('Fascia oraria rimossa con successo dal server');
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante la rimozione della fascia oraria:', xhr.status);
@@ -151,9 +162,6 @@ function modificaProfilo() {
         alter_form.hidden = true;
     }
 }
-
-const riga1 = document.getElementById("riga_orari_mattina");
-const riga2 = document.getElementById("riga_orari_sera");
 
 function tabellaOrari(inizio, fine) {
     let oraInizio = inizio.getHours();
