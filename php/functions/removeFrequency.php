@@ -4,6 +4,7 @@ require_once "../classes/dbh.classes.php";
 $dbh = new Dbh;
 
 if (isset($_GET['username']) && isset($_GET['f_to_remove'])) {
+    error_log("Rimuovo la frequenza " . $_GET['f_to_remove'] . " dall'utente " . $_GET['username']);
     $f = $_GET['f_to_remove'];
     $s = $dbh->connect()->prepare(
         'DELETE

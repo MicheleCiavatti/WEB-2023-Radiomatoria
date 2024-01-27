@@ -82,10 +82,10 @@
                         foreach($frequenze as $f):
                     ?>
                     <!-- Frequency displaying and removing done via AJAX -->
-                    <li id="f<?= str_replace('.', '_', $f)?>">
+                    <li id="f<?= str_replace('.', '_', $f)?>" class="remove_frequency_buttons">
                         <?= $f ?>
                         <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                            <button type="button" onclick="removeFrequency('<?= $f?>', '<?= $utente['NomeUtente']?>', '<?= '#f' . str_replace('.', '_', $f)?>')">Rimuovi</button>
+                            <button type="button" value="<?= $f ?>">Rimuovi</button>
                         <?php endif; ?>
                     </li>
                     <?php endforeach; ?>
