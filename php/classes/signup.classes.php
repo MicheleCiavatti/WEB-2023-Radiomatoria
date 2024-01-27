@@ -30,13 +30,7 @@ class Signup extends Dbh {
             exit();
         }
         session_start();
-        $_SESSION['NomeUtente'] = $uid;
-        $_SESSION['FotoProfilo'] = './img/default.png';
-        $_SESSION['Indirizzo'] = $address;
-        $_SESSION['Città'] = $city;
-        $_SESSION['DataNascita'] = $birthdate;
-        $_SESSION['IndirizzoMail'] = $mail;
-        $_SESSION['Indizio'] = $clue; 
+        $this->access($uid, './img/default.png', $address, $city, $birthdate, $mail, $clue);
         $s = null;
     }
 }

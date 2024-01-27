@@ -1,36 +1,102 @@
-function modificaProfilo() {
-    const alter_form = document.getElementsByName('alter_form');
-    if(alter_form.hidden == true) {
-        alter_form.hidden = false;
-    } else {
-        alter_form.hidden = true;
-    }
-}
-
-const riga1 = document.getElementById("riga_orari_mattina");
-const riga2 = document.getElementById("riga_orari_sera");
-
-function tabellaOrari(inizio, fine) {
-    let oraInizio = inizio.getHours();
-    let oraFine = fine.getHours();
-    for(let i=oraInizio; i!=oraFine; i=(i+1)%24) {
-        if(i<12) {
-            riga1.children.item(i+1).style.background = "green";
-        } else {
-            riga2.children.item(i-11).style.background = "green";
+document.addEventListener('DOMContentLoaded', function() {
+    let username = document.getElementById('session_user_name');
+    let other = document.getElementById('profile_name').innerHTML;
+    username = username === null ? other : username.innerHTML;
+    /* Handling of follow buttons */
+    let addFollowButton = document.getElementById('follow_button');
+    let removeFollowButton = document.getElementById('remove_follow');
+    if (addFollowButton)
+        addFollowButton.addEventListener('click', function() { addFollow(username, other) });
+    if (removeFollowButton)
+        removeFollowButton.addEventListener('click', function() { removeFollow(username, other) });
+    /* Handling remove frequency buttons */
+    let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
+    if (removeFrequencyButtons.length > 0) {
+        for (i = 0; i < removeFrequencyButtons.length; i++) {
+            let button = removeFrequencyButtons[i];
+            let id = button.closest('li').id;
+            let f_to_remove = button.closest('li').innerHTML;
+            button.addEventListener('click', function() {removeFrequency(f_to_remove, username, id) });
         }
     }
+    /* Handling remove time interval buttons */
+    let removeTimeIntervalButtons = document.getElementsByClassName('remove_timeslot_buttons');
+    if (removeTimeIntervalButtons.length > 0) {
+        for (i = 0; i < removeTimeIntervalButtons.length; i++) {
+            let button = removeTimeIntervalButtons[i];
+            let id = button.closest('li').id;
+            let times = button.closest('li').innerHTML.split('<')[0].split(' - ');
+            let start = times[0].trim();
+            let end = times[1].trim();
+            button.addEventListener('click', function() {removeTimeInterval(username, start, end, id) });
+        }
+    }
+});
+
+function removeFrequency(f_to_remove, username, id) {
+    let element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+    let xhr = new XMLHttpRequest();
+    let url = 'functions/removeFrequency.php?f_to_remove=' + encodeURIComponent(f_to_remove) + '&username=' + encodeURIComponent(username);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Frequenza rimossa con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione della frequenza:', xhr.status);
+        }
+    };
+    xhr.send();
 }
 
-function oraCorrente() {
-    const intestazione = document.getElementById("intestazione_orari");
-    let tempo_corrente = new Date();
-    let ora_corrente = tempo_corrente.getHours();
-    if(ora_corrente<=12) {
-        intestazione.children.item(ora_corrente).style.color = "green";
-        riga1.children.item(0).style.color = "green";
-    } else {
-        intestazione.children.item(ora_corrente-12).style.color = "green";
-        riga2.children.item(0).style.color = "green";
-    }
+function removeTimeInterval(username, start, end, id) {
+    let element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+    let xhr = new XMLHttpRequest();
+    let url = 'functions/removeTimeSlot.php?username=' + encodeURIComponent(username) + '&start=' + encodeURIComponent(start) + '&end=' + encodeURIComponent(end);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Frequenza rimossa con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione della frequenza:', xhr.status);
+        }
+    };
+    xhr.send();
 }
+
+function addFollow(username, other) {
+    let xhr = new XMLHttpRequest();
+    let url = 'functions/addFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Follow aggiunto con successo al server');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante l\'aggiunta del follow:', xhr.status);
+        }
+    };
+    xhr.send();
+}
+
+function removeFollow(username, other) {
+    let xhr = new XMLHttpRequest();
+    let url = 'functions/removeFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Follow rimosso con successo dal server');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione del follow:', xhr.status);
+        }
+    };
+    xhr.send();
+}
+
+//onclick="removeFrequency('<?= $f?>', '<?= $utente['NomeUtente']?>', '<?= '#f' . str_replace('.', '_', $f)?>')"

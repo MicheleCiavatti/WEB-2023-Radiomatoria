@@ -6,7 +6,7 @@ if (isset($_POST['orainizio']) && isset($_POST['orafine'])) {
     $uid = $_SESSION['NomeUtente'];
     
     if($start >= $end) {
-        header('location: ../myProfile.php?error=start>time');
+        header('location: ../profile.php?id=' . $uid . '&error=start>time');
         exit();
     }
 
@@ -18,8 +18,8 @@ if (isset($_POST['orainizio']) && isset($_POST['orafine'])) {
     );
     if (!$s->execute(array($start, $end, $uid))) {
         $s = null;
-        header('location: ../myProfile.php?error=stmtfailed');
+        header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
         exit();
     }
-    header('location: ../myProfile.php?error=none');
+    header('location: ../profile.php?id=' . $uid .'&error=none');
 }

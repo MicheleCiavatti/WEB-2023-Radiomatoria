@@ -1,16 +1,15 @@
 <?php
-    require_once './php/profileAccess.php';
+    require_once 'includes/profileFunctions.inc.php';
     $post_list = [];
     $element_id_like = [];
     $element_id_dislike = [];
-
-    $username = $_GET['id'];
-    $data = profileAccess($username);
-    $utente = $data[0];
-    $frequenze = $data[1];
-    $orari = $data[2];
-    $amici = $data[3];
-    $seguiti = $data[4];
+    $username = $_GET['id']; //Get user owner of the profile
+    $data = profileAccess($username); 
+    $utente = $data[0]; //Contains user info
+    $frequenze = $data[1]; 
+    $orari = $data[2]; 
+    $amici = $data[3]; 
+    $seguiti = $data[4]; 
     $bloccati = $data[5];
 ?>
 <!DOCTYPE html>
@@ -26,14 +25,14 @@
         </header>
         <nav>
             <ul>
-                <?php if (isset($_COOKIE['NomeUtente'])): ?>
-                    <li id="pag_profilo"><a href="profile.php?id=<?= $_COOKIE['NomeUtente']; ?>">Profilo</a></li>
+                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                    <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                 <?php endif; ?>
-                <li id="pag_principale"><a href="index.php">Home page</a></li>
+                <li id="pag_principale"><a href="home.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                <?php if (isset($_COOKIE['NomeUtente'])): ?>
+                <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <li id="pag_notifiche"><a href="notifiche.php">Notifiche</a></li>
-                    <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
+                    <li id="pag_uscita"><a href="./php/includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
                     <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
                     <li id="pag_accesso"><a href="login.html">Login</a></li>
@@ -76,7 +75,9 @@
                             </td>
                         </tr>
                         <tr>
+                            <!-- TIME TABLE: needs fix.
                             <td>
+                                
                                 <table onload="oraCorrente()">
                                     <caption>Orari di presenza in radio</caption>
                                     <tr id="intestazione_orari">
@@ -126,6 +127,8 @@
                                     </tr>
                                 </table>
                             </td>
+                                    --->
+                            <td>Orari di attività</td>
                             <td>
                                 <ul id="lista_orari">
                                     <?php foreach($orari as $intervallo): ?>
@@ -136,7 +139,7 @@
                         </tr>
                     </table>
                 </section>
-                <?php if($utente['NomeUtente'] == $_COOKIE['NomeUtente']): ?>
+                <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                     <section onload="modificaProfilo()">
                         <button class="access_required" onclick="modificaProfilo()">Inserisci o modifica</button>
                         <form action="alterProfile.php" method="post" name="alter_form">
@@ -173,14 +176,17 @@
                                             <caption>Frequenze preferite (aggiungere progressivemente in MegaHertz)</caption>
                                             <?php foreach($frequenze as $frequenza): 
                                             $frequenza = (array) $frequenza; ?>
+                                            <!--ERROR -->
                                                 <tr>
                                                     <td><?= $frequenza[0]; ?></td>
                                                     <td><button onclick="removeFreq(<?= $frequenza[0]; ?>)">Rimuovi</button></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                                 <tr>
-                                                    <td><label for="user_freq">Aggiungi</label></td>
-                                                    <td><input type="number" name="user_freq" step="any" min="0" id="user_freq"/></td>
+                                                    <form action="includes/addMHz.inc.php" method="post">
+                                                        <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
+                                                        <input type="submit" value="Aggiungi">
+                                                    </form>
                                                 </tr>
                                         </table>
                                     </td>
@@ -419,7 +425,8 @@
                 <?php endif; ?>
             </aside>
         </main>
-        <script src="js/profile.js" type="text/javascript"></script>
-        <script src="js/index.js" type="text/javascript"></script>
+        <script src="../js/profile.js" type="text/javascript"></script>
+        <script src="../js/index.js" type="text/javascript"></script>
+        <script src="../js/generale.js" type="text/javascript"></script>
     </body>
 </html>
