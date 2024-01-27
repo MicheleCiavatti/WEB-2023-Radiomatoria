@@ -122,6 +122,7 @@
                     </form>
                 <?php endif; ?>
             </section>
+            <!--************************************* HANDLING PASSWORD AND CLUE **************************************-->
             <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                 <section>
                     <ul>
@@ -141,7 +142,10 @@
                 <h2>Amici</h2>
                 <ul>
                     <?php foreach($amici as $amico):?>
-                        <li><a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a></li> <!-- Would be nice to see the propic of the friend, but it doesn't work -->
+                        <li>
+                            <img src="<?= '../' . $amico[1] ?>" alt=""/>
+                            <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
+                        </li> <!-- Would be nice to see the propic of the friend, but it doesn't work -->
                     <?php endforeach;?>
                 </ul>
             </section>
@@ -149,7 +153,11 @@
                 <h2>Following</h2>
                 <ul>
                     <?php foreach($seguiti as $seguito):?>
-                        <li><a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a></li> <!-- Would be nice to see the propic of the followed, but it doesn't work -->
+                        <?php error_log($seguito[1]); ?>
+                        <li>
+                            <img src="<?= '../' . $seguito[1] ?>" alt=""/>
+                            <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
+                        </li>
                     <?php endforeach;?>
                 </ul>
             </section>
