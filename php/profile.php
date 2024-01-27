@@ -46,9 +46,10 @@
             <header>
                 <!--- Profile pic, name and buttons for friendship/follow --->
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
-                <p><?= $utente["NomeUtente"] ?></p>
+                <p id='profile_name'><?= $utente["NomeUtente"] ?></p>
                 <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
                 <ul>
+                    <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
                     <li>
                             <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
                                 <button type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
@@ -58,11 +59,9 @@
                     </li>
                     <li>
                             <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                <button id="remove_follow" type="button" onclick="removeFollow('<?= $_SESSION['NomeUtente'] ?>', '<?= $utente['NomeUtente'] ?>')">Rimuovi follow</button>
+                                <button id="remove_follow" type="button">Rimuovi follow</button>
                             <?php else: ?>
-                                <button id="follow_button" type="button" onclick="addFollow('<?= $_SESSION['NomeUtente'] ?>', '<?= $utente['NomeUtente'] ?>')">
-                                Segui
-                                </button>
+                                <button id="follow_button" type="button">Segui</button>
                             <?php endif; ?>
                     </li>
                 </ul>
