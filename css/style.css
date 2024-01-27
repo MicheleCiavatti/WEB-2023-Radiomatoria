@@ -122,3 +122,7 @@ footer {
     background-color: lemonchiffon;
     font-weight: lighter;
 }
+
+#session_user_name {
+    display: none;
+}
