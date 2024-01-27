@@ -35,7 +35,7 @@
                 <li><a href="guide.php">Guida</a></li>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <li><a href="notifiche.php">Notifiche</a></li>
-                    <li><a href="./php/includes/logout.inc.php">Logout</a></li>
+                    <li><a href="./includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
                     <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
                     <li id="pag_accesso"><a href="login.html">Login</a></li>
@@ -58,9 +58,11 @@
                     </li>
                     <li>
                             <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                <button type="button" value="Rimuovi follow">Rimuovi follow</button>
+                                <button id="remove_follow" type="button" onclick="removeFollow('<?= $_SESSION['NomeUtente'] ?>', '<?= $utente['NomeUtente'] ?>')">Rimuovi follow</button>
                             <?php else: ?>
-                                <button type="button" value="Segui">Segui</button>
+                                <button id="follow_button" type="button" onclick="addFollow('<?= $_SESSION['NomeUtente'] ?>', '<?= $utente['NomeUtente'] ?>')">
+                                Segui
+                                </button>
                             <?php endif; ?>
                     </li>
                 </ul>
