@@ -4,9 +4,12 @@ require_once "../classes/dbh.classes.php";
 $dbh = new Dbh;
 
 if (isset($_GET['username']) && isset($_GET['start']) && isset($_GET['end'])) {
+    error_log($_GET['end']);
+    error_log(strtotime($_GET['end']));
     $uid = $_GET['username'];
-    $start = $_GET['start'];
-    $end = $_GET['end'];
+    $end = date("H:i:s", strtotime($_GET['end']));
+    $start = date("H:i:s", strtotime($_GET['start']));
+    error_log("uid: " . $uid . " start: " . $start . " end: " . $end);
     $s = $dbh->connect()->prepare(
         'DELETE 
          FROM DISPONIBILITA

@@ -2,12 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let username = document.getElementById('session_user_name');
     let other = document.getElementById('profile_name').innerHTML;
     username = username === null ? other : username.innerHTML;
+    /* Handling of follow buttons */
     let addFollowButton = document.getElementById('follow_button');
     let removeFollowButton = document.getElementById('remove_follow');
     if (addFollowButton)
         addFollowButton.addEventListener('click', function() { addFollow(username, other) });
     if (removeFollowButton)
         removeFollowButton.addEventListener('click', function() { removeFollow(username, other) });
+    /* Handling remove frequency buttons */
     let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
     if (removeFrequencyButtons.length > 0) {
         for (i = 0; i < removeFrequencyButtons.length; i++) {
@@ -15,6 +17,18 @@ document.addEventListener('DOMContentLoaded', function() {
             let id = button.closest('li').id;
             let f_to_remove = button.closest('li').innerHTML;
             button.addEventListener('click', function() {removeFrequency(f_to_remove, username, id) });
+        }
+    }
+    /* Handling remove time interval buttons */
+    let removeTimeIntervalButtons = document.getElementsByClassName('remove_timeslot_buttons');
+    if (removeTimeIntervalButtons.length > 0) {
+        for (i = 0; i < removeTimeIntervalButtons.length; i++) {
+            let button = removeTimeIntervalButtons[i];
+            let id = button.closest('li').id;
+            let times = button.closest('li').innerHTML.split('<')[0].split(' - ');
+            let start = times[0].trim();
+            let end = times[1].trim();
+            button.addEventListener('click', function() {removeTimeInterval(username, start, end, id) });
         }
     }
 });
@@ -37,7 +51,7 @@ function removeFrequency(f_to_remove, username, id) {
 }
 
 function removeTimeInterval(username, start, end, id) {
-    let element = document.querySelector(id);
+    let element = document.getElementById(id);
     element.parentNode.removeChild(element);
     let xhr = new XMLHttpRequest();
     let url = 'functions/removeTimeSlot.php?username=' + encodeURIComponent(username) + '&start=' + encodeURIComponent(start) + '&end=' + encodeURIComponent(end);

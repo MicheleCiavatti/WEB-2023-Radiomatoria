@@ -75,7 +75,7 @@
                     <li>Indirizzo e-mail: <?php echo $utente['IndirizzoMail']?></li>
                 </ul>
             </section>
-            <!--HANDLING USER FREQUENCIES: both inserting and removing-->
+             <!--************************************* HANDLING USER FREQUENCIES **************************************-->
             <section>
                 <ul>
                     <?php
@@ -98,17 +98,17 @@
                     </form>
                 <?php endif; ?>
             </section>
-            <!-- HANDLING USER TIME SLOTS: both inserting and removing -->
+            <!--************************************* HANDLING USER TIME SLOTS **************************************-->
             <section>
                 <ul>
                     <?php
                         foreach($orari as $intervallo):
                     ?>
                     <!-- Time slots displaying and removing done via AJAX -->
-                    <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>">
+                    <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
                         <?= $intervallo[0] ?> - <?= $intervallo[1]?>
                         <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                            <button type="button" onclick="removeTimeInterval('<?= $utente['NomeUtente']?>', '<?= $intervallo[0]?>', '<?= $intervallo[1]?>', '<?= '#ts' . str_replace(':', '_', $intervallo[0] . $intervallo[1])?>')">Rimuovi</button> 
+                            <button type="button">Rimuovi</button> 
                         <?php endif; ?>
                     </li>
                     <?php endforeach; ?>
