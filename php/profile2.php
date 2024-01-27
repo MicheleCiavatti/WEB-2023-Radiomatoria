@@ -1,15 +1,13 @@
 <?php
-    require_once 'includes/profileFunctions.inc.php';
-    $post_list = [];
-    $element_id_like = [];
-    $element_id_dislike = [];
-    $username = $_GET['id']; //Get user owner of the profile
-    $data = profileAccess($username); 
-    $utente = $data[0]; //Contains user info
-    $frequenze = $data[1]; 
-    $orari = $data[2]; 
-    $amici = $data[3]; 
-    $seguiti = $data[4]; 
+    require_once './php/generale.php';
+    require_once './php/profile.php';
+    $username = $_GET['id'];
+    $data = profileAccess($username);
+    $utente = $data[0];
+    $frequenze = $data[1];
+    $orari = $data[2];
+    $amici = $data[3];
+    $seguiti = $data[4];
     $bloccati = $data[5];
 ?>
 <!DOCTYPE html>
@@ -19,7 +17,7 @@
         <meta charset="UTF-8"/>
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body>
+    <body onload="hide()">
         <header>
             <h1>Long Light</h1>
         </header>
@@ -69,7 +67,7 @@
                                 <ul id="lista_frequenze">
                                     <?php foreach($frequenze as $frequenza): 
                                     $frequenza = (array) $frequenza; ?>
-                                    <li><?= $frequenza[0]; ?></li>
+                                    <li name="f<?= $frequenza[0]; ?>"><?= $frequenza[0]; ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
@@ -132,7 +130,7 @@
                             <td>
                                 <ul id="lista_orari">
                                     <?php foreach($orari as $intervallo): ?>
-                                        <li onload="tabellaOrari(<?= $intervallo[0]; ?>, <?= $intervallo[1]; ?>)"><?= $intervallo[0] . " – " . $intervallo[1]; ?></li>
+                                        <li name="i<?= $intervallo[0] . '–' . $intervallo[1]; ?>" onload="tabellaOrari(<?= $intervallo[0]; ?>, <?= $intervallo[1]; ?>)"><?= $intervallo[0] . " – " . $intervallo[1]; ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
@@ -176,8 +174,7 @@
                                             <caption>Frequenze preferite (aggiungere progressivemente in MegaHertz)</caption>
                                             <?php foreach($frequenze as $frequenza): 
                                             $frequenza = (array) $frequenza; ?>
-                                            <!--ERROR -->
-                                                <tr>
+                                                <tr name="f<?= $frequenza[0]; ?>">
                                                     <td><?= $frequenza[0]; ?></td>
                                                     <td><button onclick="removeFreq(<?= $frequenza[0]; ?>)">Rimuovi</button></td>
                                                 </tr>
@@ -196,9 +193,9 @@
                                         <table>
                                             <caption>Orari in radio (non si accettano sovrapposizioni)</caption>
                                             <?php foreach($orari as $intervallo): ?>
-                                                <tr>
+                                                <tr name="i<?= $intervallo[0] . '–' . $intervallo[1]; ?>">
                                                     <td><?= $intervallo[0] . "–" . $intervallo[1]; ?></td>
-                                                    <td><button onclick="removeInterval($intervallo[0])">Rimuovi</button></td>
+                                                    <td><button onclick="removeInterval(<?= $intervallo[0]; ?>,<?= $intervallo[1]; ?>)">Rimuovi</button></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                                 <tr>
@@ -245,25 +242,26 @@
                 <section id="comandi">
                     <h3>Comandi</h3>
                     <?php if(isFriend($utente['NomeUtente'])): ?>
-                        <button class="access_required" onclick="removeFriend($utente['NomeUtente'])">Rescindi amicizia</button>
+                        <button id="remove_friend" class="access_required" onclick="removeFriend(<?= $utente['NomeUtente'] ?>)">Rescindi amicizia</button>
                     <?php else: ?>
-                        <button class="access_required" onclick="notify('ti ha inviato una richiesta di amicizia', $utente['NomeUtente'], true)">Richiedi amicizia</button>
+                        <button id="friend_request" class="access_required" onclick="friendRequest(<?= $utente['NomeUtente'] ?>)">Richiedi amicizia</button>
                     <?php endif;
                     if(isFollowed($utente['NomeUtente'])): ?>
-                        <button class="access_required" onclick="removeFollowed($utente['NomeUtente'])">Lascia</button>
+                        <button id="remove_followed" class="access_required" onclick="removeFollowed(<?= $utente['NomeUtente'] ?>)">Lascia</button>
                     <?php else: ?>
-                        <button class="access_required" onclick="addFollowed($utente['NomeUtente'])">Segui</button>
+                        <button id="add_followed" class="access_required" onclick="addFollowed(<?= $utente['NomeUtente'] ?>)">Segui</button>
                     <?php endif;
                     if(isBlocked($utente['NomeUtente'])): ?>
-                        <button class="access_required" onclick="removeBlocked($utente['NomeUtente'])">Rilascia blocco</button>
+                        <button id="remove_blocked" class="access_required" onclick="removeBlocked(<?= $utente['NomeUtente'] ?>)">Rilascia blocco</button>
                     <?php else: ?>
-                        <button class="access_required" onclick="addBlocked($utente['NomeUtente'])">Blocca</button>
+                        <button id="add_blocked" class="access_required" onclick="addBlocked(<?= $utente['NomeUtente'] ?>)">Blocca</button>
                     <?php endif; ?>
                 </section>
             <?php endif; ?>
             <section id="post_column">
                 <header>
-                    <form action="selectPostProfile.php" method="post" name="select_form_profile">
+                    <form action="selectPostProfile.php" method="post" name="select_form_profile" id="select_form">
+                        <input type="hidden" name="username" id="username" value="<?= $utente['NomeUtente'] ?>"/>
                         <label for="relation">Seleziona post in base alla relazione col proprietario del profilo</label>
                         <select name="relation" id="relation" onchange="this.form.submit()">
                             <option value="none" selected>Nessuna</option>

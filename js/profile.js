@@ -98,5 +98,3 @@ function removeFollow(username, other) {
     };
     xhr.send();
 }
-
-//onclick="removeFrequency('<?= $f?>', '<?= $utente['NomeUtente']?>', '<?= '#f' . str_replace('.', '_', $f)?>')"

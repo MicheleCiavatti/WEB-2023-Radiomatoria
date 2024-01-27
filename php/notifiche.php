@@ -1,7 +1,12 @@
 <?php
 session_start();
-if (!cookiesSet())
+if (!isset($_COOKIE['NomeUtente'])) {
     header('location: login.html?error=needtologin');
+}
+require_once './php/list_notifications.php';
+$data = list_notifications();
+$notifiche_non_lette = $data[0];
+$notifiche_lette = $data[1];
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -10,7 +15,7 @@ if (!cookiesSet())
         <meta charset="UTF-8"/>
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload="list_notifications()">
+    <body>
         <header>
             <h1>Long Light</h1>
         </header>
@@ -29,7 +34,7 @@ if (!cookiesSet())
                 <h3>Da leggere</h3>
                 <ul id="unread_notifications_list">
                     <?php foreach($notifiche_non_lette as $notifica): ?>
-                        <li onclick="readNotification($notifica['IdNotifica'])">
+                        <li id="nid<?= $notifica['IdNotifica'] ?>" onclick="readNotification($notifica['IdNotifica'])">
                             <a href="profile.php?id=<?= $notifica['Mandante'] ?>"><?= $notifica['Mandante']; ?></a>
                             <span><?= $notifica['TestoNotifica']; ?></span>
                             <?php if($notifica['Richiesta'] == true): ?>
