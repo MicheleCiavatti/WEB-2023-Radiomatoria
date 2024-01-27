@@ -89,4 +89,19 @@ function isFriend($user, $other) {
     }
     return $s->rowCount() > 0;
 }
+
+function isFollowed($user, $other) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM FOLLOW
+         WHERE Follower = ? AND Followed = ?;'
+    );
+    if (!$s->execute(array($user, $other))) {
+        $s = null;
+        header('location: ../profile.php?id=' . $other . '&error=stmtfailed');
+        exit();
+    }
+    return $s->rowCount() > 0;
+}
     

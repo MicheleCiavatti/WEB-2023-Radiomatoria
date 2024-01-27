@@ -44,19 +44,27 @@
         </nav>
         <main>
             <header>
+                <!--- Profile pic, name and buttons for friendship/follow --->
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
                 <p><?= $utente["NomeUtente"] ?></p>
+                <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
                 <ul>
                     <li>
-                        <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
                             <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
                                 <button type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
                             <?php else: ?>
-                                <button type="button" value="Manda amicizia">Richiedi amicizia</button>
+                                <button type="button" value="Richiedi amicizia">Richiedi amicizia</button>
                             <?php endif; ?>
-                        <?php endif; ?>
+                    </li>
+                    <li>
+                            <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
+                                <button type="button" value="Rimuovi follow">Rimuovi follow</button>
+                            <?php else: ?>
+                                <button type="button" value="Segui">Segui</button>
+                            <?php endif; ?>
                     </li>
                 </ul>
+                <?php endif; ?>
             </header>
             <section>
                 <ul>
