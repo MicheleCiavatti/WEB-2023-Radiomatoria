@@ -26,11 +26,9 @@
         </header>
         <nav>
             <ul>
-                <li>
-                    <?php if (isset($_SESSION['NomeUtente'])): ?>
-                        <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
-                    <?php endif; ?>
-                </li>
+                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                    <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                <?php endif; ?>
                 <li><a href="home.php">Home page</a></li>
                 <li><a href="guide.php">Guida</a></li>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
