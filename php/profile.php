@@ -1,6 +1,5 @@
 <?php
     require_once './includes/profileInfo.inc.php';
-    $_SESSION['NomeUtente'] = "AlessandroC";
     $post_list = [];
     $element_id_like = [];
     $element_id_dislike = [];
