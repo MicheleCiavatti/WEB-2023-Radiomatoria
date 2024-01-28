@@ -1,5 +1,6 @@
 <?php
     require_once './includes/profileInfo.inc.php';
+    $_SESSION['NomeUtente'] = "AlessandroC";
     $post_list = [];
     $element_id_like = [];
     $element_id_dislike = [];
@@ -32,7 +33,7 @@
                     <?php endif; ?>
                 </li>
                 <li><a href="home.php">Home page</a></li>
-                <li><a href="guide.php">Guida</a></li>
+                <li><a href="guida.php">Guida</a></li>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <li><a href="notifiche.php">Notifiche</a></li>
                     <li><a href="./includes/logout.inc.php">Logout</a></li>
@@ -75,7 +76,7 @@
                     <li>Indirizzo e-mail: <?php echo $utente['IndirizzoMail']?></li>
                 </ul>
             </section>
-             <!--************************************* HANDLING USER FREQUENCIES **************************************-->
+            <!--************************************* HANDLING USER FREQUENCIES **************************************-->
             <section>
                 <ul>
                     <?php
@@ -100,6 +101,54 @@
             </section>
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
             <section>
+            <table>
+                <caption>Orari di presenza in radio</caption>
+                <tr id="intestazione_orari">
+                    <th></th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th>12</th>
+                </tr>
+                <tr id="riga_orari_mattina">
+                    <th>AM</th>
+                    <td headers="1 AM"></td>
+                    <td headers="2 AM"></td>
+                    <td headers="3 AM"></td>
+                    <td headers="4 AM"></td>
+                    <td headers="5 AM"></td>
+                    <td headers="6 AM"></td>
+                    <td headers="7 AM"></td>
+                    <td headers="8 AM"></td>
+                    <td headers="9 AM"></td>
+                    <td headers="10 AM"></td>
+                    <td headers="11 AM"></td>
+                    <td headers="12 AM"></td>
+                </tr>
+                <tr id="riga_orari_sera">
+                    <th>PM</th>
+                    <td headers="1 PM"></td>
+                    <td headers="2 PM"></td>
+                    <td headers="3 PM"></td>
+                    <td headers="4 PM"></td>
+                    <td headers="5 PM"></td>
+                    <td headers="6 PM"></td>
+                    <td headers="7 PM"></td>
+                    <td headers="8 PM"></td>
+                    <td headers="9 PM"></td>
+                    <td headers="10 PM"></td>
+                    <td headers="11 PM"></td>
+                    <td headers="12 PM"></td>
+                </tr>
+            </table>
                 <ul>
                     <?php
                         foreach($orari as $intervallo):
@@ -115,6 +164,7 @@
                 </ul>
                 <!-- Form for adding time slots -->
                 <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                    <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
                     <form action="includes/addTimeSlot.inc.php" method="post">
                         <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
                         <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
@@ -129,11 +179,11 @@
                         <li>Indizio: <?= $utente['Indizio']?></li>
                     </ul>
                     <form action="includes/changeClue.inc.php" method="post">
-                        <label for="new_clue">Nuovo indizio:<input name="new_clue" required></label>
+                        <label for="new_clue">Modifica l'indizio: <input name="new_clue" required></label>
                         <input type="submit" value="Modifica indizio">
                     </form>
                     <form action="includes/changePW.inc.php" method="post">
-                        <label for="new_pw">Nuova password:<input name="new_pw" type="password" minlength="8" required></label>
+                        <label for="new_pw">Cambia password:<input name="new_pw" type="password" minlength="8" required></label>
                         <input type="submit" value="Modifica password">
                     </form>
                 </section>
@@ -145,7 +195,8 @@
                         <li>
                             <img src="<?= '../' . $amico[1] ?>" alt=""/>
                             <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
-                        </li> <!-- Would be nice to see the propic of the friend, but it doesn't work -->
+                            <button class="access_required" id="remove_followed_button">Rimuovi</button>
+                        </li>
                     <?php endforeach;?>
                 </ul>
             </section>
@@ -157,9 +208,25 @@
                         <li>
                             <img src="<?= '../' . $seguito[1] ?>" alt=""/>
                             <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
+                            <button class="access_required" id="remove_followed_button">Rimuovi</button>
                         </li>
                     <?php endforeach;?>
                 </ul>
+            </section>
+            <section>
+                <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                    <h3>Bloccati</h2>
+                    <ul>
+                        <?php foreach($bloccati as $bloccato): ?>
+                            <li>
+                                <img src="<?= $bloccato[1]; ?>" alt=""/>
+                                <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
+                                <button class="access_required" id="remove_followed_button">Perdona</button>
+                            </li>
+                            
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
