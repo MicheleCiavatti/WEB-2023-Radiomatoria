@@ -104,47 +104,71 @@
                 <caption>Orari di presenza in radio</caption>
                 <tr id="intestazione_orari">
                     <th></th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>6</th>
-                    <th>7</th>
-                    <th>8</th>
-                    <th>9</th>
-                    <th>10</th>
-                    <th>11</th>
-                    <th>12</th>
+                    <th colspan="2">1</th>
+                    <th colspan="2">2</th>
+                    <th colspan="2">3</th>
+                    <th colspan="2">4</th>
+                    <th colspan="2">5</th>
+                    <th colspan="2">6</th>
+                    <th colspan="2">7</th>
+                    <th colspan="2">8</th>
+                    <th colspan="2">9</th>
+                    <th colspan="2">10</th>
+                    <th colspan="2">11</th>
+                    <th colspan="2">12</th>
                 </tr>
                 <tr id="riga_orari_mattina">
                     <th>AM</th>
                     <td headers="1 AM"></td>
+                    <td headers="1 AM"></td>
+                    <td headers="2 AM"></td>
                     <td headers="2 AM"></td>
                     <td headers="3 AM"></td>
+                    <td headers="3 AM"></td>
+                    <td headers="4 AM"></td>
                     <td headers="4 AM"></td>
                     <td headers="5 AM"></td>
+                    <td headers="5 AM"></td>
+                    <td headers="6 AM"></td>
                     <td headers="6 AM"></td>
                     <td headers="7 AM"></td>
+                    <td headers="7 AM"></td>
+                    <td headers="8 AM"></td>
                     <td headers="8 AM"></td>
                     <td headers="9 AM"></td>
+                    <td headers="9 AM"></td>
+                    <td headers="10 AM"></td>
                     <td headers="10 AM"></td>
                     <td headers="11 AM"></td>
+                    <td headers="11 AM"></td>
+                    <td headers="12 AM"></td>
                     <td headers="12 AM"></td>
                 </tr>
                 <tr id="riga_orari_sera">
                     <th>PM</th>
                     <td headers="1 PM"></td>
+                    <td headers="1 PM"></td>
+                    <td headers="2 PM"></td>
                     <td headers="2 PM"></td>
                     <td headers="3 PM"></td>
+                    <td headers="3 PM"></td>
+                    <td headers="4 PM"></td>
                     <td headers="4 PM"></td>
                     <td headers="5 PM"></td>
+                    <td headers="5 PM"></td>
+                    <td headers="6 PM"></td>
                     <td headers="6 PM"></td>
                     <td headers="7 PM"></td>
+                    <td headers="7 PM"></td>
+                    <td headers="8 PM"></td>
                     <td headers="8 PM"></td>
                     <td headers="9 PM"></td>
+                    <td headers="9 PM"></td>
+                    <td headers="10 PM"></td>
                     <td headers="10 PM"></td>
                     <td headers="11 PM"></td>
+                    <td headers="11 PM"></td>
+                    <td headers="12 PM"></td>
                     <td headers="12 PM"></td>
                 </tr>
             </table>
