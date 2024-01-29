@@ -36,19 +36,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
             /* Aesthetics */
             let oraInizio = start.slice(0,2);
+            let minutiInizio = start.slice(3,5);
             let oraFine = end.slice(0,2);
+            let minutiFine = end.slice(3,5);
             for(item of intestazione.children) {
-                if((oraInizio <= parseInt(item.innerHTML)
-                && oraFine >= parseInt(item.innerHTML)
-                && oraInizio <= oraFine) || (oraInizio > oraFine
-                && (oraInizio <= parseInt(item.innerHTML) || oraFine >= parseInt(item.innerHTML)))) {
-                    riga1.children.item(parseInt(item.innerHTML)).style.background = "green";
+                if((oraInizio < parseInt(item.innerHTML)
+                && oraFine > parseInt(item.innerHTML)
+                && oraInizio < oraFine) || (oraInizio > oraFine
+                && (oraInizio < parseInt(item.innerHTML) || oraFine > parseInt(item.innerHTML)))) {
+                    riga1.children.item(parseInt(item.innerHTML)*2-1).style.background = "green";
+                    riga1.children.item(parseInt(item.innerHTML)*2).style.background = "green";
                 }
-                if((oraInizio <= parseInt(item.innerHTML) + 12
-                && oraFine >= parseInt(item.innerHTML) + 12
-                && oraInizio <= oraFine) || (oraInizio > oraFine
-                && (oraInizio <= parseInt(item.innerHTML) + 12 || oraFine >= parseInt(item.innerHTML) + 12))) {
-                    riga2.children.item(parseInt(item.innerHTML)).style.background = "green";
+                if((oraInizio < parseInt(item.innerHTML) + 12
+                && oraFine > parseInt(item.innerHTML) + 12
+                && oraInizio < oraFine) || (oraInizio > oraFine
+                && (oraInizio < parseInt(item.innerHTML) + 12 || oraFine > parseInt(item.innerHTML) + 12))) {
+                    riga2.children.item(parseInt(item.innerHTML)*2-1).style.background = "green";
+                    riga2.children.item(parseInt(item.innerHTML)*2).style.background = "green";
+                }
+            }
+            if(minutiInizio < 30) {
+                if(oraInizio <= 12) {
+                    riga1.children.item(oraInizio*2).style.background = "green";
+                    if(minutiInizio == 0) {
+                        riga1.children.item(oraInizio*2-1).style.background = "green";
+                    }
+                } else {
+                    riga2.children.item(oraInizio*2+1).style.background = "green";
+                    if(minutiInizio == 0) {
+                        riga2.children.item(oraInizio*2-1).style.background = "green";
+                    }
+                }
+            }
+            if(minutiFine > 30) {
+                if(oraFine <= 12) {
+                    riga1.children.item(oraFine*2-1).style.background = "green";
+                } else {
+                    riga2.children.item(oraFine*2-1).style.background = "green";
                 }
             }
         }
