@@ -6,7 +6,7 @@
     $username = $_GET['id']; //Get user owner of the profile
     $data = profileAccess($username); 
     /*Adding user's info in local variables*/
-    $utente = $data[0]; //Contains user info
+    $utente = $data[0]; 
     $frequenze = $data[1]; 
     $orari = $data[2]; 
     $amici = $data[3]; 
@@ -30,7 +30,7 @@
                     <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                 <?php endif; ?>
                 <li><a href="home.php">Home page</a></li>
-                <li><a href="guide.php">Guida</a></li>
+                <li><a href="guida.php">Guida</a></li>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <li><a href="notifiche.php">Notifiche</a></li>
                     <li><a href="./includes/logout.inc.php">Logout</a></li>
@@ -50,7 +50,7 @@
                     <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
                     <li>
                             <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                <button type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
+                                <button id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
                             <?php else: ?>
                                 <button type="button" value="Richiedi amicizia">Richiedi amicizia</button>
                             <?php endif; ?>
@@ -73,7 +73,7 @@
                     <li>Indirizzo e-mail: <?php echo $utente['IndirizzoMail']?></li>
                 </ul>
             </section>
-             <!--************************************* HANDLING USER FREQUENCIES **************************************-->
+            <!--************************************* HANDLING USER FREQUENCIES **************************************-->
             <section>
                 <ul>
                     <?php
@@ -98,6 +98,78 @@
             </section>
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
             <section>
+            <table>
+                <caption>Orari di presenza in radio</caption>
+                <tr id="intestazione_orari">
+                    <th></th>
+                    <th colspan="2">1</th>
+                    <th colspan="2">2</th>
+                    <th colspan="2">3</th>
+                    <th colspan="2">4</th>
+                    <th colspan="2">5</th>
+                    <th colspan="2">6</th>
+                    <th colspan="2">7</th>
+                    <th colspan="2">8</th>
+                    <th colspan="2">9</th>
+                    <th colspan="2">10</th>
+                    <th colspan="2">11</th>
+                    <th colspan="2">12</th>
+                </tr>
+                <tr id="riga_orari_mattina">
+                    <th>AM</th>
+                    <td headers="1 AM"></td>
+                    <td headers="1 AM"></td>
+                    <td headers="2 AM"></td>
+                    <td headers="2 AM"></td>
+                    <td headers="3 AM"></td>
+                    <td headers="3 AM"></td>
+                    <td headers="4 AM"></td>
+                    <td headers="4 AM"></td>
+                    <td headers="5 AM"></td>
+                    <td headers="5 AM"></td>
+                    <td headers="6 AM"></td>
+                    <td headers="6 AM"></td>
+                    <td headers="7 AM"></td>
+                    <td headers="7 AM"></td>
+                    <td headers="8 AM"></td>
+                    <td headers="8 AM"></td>
+                    <td headers="9 AM"></td>
+                    <td headers="9 AM"></td>
+                    <td headers="10 AM"></td>
+                    <td headers="10 AM"></td>
+                    <td headers="11 AM"></td>
+                    <td headers="11 AM"></td>
+                    <td headers="12 AM"></td>
+                    <td headers="12 AM"></td>
+                </tr>
+                <tr id="riga_orari_sera">
+                    <th>PM</th>
+                    <td headers="1 PM"></td>
+                    <td headers="1 PM"></td>
+                    <td headers="2 PM"></td>
+                    <td headers="2 PM"></td>
+                    <td headers="3 PM"></td>
+                    <td headers="3 PM"></td>
+                    <td headers="4 PM"></td>
+                    <td headers="4 PM"></td>
+                    <td headers="5 PM"></td>
+                    <td headers="5 PM"></td>
+                    <td headers="6 PM"></td>
+                    <td headers="6 PM"></td>
+                    <td headers="7 PM"></td>
+                    <td headers="7 PM"></td>
+                    <td headers="8 PM"></td>
+                    <td headers="8 PM"></td>
+                    <td headers="9 PM"></td>
+                    <td headers="9 PM"></td>
+                    <td headers="10 PM"></td>
+                    <td headers="10 PM"></td>
+                    <td headers="11 PM"></td>
+                    <td headers="11 PM"></td>
+                    <td headers="12 PM"></td>
+                    <td headers="12 PM"></td>
+                </tr>
+            </table>
                 <ul>
                     <?php
                         foreach($orari as $intervallo):
@@ -113,6 +185,7 @@
                 </ul>
                 <!-- Form for adding time slots -->
                 <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                    <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
                     <form action="includes/addTimeSlot.inc.php" method="post">
                         <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
                         <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
@@ -127,15 +200,16 @@
                         <li>Indizio: <?= $utente['Indizio']?></li>
                     </ul>
                     <form action="includes/changeClue.inc.php" method="post">
-                        <label for="new_clue">Nuovo indizio:<input name="new_clue" required></label>
+                        <label for="new_clue">Modifica l'indizio: <input name="new_clue" required></label>
                         <input type="submit" value="Modifica indizio">
                     </form>
                     <form action="includes/changePW.inc.php" method="post">
-                        <label for="new_pw">Nuova password:<input name="new_pw" type="password" minlength="8" required></label>
+                        <label for="new_pw">Cambia password:<input name="new_pw" type="password" minlength="8" required></label>
                         <input type="submit" value="Modifica password">
                     </form>
                 </section>
             <?php endif; ?>
+            <!--************************************* HANDLING FRIEND LIST **************************************-->
             <section>
                 <h2>Amici</h2>
                 <ul>
@@ -143,10 +217,12 @@
                         <li>
                             <img src="<?= '../' . $amico[1] ?>" alt=""/>
                             <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
-                        </li> <!-- Would be nice to see the propic of the friend, but it doesn't work -->
+                            <button class="remove_friend_buttons" id="remove_followed_button">Rimuovi</button>
+                        </li>
                     <?php endforeach;?>
                 </ul>
             </section>
+            <!--************************************* HANDLING FOLLOWED LIST **************************************-->
             <section>
                 <h2>Following</h2>
                 <ul>
@@ -155,9 +231,26 @@
                         <li>
                             <img src="<?= '../' . $seguito[1] ?>" alt=""/>
                             <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
+                            <button class="remove_follow_buttons" id="remove_followed_button">Rimuovi</button>
                         </li>
                     <?php endforeach;?>
                 </ul>
+            </section>
+            <!--************************************* HANDLING BLOCKED LIST **************************************-->
+            <section>
+                <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                    <h2>Bloccati</h2>
+                    <ul>
+                        <?php foreach($bloccati as $bloccato): ?>
+                            <li>
+                                <img src="<?= $bloccato[1]; ?>" alt=""/>
+                                <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
+                                <button class="access_required" id="remove_block_button">Perdona</button>
+                            </li>
+                            
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
