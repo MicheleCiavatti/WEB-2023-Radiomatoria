@@ -65,14 +65,14 @@
                 </ul>
                 <?php endif; ?>
             </header>
-            <section>
+            <aside>
                 <ul>
                     <li>Indirizzo: <?php echo $utente['Indirizzo']?></li>
                     <li>Città: <?php echo $utente['Città']?></li>
                     <li>Data di Nascita: <?php echo $utente['DataNascita']?></li>
                     <li>Indirizzo e-mail: <?php echo $utente['IndirizzoMail']?></li>
                 </ul>
-            </section>
+            </aside>
             <!--************************************* HANDLING USER FREQUENCIES **************************************-->
             <section>
                 <ul>
@@ -210,53 +210,74 @@
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING FRIEND LIST **************************************-->
-            <section>
-                <h2>Amici</h2>
-                <ul>
-                    <?php foreach($amici as $amico):?>
-                        <li>
-                            <img src="<?= '../' . $amico[1] ?>" alt=""/>
-                            <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
-                            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                <button class="remove_friend_buttons" id="remove_followed_button">Rimuovi</button>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach;?>
-                </ul>
-            </section>
+            <?php if(!empty($amici)): ?>
+                <section>
+                    <header><h2>Amici</h2><header>
+                    <p>
+                        <ul>
+                            <?php foreach($amici as $amico):?>
+                                <li>
+                                    <img src="<?= '../' . $amico[1] ?>" alt=""/>
+                                    <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
+                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                        <button class="remove_friend_buttons" id="remove_followed_button">Rimuovi</button>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach;?>
+                        </ul>
+                    </p>
+                </section>
+            <?php endif; ?>
             <!--************************************* HANDLING FOLLOWED LIST **************************************-->
-            <section>
-                <h2>Following</h2>
-                <ul>
-                    <?php foreach($seguiti as $seguito):?>
-                        <?php error_log($seguito[1]); ?>
-                        <li>
-                            <img src="<?= '../' . $seguito[1] ?>" alt=""/>
-                            <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
-                            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                <button class="remove_follow_buttons" id="remove_followed_button">Rimuovi</button>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach;?>
-                </ul>
-            </section>
+            <?php if(!empty($seguiti)): ?>
+                <section>
+                    <header><h2>Following</h2><header>
+                    <p>
+                        <ul>
+                            <?php foreach($seguiti as $seguito):?>
+                                <?php error_log($seguito[1]); ?>
+                                <li>
+                                    <img src="<?= '../' . $seguito[1] ?>" alt=""/>
+                                    <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
+                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                        <button class="remove_follow_buttons" id="remove_followed_button">Rimuovi</button>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach;?>
+                        </ul>
+                    </p>
+                </section>
+            <?php endif; ?>
             <!--************************************* HANDLING BLOCKED LIST **************************************-->
+            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente'] && !empty($bloccati)): ?>
+                <section>
+                    <header><h2>Bloccati</h2></header>
+                    <p>
+                        <ul>
+                            <?php foreach($bloccati as $bloccato): ?>
+                                <li>
+                                    <img src="<?= $bloccato[1]; ?>" alt=""/>
+                                    <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
+                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                        <button class="access_required" id="remove_block_button">Perdona</button>
+                                    <?php endif; ?>
+                                </li>
+                                
+                            <?php endforeach; ?>
+                        </ul>
+                    </p>
+                </section>
+            <?php endif; ?>
+            <!--************************************* HANDLING POSTS **************************************-->
             <section>
-                <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                    <h2>Bloccati</h2>
-                    <ul>
-                        <?php foreach($bloccati as $bloccato): ?>
-                            <li>
-                                <img src="<?= $bloccato[1]; ?>" alt=""/>
-                                <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
-                                <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                    <button class="access_required" id="remove_block_button">Perdona</button>
-                                <?php endif; ?>
-                            </li>
-                            
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
+                <p>
+                    <form action="includes/addPost.inc.php" method="post">
+                        <label for="post_text">Scrivi un post:
+                            <textarea name="post_text" rows="4" cols="50" required></textarea>
+                        </label>
+                        <input type="submit" value="Pubblica">
+                    </form>
+                </p>
             </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
