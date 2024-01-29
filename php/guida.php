@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="it">
     <head>
@@ -74,11 +75,11 @@ Normalmente i radioamatori vengono chiamati ad operare assieme alla Protezione C
                     </ul>
                 </article>
             </section>
-            <?php if (!cookiesSet()): ?>
+            <?php if (!isset($_SESSION['NomeUtente'])): ?>
                 <section id="invito">
                     <h2>Invito</h2>
                     <p>Speriamo che questa pagina ti abbia aiutato a vedere le tecnologie radiofoniche in una luce diversa e ti invitiamo a partecipare in questo sito come utente registrato.</p>
-                    <a href="create.html">Crea account</a>
+                    <a href="../signup.html">Crea account</a>
                 </section>
             <?php endif; ?>
         </main>

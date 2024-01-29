@@ -23,7 +23,7 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
             <ul>
                 <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                 <li><a href="#">Home page</a></li>
-                <li><a href="guide.php">Guida</a></li>
+                <li><a href="guida.php">Guida</a></li>
                 <li><a href="includes/logout.inc.php">Logout</a></li>
                 <li><a href="#">Notifiche</a></li>
             </ul>
