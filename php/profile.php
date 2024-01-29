@@ -50,7 +50,7 @@
                     <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
                     <li>
                             <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                <button type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
+                                <button id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
                             <?php else: ?>
                                 <button type="button" value="Richiedi amicizia">Richiedi amicizia</button>
                             <?php endif; ?>
@@ -216,7 +216,7 @@
                         <li>
                             <img src="<?= '../' . $amico[1] ?>" alt=""/>
                             <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
-                            <button class="access_required" id="remove_followed_button">Rimuovi</button>
+                            <button class="remove_friend_buttons" id="remove_followed_button">Rimuovi</button>
                         </li>
                     <?php endforeach;?>
                 </ul>

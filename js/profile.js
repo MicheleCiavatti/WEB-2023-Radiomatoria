@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addFollowButton.addEventListener('click', function() { addFollow(username, other) });
     if (removeFollowButton)
         removeFollowButton.addEventListener('click', function() { removeFollow(username, other) });
-    /* Handling unfollow buttons in the list of follwed */
+    /* Handling unfollow buttons in the list of followed */
     const removeFollowButtons = document.getElementsByClassName('remove_follow_buttons');
     if (removeFollowButtons.length > 0) {
         for (i = 0; i < removeFollowButtons.length; i++) {
@@ -23,11 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', function() { removeFollow(username, other) });
         }
     }
-    /* Handling friend buttons */
-    // FRIEND REMOVE
-    //const removeFriendButtons = document.getElementsByClassName('')
-    // FRIEND ADD
-    /* Handling remove frequency buttons */
+    /* Handling remove-add friend button on top of the page*/
+    const removeFriendButton = document.getElementById('remove_friend');
+    if (removeFriendButton) {
+        removeFriendButton.addEventListener('click', function() { removeFriend(username, other) });
+    }
+    /*Handling remove frequency buttons */
     let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
     if (removeFrequencyButtons.length > 0) {
         for (i = 0; i < removeFrequencyButtons.length; i++) {
@@ -184,7 +185,6 @@ function addFollow(username, other) {
 }
 
 function removeFollow(username, other) {
-    console.log(username + ' ' + other);
     let xhr = new XMLHttpRequest();
     let url = 'functions/removeFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
@@ -195,6 +195,23 @@ function removeFollow(username, other) {
             location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante la rimozione del follow:', xhr.status);
+        }
+    };
+    xhr.send();
+}
+
+function removeFriend(username, other) {
+    console.log(username + ' ' + other);
+    const xhr = new XMLHttpRequest();
+    const url = 'functions/removeFriend.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Amico rimosso con successo dal server');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione dell\'amico:', xhr.status);
         }
     };
     xhr.send();
