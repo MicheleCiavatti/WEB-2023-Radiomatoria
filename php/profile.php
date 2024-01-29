@@ -6,7 +6,7 @@
     $username = $_GET['id']; //Get user owner of the profile
     $data = profileAccess($username); 
     /*Adding user's info in local variables*/
-    $utente = $data[0]; //Contains user info
+    $utente = $data[0]; 
     $frequenze = $data[1]; 
     $orari = $data[2]; 
     $amici = $data[3]; 
@@ -229,7 +229,7 @@
                         <li>
                             <img src="<?= '../' . $seguito[1] ?>" alt=""/>
                             <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
-                            <button class="access_required" id="remove_followed_button">Rimuovi</button>
+                            <button class="remove_follow_buttons" id="remove_followed_button">Rimuovi</button>
                         </li>
                     <?php endforeach;?>
                 </ul>
@@ -242,7 +242,7 @@
                             <li>
                                 <img src="<?= $bloccato[1]; ?>" alt=""/>
                                 <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
-                                <button class="access_required" id="remove_followed_button">Perdona</button>
+                                <button class="access_required" id="remove_block_button">Perdona</button>
                             </li>
                             
                         <?php endforeach; ?>

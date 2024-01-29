@@ -7,13 +7,26 @@ document.addEventListener('DOMContentLoaded', function() {
     let username = document.getElementById('session_user_name');
     let other = document.getElementById('profile_name').innerHTML;
     username = username === null ? other : username.innerHTML;
-    /* Handling of follow buttons */
+    /* Handling of follow buttons on top of the page */
     let addFollowButton = document.getElementById('follow_button');
     let removeFollowButton = document.getElementById('remove_follow');
     if (addFollowButton)
         addFollowButton.addEventListener('click', function() { addFollow(username, other) });
     if (removeFollowButton)
         removeFollowButton.addEventListener('click', function() { removeFollow(username, other) });
+    /* Handling unfollow buttons in the list of follwed */
+    const removeFollowButtons = document.getElementsByClassName('remove_follow_buttons');
+    if (removeFollowButtons.length > 0) {
+        for (i = 0; i < removeFollowButtons.length; i++) {
+            const button = removeFollowButtons[i];
+            const other = button.parentElement.querySelector('a').innerHTML;
+            button.addEventListener('click', function() { removeFollow(username, other) });
+        }
+    }
+    /* Handling friend buttons */
+    // FRIEND REMOVE
+    //const removeFriendButtons = document.getElementsByClassName('')
+    // FRIEND ADD
     /* Handling remove frequency buttons */
     let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
     if (removeFrequencyButtons.length > 0) {
@@ -81,10 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let ora_corrente = tempo_corrente.getHours();
     if(ora_corrente<=12) {
         document.getElementById("intestazione_orari").children.item(ora_corrente).style.color = "green";
-        riga1.children.item(0).style.color = "green";
+        riga1.children.item(0).style.color = "blue";
     } else {
         document.getElementById("intestazione_orari").children.item(ora_corrente-12).style.color = "green";
-        riga2.children.item(0).style.color = "green";
+        riga2.children.item(0).style.color = "blue";
     }
 });
 
@@ -171,6 +184,7 @@ function addFollow(username, other) {
 }
 
 function removeFollow(username, other) {
+    console.log(username + ' ' + other);
     let xhr = new XMLHttpRequest();
     let url = 'functions/removeFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
@@ -186,4 +200,3 @@ function removeFollow(username, other) {
     xhr.send();
 }
 
-//onclick="removeFrequency('<?= $f?>', '<?= $utente['NomeUtente']?>', '<?= '#f' . str_replace('.', '_', $f)?>')"
