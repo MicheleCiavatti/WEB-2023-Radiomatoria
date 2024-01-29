@@ -28,25 +28,25 @@ function decorateTable(start, end, color) {
             riga2.item(parseInt(item.innerHTML)*2-1).style.background = color;
             riga2.item(parseInt(item.innerHTML)*2).style.background = color;
         }
-        if(minutiInizio < 30) {
-            if(oraInizio <= 12) {
-                riga1.item(oraInizio*2).style.background = color;
-                if(minutiInizio == 0) {
-                    riga1.item(oraInizio*2-1).style.background = color;
-                }
-            } else {
-                riga2.item(oraInizio*2+1).style.background = color;
-                if(minutiInizio == 0) {
-                    riga2.item(oraInizio*2-1).style.background = color;
-                }
+    }
+    if(minutiInizio < 30) {
+        if(oraInizio <= 12) {
+            riga1.item(oraInizio*2).style.background = color;
+            if(minutiInizio == 0) {
+                riga1.item(oraInizio*2-1).style.background = color;
+            }
+        } else {
+            riga2.item((oraInizio-12)*2).style.background = color;
+            if(minutiInizio == 0) {
+                riga2.item((oraInizio-12)*2-1).style.background = color;
             }
         }
-        if(minutiFine > 30) {
-            if(oraFine <= 12) {
-                riga1.item(oraFine*2-1).style.background = color;
-            } else {
-                riga2.item(oraFine*2-1).style.background = color;
-            }
+    }
+    if(minutiFine > 30) {
+        if(oraFine <= 12) {
+            riga1.item(oraFine*2-1).style.background = color;
+        } else {
+            riga2.item((oraFine-12)*2-1).style.background = color;
         }
     }
 }
