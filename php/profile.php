@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <title>Profilo di <?= $utente['NomeUtente']?></title>
+        <title>LongLight - Profilo di <?= $utente['NomeUtente']?></title>
         <meta charset="UTF-8"/>
         <link href="../css/style.css" rel="stylesheet" type="text/css"/>
     </head>
