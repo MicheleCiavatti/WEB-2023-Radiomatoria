@@ -209,6 +209,7 @@
                     </form>
                 </section>
             <?php endif; ?>
+            <!--************************************* HANDLING FRIEND LIST **************************************-->
             <section>
                 <h2>Amici</h2>
                 <ul>
@@ -221,6 +222,7 @@
                     <?php endforeach;?>
                 </ul>
             </section>
+            <!--************************************* HANDLING FOLLOWED LIST **************************************-->
             <section>
                 <h2>Following</h2>
                 <ul>
@@ -234,9 +236,10 @@
                     <?php endforeach;?>
                 </ul>
             </section>
+            <!--************************************* HANDLING BLOCKED LIST **************************************-->
             <section>
                 <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                    <h3>Bloccati</h2>
+                    <h2>Bloccati</h2>
                     <ul>
                         <?php foreach($bloccati as $bloccato): ?>
                             <li>

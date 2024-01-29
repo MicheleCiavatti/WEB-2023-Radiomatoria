@@ -28,6 +28,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (removeFriendButton) {
         removeFriendButton.addEventListener('click', function() { removeFriend(username, other) });
     }
+    //TODO add friend button
+    
+    /* Handling remove friend buttons in the list of friends */
+    const removeFriendButtons = document.getElementsByClassName('remove_friend_buttons');
+    if (removeFriendButtons.length > 0) {
+        for (i = 0; i < removeFriendButtons.length; i++) {
+            const button = removeFriendButtons[i];
+            const other = button.parentElement.querySelector('a').innerHTML;
+            button.addEventListener('click', function() { removeFriend(username, other) });
+        }
+    }
     /*Handling remove frequency buttons */
     let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
     if (removeFrequencyButtons.length > 0) {
