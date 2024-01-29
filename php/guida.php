@@ -83,6 +83,5 @@ Normalmente i radioamatori vengono chiamati ad operare assieme alla Protezione C
                 </section>
             <?php endif; ?>
         </main>
-        <script src="js/generale.js" type="text/javascript"></script>
     </body>
 </html>
