@@ -71,8 +71,25 @@
         foreach ($result as $row) {
             $bloccati[] = array($row[0], $row[1]);
         }
+
+        $stmt = $dbh->connect()->prepare(
+            'SELECT *
+             FROM POST
+             WHERE Creatore = ?
+             ORDER BY DataPost DESC;'
+        );
+        if (!$stmt->execute(array($username))) {
+            $stmt = null;
+            header('location: ../../login.html?error=stmtfailed');
+            exit();
+        }
+        $result = $stmt->fetchAll(PDO::FETCH_NUM);
+        $post = [];
+        foreach ($result as $row) {
+            $post[] = array($row[0], $row[1], $row[2], $row[3], $row[4]);
+        }
     
-        return array($utente, $frequenze, $orari, $amici, $seguiti, $bloccati);
+        return array($utente, $frequenze, $orari, $amici, $seguiti, $bloccati, $post);
     }
 
 function isFriend($user, $other) {

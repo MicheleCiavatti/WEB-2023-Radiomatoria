@@ -1,8 +1,5 @@
 <?php
     require_once './includes/profileInfo.inc.php';
-    $post_list = [];
-    $element_id_like = [];
-    $element_id_dislike = [];
     $username = $_GET['id']; //Get user owner of the profile
     $data = profileAccess($username); 
     /*Adding user's info in local variables*/
@@ -12,6 +9,7 @@
     $amici = $data[3]; 
     $seguiti = $data[4]; 
     $bloccati = $data[5];
+    $post_list = $data[6];
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -280,6 +278,15 @@
                         <input type="submit" value="Pubblica">
                     </form>
                 </p>
+                <?php foreach($post_list as $post): ?>
+                    <article class="post">
+                        <?php if ($post[4] != null): ?>
+                            <img src="<?= $post[4]; ?>" alt=""/>
+                        <?php endif; ?>
+                        <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
+                        <p><?= $post[3]; ?></p>
+                    </article>
+                <?php endforeach; ?>
             </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
