@@ -36,9 +36,9 @@ function decorateTable(start, end, color) {
                 riga1.children.item(oraInizio*2-1).style.background = color;
             }
         } else {
-            riga2.children.item(oraInizio*2+1).style.background = color;
+            riga2.children.item((oraInizio-12)*2).style.background = color;
             if(minutiInizio == 0) {
-                riga2.children.item(oraInizio*2-1).style.background = color;
+                riga2.children.item((oraInizio-12)*2-1).style.background = color;
             }
         }
     }
@@ -46,7 +46,7 @@ function decorateTable(start, end, color) {
         if(oraFine <= 12) {
             riga1.children.item(oraFine*2-1).style.background = color;
         } else {
-            riga2.children.item(oraFine*2-1).style.background = color;
+            riga2.children.item((oraFine-12)*2-1).style.background = color;
         }
     }
 }
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let button = removeFrequencyButtons[i];
             let id = button.parentElement.id;
             let f_to_remove = button.parentElement.innerText;
-            button.addEventListener('click', function() {removeFrequency(f_to_remove, username, id) });
+            button.addEventListener('click', function() {removeFrequency(f_to_remove, id) });
         }
     }
 
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let times = button.parentElement.innerText.split('<')[0].split(' - ');
             let start = times[0].trim();
             let end = times[1].trim();
-            button.addEventListener('click', function() {removeTimeInterval(username, start, end, id) });
+            button.addEventListener('click', function() {removeTimeInterval(start, end, id) });
 
             /* Aesthetics */
             decorateTable(start, end, "green");
