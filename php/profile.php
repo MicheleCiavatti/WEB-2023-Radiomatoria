@@ -3,7 +3,7 @@
     $post_list = [];
     $element_id_like = [];
     $element_id_dislike = [];
-    $username = $_GET['id']; //Get user owner of the profile
+    $owner = $_GET['id']; //Get user owner of the profile
     $data = profileAccess($username); 
     /*Adding user's info in local variables*/
     $utente = $data[0]; 
@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <title>LongLight - Profilo di <?= $utente['NomeUtente']?></title>
+        <title>LongLight - Profilo di <?= $owner?></title>
         <meta charset="UTF-8"/>
         <link href="../css/style.css" rel="stylesheet" type="text/css"/>
     </head>
@@ -45,18 +45,18 @@
                 <!--- Profile pic, name and buttons for friendship/follow --->
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
                 <p id='profile_name'><?= $utente["NomeUtente"] ?></p>
-                <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
+                <?php if ($owner != $_SESSION['NomeUtente']): ?>
                 <ul>
                     <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
                     <li>
-                            <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
+                            <?php if (isFriend($_SESSION['NomeUtente'], $owner)): ?>
                                 <button id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
                             <?php else: ?>
                                 <button type="button" value="Richiedi amicizia">Richiedi amicizia</button>
                             <?php endif; ?>
                     </li>
                     <li>
-                            <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
+                            <?php if (isFollowed($_SESSION['NomeUtente'], $owner)): ?>
                                 <button id="remove_follow" type="button">Rimuovi follow</button>
                             <?php else: ?>
                                 <button id="follow_button" type="button">Segui</button>
@@ -82,14 +82,14 @@
                     <!-- Frequency displaying and removing done via AJAX -->
                     <li id="f<?= str_replace('.', '_', $f)?>" class="remove_frequency_buttons">
                         <?= $f ?>
-                        <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                        <?php if ($_SESSION['NomeUtente'] == $owner):?>
                             <button type="button" value="<?= $f ?>">Rimuovi</button>
                         <?php endif; ?>
                     </li>
                     <?php endforeach; ?>
                 </ul>
                 <!-- Form for adding frequencies -->
-                <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                <?php if ($_SESSION['NomeUtente'] == $owner):?>
                     <form action="includes/addMHz.inc.php" method="post">
                         <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
                         <input type="submit" value="Aggiungi">
@@ -184,7 +184,7 @@
                     <?php endforeach; ?>
                 </ul>
                 <!-- Form for adding time slots -->
-                <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                <?php if ($_SESSION['NomeUtente'] == $owner):?>
                     <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
                     <form action="includes/addTimeSlot.inc.php" method="post">
                         <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
@@ -194,7 +194,7 @@
                 <?php endif; ?>
             </section>
             <!--************************************* HANDLING PASSWORD AND CLUE **************************************-->
-            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+            <?php if($owner == $_SESSION['NomeUtente']): ?>
                 <section>
                     <ul>
                         <li>Indizio: <?= $utente['Indizio']?></li>
@@ -219,7 +219,7 @@
                                 <li>
                                     <img src="<?= '../' . $amico[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
-                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <?php if($owner == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_friend_buttons" id="remove_followed_button">Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
@@ -238,7 +238,7 @@
                                 <li>
                                     <img src="<?= '../' . $seguito[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
-                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <?php if($owner == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_follow_buttons" id="remove_followed_button">Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
@@ -248,7 +248,7 @@
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING BLOCKED LIST **************************************-->
-            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente'] && !empty($bloccati)): ?>
+            <?php if($owner == $_SESSION['NomeUtente'] && !empty($bloccati)): ?>
                 <section>
                     <header><h2>Bloccati</h2></header>
                     <p>
@@ -257,7 +257,7 @@
                                 <li>
                                     <img src="<?= $bloccato[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
-                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <?php if($owner == $_SESSION['NomeUtente']): ?>
                                         <button class="access_required" id="remove_block_button">Perdona</button>
                                     <?php endif; ?>
                                 </li>
