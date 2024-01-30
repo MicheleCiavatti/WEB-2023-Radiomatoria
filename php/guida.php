@@ -38,8 +38,6 @@
                             comunicare con altri utenti ed operare stazioni amatoriali per creare loro stessi 
                             contenuti radio. Tuttavia una radio ha come fondamentale caratteristica la 
                             comunicazione sincrona, che si rivela uno svantaggio in certe situazioni.
-                        </p> 
-                        <p>
                             E qui entra in gioco una controparte asincrona: "Long Light", un social media 
                             creato nel 2024 per diffondere la passione della radioamatoria e connettere chi la 
                             condivide. Il sito accetta chiunque, anche chi non possiede 
@@ -99,8 +97,6 @@
                             La dismissione di attrezzatura da parte degli operatori telefonici ha immesso nel 
                             mercato dell'usato apparecchiature e materiale a basso costo ed un radioamatore 
                             esperto potrebbe ulteriormente ridurre i costi costruiendo gli apparati che utilizza.
-                        </p>
-                        <p>
                             In base al tipo di frequenze adoperate un sistema radio completo costerebbe da poche 
                             centinaia a diverse migliaia di euro, ma un utente medio con esigenze limitate 
                             difficilmente si ritroverebbe a pagare oltre 100-150 euro.
@@ -122,8 +118,6 @@
                             specialmente <abbr title="Ultra High Frequencies">UHF</abbr>); il solo modem 
                             Wi-Fi oggi utilizza frequenze sui 2,4GHz e sui 5GHz, senza parlare dei 
                             "trasferimenti digitali" che spesso operano sui 24GHz e oltre.
-                        </p>
-                        <p>
                             L'evoluzione consiste nel progressivo abbandono dei segnali di tipo analogico in 
                             favore del digitale.
                         </p>
@@ -134,8 +128,6 @@
                             I radioamatori devono operare solo nei range di frequenze a loro assegnati, 
                             anche se molto vicini a range privati (satelliti, televisione, stazioni radio 
                             professionali, altri radioamatori ecc.) o addirittura proibiti.
-                        </p>
-                        <p>
                             Esistono frequenze pubbliche, ma solo un radioamatore patentato possiede 
                             frequenze ad uso esclusivo.
                         </p>
