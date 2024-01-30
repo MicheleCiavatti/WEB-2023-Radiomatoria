@@ -6,8 +6,8 @@ if (isset($_POST['comment_text'])) {
     $uid = $_SESSION['NomeUtente'];
     $comment_text = $_POST['comment_text'];
     $date = date("Y-m-d H:i:s");
-    $post_author = $_SESSION['post_author'];
-    $post_number = $_SESSION['post_number'];
+    $post_author = $_POST['post_author'];
+    $post_number = $_POST['post_number'];
     if (isset($_POST['comment_pic'])) {
         $comment_pic = $_POST['comment_pic'];
     } else {
@@ -31,8 +31,8 @@ if (isset($_POST['comment_text'])) {
     );
     if (!$s->execute(array($post_author, $date, $comment_text, $comment_pic, $nrComment, $post_number, $uid))) {
         $s = null;
-        header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
+        header('location: ../profile.php?id=' . $post_author . '&error=stmtfailed');
         exit();
     }
-    header('location: ../profile.php?id=' . $uid . '&error=none');
+    header('location: ../profile.php?id=' . $post_author . '&error=none');
 }

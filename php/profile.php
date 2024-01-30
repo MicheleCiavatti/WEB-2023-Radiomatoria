@@ -269,18 +269,16 @@
             <?php endif; ?>
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
-                <header><h2>Post</h2></header>
-                <p>
-                    <form action="includes/addPost.inc.php" method="post">
-                        <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
-                        <input type="submit" value="Pubblica">
-                    </form>
-                </p>
+                <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                    <header><h2>Post</h2></header>
+                    <p>
+                        <form action="includes/addPost.inc.php" method="post">
+                            <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
+                            <input type="submit" value="Pubblica">
+                        </form>
+                    </p>
+                <?php endif; ?>
                 <?php foreach($post_list as $post): ?>
-                    <?php 
-                        $_SESSION['post_author'] = $post[0];
-                        $_SESSION['post_number'] = $post[1];
-                    ?>
                     <article class="post">
                         <header>
                             <?php if ($post[4] != null): ?>
@@ -303,6 +301,8 @@
                             </ul>
                             <form action="includes/addComment.inc.php" method="post">
                                 <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
+                                <input type="hidden" name="post_author" value="<?= $post[0]?>">
+                                <input type="hidden" name="post_number" value="<?= $post[1]?>">
                                 <input type="submit" value="Pubblica">
                             </form>
                         </section>

@@ -76,7 +76,7 @@
             'SELECT *
              FROM POST
              WHERE Creatore = ?
-             ORDER BY DataPost DESC;'
+             ORDER BY NrPost DESC;'
         );
         if (!$stmt->execute(array($username))) {
             $stmt = null;
@@ -132,13 +132,13 @@ function getComments($creatorPost, $nrPost) {
     );
     if (!$s->execute(array($creatorPost, $nrPost))) {
         $s = null;
-        header('location: ../profile.php?id=' . $_SESSION['NomeUtente'] . '&error=stmtfailed');
+        header('location: ../profile.php?id=' . $creatorPost . '&error=stmtfailed');
         exit();
     }
     $result = $s->fetchAll(PDO::FETCH_ASSOC);
     $comments = [];
     foreach ($result as $row) {
-        $comments[] = array($row['Creatore'], $row['DataCommento'], $row['TestoCommento']);
+        $comments[] = array($row['AutoreCommento'], $row['DataCommento'], $row['TestoCommento']);
     }
     return $comments;
 }
