@@ -32,6 +32,7 @@ create table BANDE (
 create table COMMENTI (
      Creatore varchar(50) not null,
      NrPost int not null,
+     AutoreCommento varchar(50) not null,
      NrCommento int not null,
      DataCommento date not null,
      TestoCommento varchar(500) not null,
