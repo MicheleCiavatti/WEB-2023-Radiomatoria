@@ -175,10 +175,10 @@
                         foreach($orari as $intervallo):
                     ?>
                     <!-- Time slots displaying and removing done via AJAX -->
-                    <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
+                    <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>">
                         <?= $intervallo[0] ?> - <?= $intervallo[1]?>
-                        <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                            <button type="button">Rimuovi</button> 
+                        <?php if ($_SESSION['NomeUtente'] == $owner):?>
+                            <button class="access_required" name="remove_timeslot_buttons" type="button">Rimuovi</button> 
                         <?php endif; ?>
                     </li>
                     <?php endforeach; ?>
