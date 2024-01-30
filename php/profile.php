@@ -4,7 +4,7 @@
     $element_id_like = [];
     $element_id_dislike = [];
     $owner = $_GET['id']; //Get user owner of the profile
-    $data = profileAccess($username); 
+    $data = profileAccess($owner); 
     /*Adding user's info in local variables*/
     $utente = $data[0]; 
     $frequenze = $data[1]; 
