@@ -98,6 +98,7 @@
             </section>
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
             <section>
+            <!--
             <table>
                 <caption>Orari di presenza in radio</caption>
                 <tr id="intestazione_orari">
@@ -170,6 +171,7 @@
                     <td headers="12 PM"></td>
                 </tr>
             </table>
+                -->
                 <ul>
                     <?php
                         foreach($orari as $intervallo):
