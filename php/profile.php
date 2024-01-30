@@ -72,127 +72,131 @@
                 </ul>
             </aside>
             <!--************************************* HANDLING USER FREQUENCIES **************************************-->
-            <section>
-                <ul>
-                    <?php
-                        foreach($frequenze as $f):
-                    ?>
-                    <!-- Frequency displaying and removing done via AJAX -->
-                    <li id="f<?= str_replace('.', '_', $f)?>" class="remove_frequency_buttons">
-                        <?= $f ?>
-                        <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                            <button type="button" value="<?= $f ?>">Rimuovi</button>
-                        <?php endif; ?>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-                <!-- Form for adding frequencies -->
-                <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                    <form action="includes/addMHz.inc.php" method="post">
-                        <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
-                        <input type="submit" value="Aggiungi">
-                    </form>
-                <?php endif; ?>
-            </section>
+            <?php if(!empty($frequenze) || $_SESSION['NomeUtente'] == $utente['NomeUtente']): ?>
+                <section>
+                    <ul>
+                        <?php
+                            foreach($frequenze as $f):
+                        ?>
+                        <!-- Frequency displaying and removing done via AJAX -->
+                        <li id="f<?= str_replace('.', '_', $f)?>" class="remove_frequency_buttons">
+                            <?= $f ?>
+                            <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                                <button type="button" value="<?= $f ?>">Rimuovi</button>
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <!-- Form for adding frequencies -->
+                    <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                        <form action="includes/addMHz.inc.php" method="post">
+                            <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
+                            <input type="submit" value="Aggiungi">
+                        </form>
+                    <?php endif; ?>
+                </section>
+            <?php endif; ?>
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
-            <section>
-            <!--
-            <table>
-                <caption>Orari di presenza in radio</caption>
-                <tr id="intestazione_orari">
-                    <th></th>
-                    <th colspan="2">1</th>
-                    <th colspan="2">2</th>
-                    <th colspan="2">3</th>
-                    <th colspan="2">4</th>
-                    <th colspan="2">5</th>
-                    <th colspan="2">6</th>
-                    <th colspan="2">7</th>
-                    <th colspan="2">8</th>
-                    <th colspan="2">9</th>
-                    <th colspan="2">10</th>
-                    <th colspan="2">11</th>
-                    <th colspan="2">12</th>
-                </tr>
-                <tr id="riga_orari_mattina">
-                    <th>AM</th>
-                    <td headers="1 AM"></td>
-                    <td headers="1 AM"></td>
-                    <td headers="2 AM"></td>
-                    <td headers="2 AM"></td>
-                    <td headers="3 AM"></td>
-                    <td headers="3 AM"></td>
-                    <td headers="4 AM"></td>
-                    <td headers="4 AM"></td>
-                    <td headers="5 AM"></td>
-                    <td headers="5 AM"></td>
-                    <td headers="6 AM"></td>
-                    <td headers="6 AM"></td>
-                    <td headers="7 AM"></td>
-                    <td headers="7 AM"></td>
-                    <td headers="8 AM"></td>
-                    <td headers="8 AM"></td>
-                    <td headers="9 AM"></td>
-                    <td headers="9 AM"></td>
-                    <td headers="10 AM"></td>
-                    <td headers="10 AM"></td>
-                    <td headers="11 AM"></td>
-                    <td headers="11 AM"></td>
-                    <td headers="12 AM"></td>
-                    <td headers="12 AM"></td>
-                </tr>
-                <tr id="riga_orari_sera">
-                    <th>PM</th>
-                    <td headers="1 PM"></td>
-                    <td headers="1 PM"></td>
-                    <td headers="2 PM"></td>
-                    <td headers="2 PM"></td>
-                    <td headers="3 PM"></td>
-                    <td headers="3 PM"></td>
-                    <td headers="4 PM"></td>
-                    <td headers="4 PM"></td>
-                    <td headers="5 PM"></td>
-                    <td headers="5 PM"></td>
-                    <td headers="6 PM"></td>
-                    <td headers="6 PM"></td>
-                    <td headers="7 PM"></td>
-                    <td headers="7 PM"></td>
-                    <td headers="8 PM"></td>
-                    <td headers="8 PM"></td>
-                    <td headers="9 PM"></td>
-                    <td headers="9 PM"></td>
-                    <td headers="10 PM"></td>
-                    <td headers="10 PM"></td>
-                    <td headers="11 PM"></td>
-                    <td headers="11 PM"></td>
-                    <td headers="12 PM"></td>
-                    <td headers="12 PM"></td>
-                </tr>
-            </table>
-                -->
-                <ul>
-                    <?php
-                        foreach($orari as $intervallo):
-                    ?>
-                    <!-- Time slots displaying and removing done via AJAX -->
-                    <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
-                        <?= $intervallo[0] ?> - <?= $intervallo[1]?>
-                        <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                            <button type="button">Rimuovi</button> 
-                        <?php endif; ?>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-                <!-- Form for adding time slots -->
-                <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                    <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
-                    <form action="includes/addTimeSlot.inc.php" method="post">
-                        <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
-                        <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
-                        <input type="submit" value="Aggiungi">
-                    </form>
-                <?php endif; ?>
-            </section>
+            <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $utente['NomeUtente']): ?>
+                <section>
+                <!--
+                <table>
+                    <caption>Orari di presenza in radio</caption>
+                    <tr id="intestazione_orari">
+                        <th></th>
+                        <th colspan="2">1</th>
+                        <th colspan="2">2</th>
+                        <th colspan="2">3</th>
+                        <th colspan="2">4</th>
+                        <th colspan="2">5</th>
+                        <th colspan="2">6</th>
+                        <th colspan="2">7</th>
+                        <th colspan="2">8</th>
+                        <th colspan="2">9</th>
+                        <th colspan="2">10</th>
+                        <th colspan="2">11</th>
+                        <th colspan="2">12</th>
+                    </tr>
+                    <tr id="riga_orari_mattina">
+                        <th>AM</th>
+                        <td headers="1 AM"></td>
+                        <td headers="1 AM"></td>
+                        <td headers="2 AM"></td>
+                        <td headers="2 AM"></td>
+                        <td headers="3 AM"></td>
+                        <td headers="3 AM"></td>
+                        <td headers="4 AM"></td>
+                        <td headers="4 AM"></td>
+                        <td headers="5 AM"></td>
+                        <td headers="5 AM"></td>
+                        <td headers="6 AM"></td>
+                        <td headers="6 AM"></td>
+                        <td headers="7 AM"></td>
+                        <td headers="7 AM"></td>
+                        <td headers="8 AM"></td>
+                        <td headers="8 AM"></td>
+                        <td headers="9 AM"></td>
+                        <td headers="9 AM"></td>
+                        <td headers="10 AM"></td>
+                        <td headers="10 AM"></td>
+                        <td headers="11 AM"></td>
+                        <td headers="11 AM"></td>
+                        <td headers="12 AM"></td>
+                        <td headers="12 AM"></td>
+                    </tr>
+                    <tr id="riga_orari_sera">
+                        <th>PM</th>
+                        <td headers="1 PM"></td>
+                        <td headers="1 PM"></td>
+                        <td headers="2 PM"></td>
+                        <td headers="2 PM"></td>
+                        <td headers="3 PM"></td>
+                        <td headers="3 PM"></td>
+                        <td headers="4 PM"></td>
+                        <td headers="4 PM"></td>
+                        <td headers="5 PM"></td>
+                        <td headers="5 PM"></td>
+                        <td headers="6 PM"></td>
+                        <td headers="6 PM"></td>
+                        <td headers="7 PM"></td>
+                        <td headers="7 PM"></td>
+                        <td headers="8 PM"></td>
+                        <td headers="8 PM"></td>
+                        <td headers="9 PM"></td>
+                        <td headers="9 PM"></td>
+                        <td headers="10 PM"></td>
+                        <td headers="10 PM"></td>
+                        <td headers="11 PM"></td>
+                        <td headers="11 PM"></td>
+                        <td headers="12 PM"></td>
+                        <td headers="12 PM"></td>
+                    </tr>
+                </table>
+                    -->
+                    <ul>
+                        <?php
+                            foreach($orari as $intervallo):
+                        ?>
+                        <!-- Time slots displaying and removing done via AJAX -->
+                        <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
+                            <?= $intervallo[0] ?> - <?= $intervallo[1]?>
+                            <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                                <button type="button">Rimuovi</button> 
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <!-- Form for adding time slots -->
+                    <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                        <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
+                        <form action="includes/addTimeSlot.inc.php" method="post">
+                            <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
+                            <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
+                            <input type="submit" value="Aggiungi">
+                        </form>
+                    <?php endif; ?>
+                </section>
+            <?php endif; ?>
             <!--************************************* HANDLING PASSWORD AND CLUE **************************************-->
             <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                 <section>
@@ -306,7 +310,6 @@
                                 <input type="submit" value="Pubblica">
                             </form>
                         </section>
-
                     </article>
                 <?php endforeach; ?>
             </section>
