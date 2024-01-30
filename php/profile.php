@@ -277,6 +277,10 @@
                     </form>
                 </p>
                 <?php foreach($post_list as $post): ?>
+                    <?php 
+                        $_SESSION['post_author'] = $post[0];
+                        $_SESSION['post_number'] = $post[1];
+                    ?>
                     <article class="post">
                         <header>
                             <?php if ($post[4] != null): ?>
