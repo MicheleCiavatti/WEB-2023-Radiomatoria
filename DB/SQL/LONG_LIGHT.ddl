@@ -116,10 +116,6 @@ alter table COMMENTI add constraint FKCONTENUTO
      foreign key (Creatore, NrPost)
      references POST (Creatore, NrPost);
 
-alter table COMMENTI add constraint FKINT_COM
-     foreign key (Creatore, NrCommento)
-     references INTERAZIONI (Creatore, ElementId);
-
 alter table DISPONIBILITA add constraint FKDIS_UTE
      foreign key (Utente)
      references UTENTI (NomeUtente);

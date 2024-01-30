@@ -121,4 +121,25 @@ function isFollowed($user, $other) {
     }
     return $s->rowCount() > 0;
 }
+
+function getComments($creatorPost, $nrPost) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM COMMENTI
+         WHERE Creatore = ? AND NrPost = ?
+         ORDER BY DataCommento DESC;'
+    );
+    if (!$s->execute(array($creatorPost, $nrPost))) {
+        $s = null;
+        header('location: ../profile.php?id=' . $_SESSION['NomeUtente'] . '&error=stmtfailed');
+        exit();
+    }
+    $result = $s->fetchAll(PDO::FETCH_ASSOC);
+    $comments = [];
+    foreach ($result as $row) {
+        $comments[] = array($row['Creatore'], $row['DataCommento'], $row['TestoCommento']);
+    }
+    return $comments;
+}
     

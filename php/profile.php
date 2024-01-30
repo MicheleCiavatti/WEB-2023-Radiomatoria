@@ -272,19 +272,33 @@
                 <header><h2>Post</h2></header>
                 <p>
                     <form action="includes/addPost.inc.php" method="post">
-                        <label for="post_text">Scrivi un post:
-                            <textarea name="post_text" rows="4" cols="50" required></textarea>
-                        </label>
+                        <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
                         <input type="submit" value="Pubblica">
                     </form>
                 </p>
                 <?php foreach($post_list as $post): ?>
                     <article class="post">
-                        <?php if ($post[4] != null): ?>
-                            <img src="<?= $post[4]; ?>" alt=""/>
-                        <?php endif; ?>
-                        <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
-                        <p><?= $post[3]; ?></p>
+                        <header>
+                            <?php if ($post[4] != null): ?>
+                                <img src="<?= $post[4]; ?>" alt=""/>
+                            <?php endif; ?>
+                            <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
+                        </header>
+                        <section><?= $post[3]; ?></section>
+                        <section>
+                            <ul>
+                                <?php 
+                                    $comments = getComments($post[0], $post[1]);
+                                    foreach($comments as $comment):
+                                ?>
+                                <li>
+                                    <p><strong><a href="profile.php?id=<?=$comment[0];?>"><?=$comment[0];?></a><strong> <?= $comment[1];?></p>
+                                    <p><?=$comment[2];?></p>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </section>
+
                     </article>
                 <?php endforeach; ?>
             </section>
