@@ -237,7 +237,6 @@
                     <p>
                         <ul>
                             <?php foreach($seguiti as $seguito):?>
-                                <?php error_log($seguito[1]); ?>
                                 <li>
                                     <img src="<?= '../' . $seguito[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
@@ -272,6 +271,7 @@
             <?php endif; ?>
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
+                <header><h2>Post</h2></header>
                 <p>
                     <form action="includes/addPost.inc.php" method="post">
                         <label for="post_text">Scrivi un post:
