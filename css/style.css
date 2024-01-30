@@ -21,6 +21,12 @@
     }
 }
 
+@media screen and (max-width: 768px) {
+    article > p {
+        display: inline-block;
+    }
+}
+
 header h1 {
     color: white;
     text-decoration: overline;
@@ -94,6 +100,10 @@ section p {
     line-height: 150%;
 }
 
+article > p {
+    display: block;
+}
+
 section > a {
     background-color: whitesmoke;
     padding: 3px;
@@ -107,9 +117,19 @@ dl {
     margin: 0;
 }
 
-figure > img, figure > figcaption {
+figure {
+    display: block;
     float: right;
+}
+
+figure > img {
     max-height: 256px;
+    max-width: 256px;
+    display: block;
+}
+
+figure > figcaption {
+    display: block;
     max-width: 256px;
 }
 
