@@ -74,6 +74,7 @@
             <!--************************************* HANDLING USER FREQUENCIES **************************************-->
             <?php if(!empty($frequenze) || $_SESSION['NomeUtente'] == $utente['NomeUtente']): ?>
                 <section>
+                    <header><h2>Frequenze</h2></header>
                     <ul>
                         <?php
                             foreach($frequenze as $f):
@@ -99,6 +100,7 @@
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
             <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $utente['NomeUtente']): ?>
                 <section>
+                    <header><h2>Orari</h2></header>
                 <!--
                 <table>
                     <caption>Orari di presenza in radio</caption>
@@ -174,9 +176,7 @@
                 </table>
                     -->
                     <ul>
-                        <?php
-                            foreach($orari as $intervallo):
-                        ?>
+                        <?php foreach($orari as $intervallo): ?>
                         <!-- Time slots displaying and removing done via AJAX -->
                         <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
                             <?= $intervallo[0] ?> - <?= $intervallo[1]?>
@@ -200,6 +200,7 @@
             <!--************************************* HANDLING PASSWORD AND CLUE **************************************-->
             <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                 <section>
+                    <header><h2>Modifica password e indizio</h2></header>
                     <ul>
                         <li>Indizio: <?= $utente['Indizio']?></li>
                     </ul>
@@ -273,8 +274,8 @@
             <?php endif; ?>
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
-                <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                     <header><h2>Post</h2></header>
+                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                     <p>
                         <form action="includes/addPost.inc.php" method="post">
                             <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
