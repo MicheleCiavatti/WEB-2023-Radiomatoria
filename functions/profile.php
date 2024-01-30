@@ -114,7 +114,7 @@
         }
         foreach($result as $interval) {
             $end2 = $interval[1]
-            if($interval[0] > $interval[1]) {
+            if ($interval[0] > $interval[1]) {
                 $end2 += 12;
             }
             if(($time_start < $interval[0] && $interval[0] < $end1)

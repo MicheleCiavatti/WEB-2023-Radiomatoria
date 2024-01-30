@@ -37,14 +37,14 @@ if (isset($_POST['orainizio']) && isset($_POST['orafine'])) {
     $stmt = $dbh->connect()->prepare("SELECT COUNT(*) FROM DISPONIBILITA WHERE OraInizio = ? AND Utente = ?");
     if(!$stmt->execute(array($start, $uid))) {
         $stmt = null;
-        header('location: ../../login.html?error=stmtfailed');
+        header('location: ../profile.php?id = ' . $uid . '&error=stmtfailed');
         exit();
     }
     $result = $stmt->fetch(PDO::FETCH_NUM);
     $stmt = $dbh->connect()->prepare("INSERT INTO DISPONIBILITA (OraInizio, OraFine, Utente) VALUES (?, ?, ?)");
     if(!$stmt->execute(array($start, $end, $uid))) {
         $stmt = null;
-        header('location: ../../login.html?error=stmtfailed');
+        header('location: ../profile.php?id = ' . $uid . '&error=stmtfailed');
         exit();
     }
 
