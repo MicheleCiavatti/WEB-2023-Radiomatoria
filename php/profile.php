@@ -292,11 +292,15 @@
                                     foreach($comments as $comment):
                                 ?>
                                 <li>
-                                    <p><strong><a href="profile.php?id=<?=$comment[0];?>"><?=$comment[0];?></a><strong> <?= $comment[1];?></p>
-                                    <p><?=$comment[2];?></p>
+                                    <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
+                                    <p><?=strval($comment[2]);?></p>
                                 </li>
                                 <?php endforeach; ?>
                             </ul>
+                            <form action="includes/addComment.inc.php" method="post">
+                                <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
+                                <input type="submit" value="Pubblica">
+                            </form>
                         </section>
 
                     </article>
