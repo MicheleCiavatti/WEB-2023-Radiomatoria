@@ -1,6 +1,6 @@
-const intestazione = document.getElementById("intestazione_orari");
-const riga1 = document.getElementById("riga_orari_mattina");
-const riga2 = document.getElementById("riga_orari_sera");
+const intestazione = document.getElementById("intestazione_orari").children;
+const riga1 = document.getElementById("riga_orari_mattina").children;
+const riga2 = document.getElementById("riga_orari_sera").children;
 const removeTimeIntervalButtons = document.getElementsByClassName('remove_timeslot_buttons');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', function() { removeFriend(username, other) });
         }
     }
+
     /*Handling remove frequency buttons */
     let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
     if (removeFrequencyButtons.length > 0) {
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', function() {removeFrequency(f_to_remove, username, id) });
         }
     }
+
     /* Handling remove time interval buttons */
     if (removeTimeIntervalButtons.length > 0) {
         for (i = 0; i < removeTimeIntervalButtons.length; i++) {
@@ -228,3 +230,45 @@ function removeFriend(username, other) {
     xhr.send();
 }
 
+function decorateTable(start, end, color) {
+    let oraInizio = start.slice(0,2);
+    let minutiInizio = start.slice(3,5);
+    let oraFine = end.slice(0,2);
+    let minutiFine = end.slice(3,5);
+    for(item of intestazione) {
+        if((oraInizio < parseInt(item.innerHTML)
+        && oraFine > parseInt(item.innerHTML)
+        && oraInizio < oraFine) || (oraInizio > oraFine
+        && (oraInizio < parseInt(item.innerHTML) || oraFine > parseInt(item.innerHTML)))) {
+            riga1.item(parseInt(item.innerHTML)*2-1).style.background = color;
+            riga1.item(parseInt(item.innerHTML)*2).style.background = color;
+        }
+        if((oraInizio < parseInt(item.innerHTML) + 12
+        && oraFine > parseInt(item.innerHTML) + 12
+        && oraInizio < oraFine) || (oraInizio > oraFine
+        && (oraInizio < parseInt(item.innerHTML) + 12 || oraFine > parseInt(item.innerHTML) + 12))) {
+            riga2.item(parseInt(item.innerHTML)*2-1).style.background = color;
+            riga2.item(parseInt(item.innerHTML)*2).style.background = color;
+        }
+    }
+    if(minutiInizio < 30) {
+        if(oraInizio <= 12) {
+            riga1.item(oraInizio*2).style.background = color;
+            if(minutiInizio == 0) {
+                riga1.item(oraInizio*2-1).style.background = color;
+            }
+        } else {
+            riga2.item((oraInizio-12)*2).style.background = color;
+            if(minutiInizio == 0) {
+                riga2.item((oraInizio-12)*2-1).style.background = color;
+            }
+        }
+    }
+    if(minutiFine > 30) {
+        if(oraFine <= 12) {
+            riga1.item(oraFine*2-1).style.background = color;
+        } else {
+            riga2.item((oraFine-12)*2-1).style.background = color;
+        }
+    }
+}
