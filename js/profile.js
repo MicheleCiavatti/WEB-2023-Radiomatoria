@@ -1,7 +1,12 @@
 const intestazione = document.getElementById("intestazione_orari").children;
 const riga1 = document.getElementById("riga_orari_mattina").children;
 const riga2 = document.getElementById("riga_orari_sera").children;
-const removeTimeIntervalButtons = document.getElementsByClassName('remove_timeslot_buttons');
+const removeFrequencyButtons = document.getElementsByName('remove_frequency_buttons');
+const removeTimeIntervalButtons = document.getElementsByName('remove_timeslot_buttons');
+const owner = document.getElementById('profile_name').innerHTML;
+const removeFriendButton = document.getElementsByName('remove_friend');
+const removeFollowButton = document.getElementsByName('remove_follow');
+const removeBlockButton = document.getElementsByName('remove_block');
 
 function decorateTable(start, end, color) {
     let oraInizio = start.slice(0,2);
@@ -47,49 +52,64 @@ function decorateTable(start, end, color) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    let username = document.getElementById('session_user_name');
-    let other = document.getElementById('profile_name').innerHTML;
-    username = username === null ? other : username.innerHTML;
-    /* Handling of follow buttons on top of the page */
-    let addFollowButton = document.getElementById('follow_button');
-    let removeFollowButton = document.getElementById('remove_follow');
-    if (addFollowButton)
-        addFollowButton.addEventListener('click', function() { addFollow(username, other) });
-    if (removeFollowButton)
-        removeFollowButton.addEventListener('click', function() { removeFollow(username, other) });
-    /* Handling unfollow buttons in the list of followed */
-    const removeFollowButtons = document.getElementsByClassName('remove_follow_buttons');
-    if (removeFollowButtons.length > 0) {
-        for (i = 0; i < removeFollowButtons.length; i++) {
-            const button = removeFollowButtons[i];
-            const other = button.parentElement.querySelector('a').innerHTML;
-            button.addEventListener('click', function() { removeFollow(username, other) });
+    if(document.getElementById("comandi")) {
+        /* Handling of buttons in the top and bottom of the page */
+        const username = document.getElementById('session_user_name').innerHTML;
+        const addFriendButton = document.getElementById('friend_request');
+        if (addFriendButton) {
+            addFriendButton.addEventListener('click', function() { notify(username, owner, true) });
         }
-    }
-    /* Handling remove-add friend button on top of the page*/
-    const removeFriendButton = document.getElementById('remove_friend');
-    if (removeFriendButton) {
-        removeFriendButton.addEventListener('click', function() { removeFriend(username, other) });
-    }
-    //TODO add friend button
-    
-    /* Handling remove friend buttons in the list of friends */
-    const removeFriendButtons = document.getElementsByClassName('remove_friend_buttons');
-    if (removeFriendButtons.length > 0) {
-        for (i = 0; i < removeFriendButtons.length; i++) {
-            const button = removeFriendButtons[i];
-            const other = button.parentElement.querySelector('a').innerHTML;
-            button.addEventListener('click', function() { removeFriend(username, other) });
+        if (removeFriendButton.length > 0) {
+            removeFriendButton[0].addEventListener('click', function() { removeFriend(username, owner) });
+        }
+        const addFollowButton = document.getElementById('follow_button');
+        if (addFollowButton) {
+            addFollowButton.addEventListener('click', function() {
+                addFollow(username, owner);
+                notify(username, owner, false);
+            });
+        }
+        if (removeFollowButton.length > 0) {
+            removeFollowButton[0].addEventListener('click', function() { removeFollow(username, owner) });
+        }
+        const addBlockButton = document.getElementById('block_button');
+        if (addBlockButton) {
+            addBlockButton.addEventListener('click', function() { addBlock(username, owner) });
+        }
+        if (removeBlockButton.length > 0) {
+            removeBlockButton[0].addEventListener('click', function() { removeBlocked(username, owner) });
+        }
+    } else {
+        /* Handling of buttons in the bottom of the page only */
+        if (removeFriendButton.length > 0) {
+            for (i = 0; i < removeFriendButton.length; i++) {
+                let button = removeFriendButton[i];
+                let other = button.parentElement.id;
+                button.addEventListener('click', function() { removeFriend(owner, other) });
+            }
+        }
+        if (removeFollowButton.length > 0) {
+            for (i = 0; i < removeFollowButton.length; i++) {
+                let button = removeFollowButton[i];
+                let other = button.parentElement.id;
+                button.addEventListener('click', function() { removeFollow(owner, other) });
+            }
+        }
+        if (removeBlockButton.length > 0) {
+            for (i = 0; i < removeBlockButton.length; i++) {
+                let button = removeBlockButton[i];
+                let other = button.parentElement.id;
+                button.addEventListener('click', function() { removeBlocked(owner, other) });
+            }
         }
     }
 
     /*Handling remove frequency buttons */
-    let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
     if (removeFrequencyButtons.length > 0) {
         for (i = 0; i < removeFrequencyButtons.length; i++) {
             let button = removeFrequencyButtons[i];
-            let id = button.closest('li').id;
-            let f_to_remove = button.closest('li').innerHTML;
+            let id = button.parentElement.id;
+            let f_to_remove = button.parentElement.innerText;
             button.addEventListener('click', function() {removeFrequency(f_to_remove, username, id) });
         }
     }
@@ -98,8 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (removeTimeIntervalButtons.length > 0) {
         for (i = 0; i < removeTimeIntervalButtons.length; i++) {
             let button = removeTimeIntervalButtons[i];
-            let id = button.closest('li').id;
-            let times = button.closest('li').innerHTML.split('<')[0].split(' - ');
+            let id = button.parentElement.id;
+            let times = button.parentElement.innerText.split('<')[0].split(' - ');
             let start = times[0].trim();
             let end = times[1].trim();
             button.addEventListener('click', function() {removeTimeInterval(username, start, end, id) });
@@ -119,11 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function removeFrequency(f_to_remove, username, id) {
+function removeFrequency(f_to_remove, id) {
     let element = document.getElementById(id);
     element.parentNode.removeChild(element);
     let xhr = new XMLHttpRequest();
-    let url = 'functions/removeFrequency.php?f_to_remove=' + encodeURIComponent(f_to_remove) + '&username=' + encodeURIComponent(username);
+    let url = 'functions/removeFrequency.php?f_to_remove=' + encodeURIComponent(f_to_remove) + '&username=' + encodeURIComponent(owner);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -136,11 +156,11 @@ function removeFrequency(f_to_remove, username, id) {
     xhr.send();
 }
 
-function removeTimeInterval(username, start, end, id) {
+function removeTimeInterval(start, end, id) {
     let element = document.getElementById(id);
     element.parentNode.removeChild(element);
     let xhr = new XMLHttpRequest();
-    let url = 'functions/removeTimeSlot.php?username=' + encodeURIComponent(username) + '&start=' + encodeURIComponent(start) + '&end=' + encodeURIComponent(end);
+    let url = 'functions/removeTimeSlot.php?username=' + encodeURIComponent(owner) + '&start=' + encodeURIComponent(start) + '&end=' + encodeURIComponent(end);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
