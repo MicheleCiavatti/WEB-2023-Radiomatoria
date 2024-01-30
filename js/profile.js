@@ -3,6 +3,49 @@ const riga1 = document.getElementById("riga_orari_mattina").children;
 const riga2 = document.getElementById("riga_orari_sera").children;
 const removeTimeIntervalButtons = document.getElementsByClassName('remove_timeslot_buttons');
 
+function decorateTable(start, end, color) {
+    let oraInizio = start.slice(0,2);
+    let minutiInizio = start.slice(3,5);
+    let oraFine = end.slice(0,2);
+    let minutiFine = end.slice(3,5);
+    for(item of intestazione.children) {
+        if((oraInizio < parseInt(item.innerHTML)
+        && oraFine > parseInt(item.innerHTML)
+        && oraInizio < oraFine) || (oraInizio > oraFine
+        && (oraInizio < parseInt(item.innerHTML) || oraFine > parseInt(item.innerHTML)))) {
+            riga1.children.item(parseInt(item.innerHTML)*2-1).style.background = color;
+            riga1.children.item(parseInt(item.innerHTML)*2).style.background = color;
+        }
+        if((oraInizio < parseInt(item.innerHTML) + 12
+        && oraFine > parseInt(item.innerHTML) + 12
+        && oraInizio < oraFine) || (oraInizio > oraFine
+        && (oraInizio < parseInt(item.innerHTML) + 12 || oraFine > parseInt(item.innerHTML) + 12))) {
+            riga2.children.item(parseInt(item.innerHTML)*2-1).style.background = color;
+            riga2.children.item(parseInt(item.innerHTML)*2).style.background = color;
+        }
+    }
+    if(minutiInizio < 30) {
+        if(oraInizio <= 12) {
+            riga1.children.item(oraInizio*2).style.background = color;
+            if(minutiInizio == 0) {
+                riga1.children.item(oraInizio*2-1).style.background = color;
+            }
+        } else {
+            riga2.children.item(oraInizio*2+1).style.background = color;
+            if(minutiInizio == 0) {
+                riga2.children.item(oraInizio*2-1).style.background = color;
+            }
+        }
+    }
+    if(minutiFine > 30) {
+        if(oraFine <= 12) {
+            riga1.children.item(oraFine*2-1).style.background = color;
+        } else {
+            riga2.children.item(oraFine*2-1).style.background = color;
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     let username = document.getElementById('session_user_name');
     let other = document.getElementById('profile_name').innerHTML;
@@ -62,46 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', function() {removeTimeInterval(username, start, end, id) });
 
             /* Aesthetics */
-            let oraInizio = start.slice(0,2);
-            let minutiInizio = start.slice(3,5);
-            let oraFine = end.slice(0,2);
-            let minutiFine = end.slice(3,5);
-            for(item of intestazione.children) {
-                if((oraInizio < parseInt(item.innerHTML)
-                && oraFine > parseInt(item.innerHTML)
-                && oraInizio < oraFine) || (oraInizio > oraFine
-                && (oraInizio < parseInt(item.innerHTML) || oraFine > parseInt(item.innerHTML)))) {
-                    riga1.children.item(parseInt(item.innerHTML)*2-1).style.background = "green";
-                    riga1.children.item(parseInt(item.innerHTML)*2).style.background = "green";
-                }
-                if((oraInizio < parseInt(item.innerHTML) + 12
-                && oraFine > parseInt(item.innerHTML) + 12
-                && oraInizio < oraFine) || (oraInizio > oraFine
-                && (oraInizio < parseInt(item.innerHTML) + 12 || oraFine > parseInt(item.innerHTML) + 12))) {
-                    riga2.children.item(parseInt(item.innerHTML)*2-1).style.background = "green";
-                    riga2.children.item(parseInt(item.innerHTML)*2).style.background = "green";
-                }
-            }
-            if(minutiInizio < 30) {
-                if(oraInizio <= 12) {
-                    riga1.children.item(oraInizio*2).style.background = "green";
-                    if(minutiInizio == 0) {
-                        riga1.children.item(oraInizio*2-1).style.background = "green";
-                    }
-                } else {
-                    riga2.children.item(oraInizio*2+1).style.background = "green";
-                    if(minutiInizio == 0) {
-                        riga2.children.item(oraInizio*2-1).style.background = "green";
-                    }
-                }
-            }
-            if(minutiFine > 30) {
-                if(oraFine <= 12) {
-                    riga1.children.item(oraFine*2-1).style.background = "green";
-                } else {
-                    riga2.children.item(oraFine*2-1).style.background = "green";
-                }
-            }
+            decorateTable(start, end, "green");
         }
     }
     let tempo_corrente = new Date();
@@ -141,38 +145,7 @@ function removeTimeInterval(username, start, end, id) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            let oraInizio = start.slice(0,2);
-            let oraFine = end.slice(0,2);
-            for (i = 0; i < removeTimeIntervalButtons.length; i++) {
-                if((removeTimeIntervalButtons[i].closest('li').innerHTML.split('<')[0].split(' - '))[1].trim().slice(0,2) == oraInizio) {
-                    let overlapInizio = true;
-                    if(typeof overlapFine !== 'undefined') { break; }
-                }
-                if((removeTimeIntervalButtons[i].closest('li').innerHTML.split('<')[0].split(' - '))[0].trim().slice(0,2) == oraFine) {
-                    let overlapFine = true;
-                    if(typeof overlapInizio !== 'undefined') { break; }
-                }
-            }
-            for(item of intestazione.children) {
-                if((oraInizio <= parseInt(item.innerHTML)
-                && oraFine >= parseInt(item.innerHTML)
-                && oraInizio < oraFine) || (oraInizio > oraFine
-                && (oraInizio <= parseInt(item.innerHTML) || oraFine >= parseInt(item.innerHTML)))) {
-                    if(!((typeof overlapInizio !== 'undefined' && parseInt(item.innerHTML) == oraInizio) || 
-                    (typeof overlapFine !== 'undefined' && parseInt(item.innerHTML) == oraFine))) {
-                        riga1.children.item(parseInt(item.innerHTML)).style.background = "none";
-                    }
-                }
-                if((oraInizio <= parseInt(item.innerHTML) + 12
-                && oraFine >= parseInt(item.innerHTML) + 12
-                && oraInizio < oraFine) || (oraInizio > oraFine
-                && (oraInizio <= parseInt(item.innerHTML) + 12 || oraFine >= parseInt(item.innerHTML) + 12))) {
-                    if(!((typeof overlapInizio !== 'undefined' && parseInt(item.innerHTML) == oraInizio) || 
-                    (typeof overlapFine !== 'undefined' && parseInt(item.innerHTML) == oraFine))) {
-                        riga2.children.item(parseInt(item.innerHTML)).style.background = "none";
-                    }
-                }
-            }
+            decorateTable(start, end, "none");
             console.log('Fascia oraria rimossa con successo dal server');
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante la rimozione della fascia oraria:', xhr.status);
