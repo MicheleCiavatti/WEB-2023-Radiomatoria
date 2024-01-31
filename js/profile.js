@@ -4,9 +4,9 @@ const riga2 = document.getElementById("riga_orari_sera").children;
 const removeFrequencyButtons = document.getElementsByName('remove_frequency_buttons');
 const removeTimeIntervalButtons = document.getElementsByName('remove_timeslot_buttons');
 const owner = document.getElementById('profile_name').innerHTML;
-const removeFriendButton = document.getElementsByName('remove_friend');
-const removeFollowButton = document.getElementsByName('remove_follow');
-const removeBlockButton = document.getElementsByName('remove_block');
+const removeFriendButton = document.getElementsByName('remove_friend_button');
+const removeFollowButton = document.getElementsByName('remove_follow_button');
+const removeBlockButton = document.getElementsByName('remove_block_button');
 
 function decorateTable(start, end, color) {
     let oraInizio = start.slice(0,2);
@@ -36,7 +36,7 @@ function decorateTable(start, end, color) {
                 riga1.item(oraInizio*2-1).style.background = color;
             }
         } else {
-            riga2.item((oraInizio-12)*2).style.background = color;
+            riga2.children.item((oraInizio-12)*2).style.background = color;
             if(minutiInizio == 0) {
                 riga2.item((oraInizio-12)*2-1).style.background = color;
             }
@@ -52,8 +52,8 @@ function decorateTable(start, end, color) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    /* Handling of command buttons */
     if(document.getElementById("comandi")) {
+        /* Handling of buttons in the top of the page */
         const username = document.getElementById('session_user_name').innerHTML;
         const addFriendButton = document.getElementById('friend_request');
         if (addFriendButton) {
@@ -80,37 +80,40 @@ document.addEventListener('DOMContentLoaded', function() {
             removeBlockButton[0].addEventListener('click', function() { removeBlocked(username, owner) });
         }
     } else {
+        /* Handling of buttons in the bottom of the page */
         if (removeFriendButton.length > 0) {
             for (i = 0; i < removeFriendButton.length; i++) {
                 let button = removeFriendButton[i];
                 let other = button.parentElement.id;
-                button.addEventListener('click', function() { removeFriend(owner, other) });
+                button.addEventListener('click', function() { removeFriend(other) });
             }
         }
         if (removeFollowButton.length > 0) {
             for (i = 0; i < removeFollowButton.length; i++) {
                 let button = removeFollowButton[i];
                 let other = button.parentElement.id;
-                button.addEventListener('click', function() { removeFollow(owner, other) });
+                button.addEventListener('click', function() { removeFollow(other) });
             }
         }
         if (removeBlockButton.length > 0) {
             for (i = 0; i < removeBlockButton.length; i++) {
                 let button = removeBlockButton[i];
                 let other = button.parentElement.id;
-                button.addEventListener('click', function() { removeBlocked(owner, other) });
+                button.addEventListener('click', function() { removeBlocked(other) });
             }
         }
     }
-    /* Handling remove frequency buttons */
+
+    /*Handling remove frequency buttons */
     if (removeFrequencyButtons.length > 0) {
         for (i = 0; i < removeFrequencyButtons.length; i++) {
             let button = removeFrequencyButtons[i];
             let id = button.parentElement.id;
             let f_to_remove = button.parentElement.innerText;
-            button.addEventListener('click', function() { removeFrequency(f_to_remove, id) });
+            button.addEventListener('click', function() {removeFrequency(f_to_remove, id) });
         }
     }
+
     /* Handling remove time interval buttons */
     if (removeTimeIntervalButtons.length > 0) {
         for (i = 0; i < removeTimeIntervalButtons.length; i++) {
@@ -119,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let times = button.parentElement.innerText.split('<')[0].split(' - ');
             let start = times[0].trim();
             let end = times[1].trim();
-            button.addEventListener('click', function() { removeTimeInterval(start, end, id) });
+            button.addEventListener('click', function() {removeTimeInterval(start, end, id) });
 
             /* Aesthetics */
             decorateTable(start, end, "green");
@@ -128,11 +131,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let tempo_corrente = new Date();
     let ora_corrente = tempo_corrente.getHours();
     if(ora_corrente<=12) {
-        intestazione.item(ora_corrente).style.color = "green";
-        riga1.item(0).style.color = "green";
+        document.getElementById("intestazione_orari").children.item(ora_corrente).style.color = "green";
+        riga1.item(0).style.color = "blue";
     } else {
-        intestazione.item(ora_corrente-12).style.color = "green";
-        riga2.item(0).style.color = "green";
+        document.getElementById("intestazione_orari").children.item(ora_corrente-12).style.color = "green";
+        riga2.item(0).style.color = "blue";
     }
 });
 
@@ -171,25 +174,9 @@ function removeTimeInterval(start, end, id) {
     xhr.send();
 }
 
-function removeFriend(other) {
+function addFollow(other) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/removeFriend.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Amicizia rescissa con successo dal server');
-            location.reload();
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error("Errore durante la rescissione dell'amicizia:", xhr.status);
-        }
-    };
-    xhr.send();
-}
-
-function addFollow() {
-    let xhr = new XMLHttpRequest();
-    let url = 'functions/addFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
+    let url = 'functions/addFollow.php?username=' + encodeURIComponent(owner) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -205,47 +192,32 @@ function addFollow() {
 
 function removeFollow(other) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/removeFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
+    let url = 'functions/removeFollow.php?username=' + encodeURIComponent(owner) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Richiesta inviata con successo dal server');
+            console.log('Follow rimosso con successo dal server');
             location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error("Errore durante la rimozione del follow:", xhr.status);
+            console.error('Errore durante la rimozione del follow:', xhr.status);
         }
     };
     xhr.send();
 }
 
-function addBlock() {
-    let xhr = new XMLHttpRequest();
-    let url = 'functions/addBlock.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
+function removeFriend(other) {
+    console.log(owner + ' ' + other);
+    const xhr = new XMLHttpRequest();
+    const url = 'functions/removeFriend.php?username=' + encodeURIComponent(owner) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Follow aggiunto con successo al server');
+            console.log('Amico rimosso con successo dal server');
             location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error("Errore durante l'aggiunta del follow:", xhr.status);
-        }
-    };
-    xhr.send();
-}
-
-function removeBlock(other) {
-    let xhr = new XMLHttpRequest();
-    let url = 'functions/removeBlock.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Blocco rimosso con successo dal server');
-            location.reload();
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error('Errore durante la rimozione del blocco:', xhr.status);
+            console.error("Errore durante la rimozione dell'amico:", xhr.status);
         }
     };
     xhr.send();
