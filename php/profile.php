@@ -85,7 +85,7 @@
                 </ul>
                 <?php if ($username == $_SESSION['NomeUtente']): ?>
                     <button class="access_required" id="change_public_fields">Modifica campi pubblici</button>
-                    <form action="alter_profile.inc.php" method="post" id="change_fields_form">
+                    <form action="includes/alter_profile.inc.php" method="post" id="change_fields_form">
                         <table>
                             <tr>
                                 <td><label for="new_name">Nome Utente: </label></td>
