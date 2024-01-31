@@ -15,7 +15,7 @@
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                 <?php endif; ?>
-                <li id="pag_principale"><a href="index.php">Home page</a></li>
+                <li id="pag_principale"><a href="home.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <li><a href="notifiche.php">Notifiche</a></li>
