@@ -277,9 +277,10 @@
                     <header><h2>Post</h2></header>
                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                     <p>
-                        <form action="includes/addPost.inc.php" method="post">
+                        <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
+                            <input type="file" name="post_image" accept=".jpg, .jpeg, .png">
                             <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
-                            <input type="submit" value="Pubblica">
+                            <input type="submit" name="upload_post" value="Pubblica">
                         </form>
                     </p>
                 <?php endif; ?>
