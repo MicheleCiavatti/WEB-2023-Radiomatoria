@@ -6,9 +6,9 @@ const removeTimeSlotButtons = document.getElementsByName('remove_timeslot_button
 const timeIntervals = document.getElementsByClassName('timeslots');
 
 const owner = document.getElementById('profile_name').innerHTML;
-const removeFriendButton = document.getElementsByName('remove_friend_button');
-const removeFollowButton = document.getElementsByName('remove_follow_button');
-const removeBlockButton = document.getElementsByName('remove_block_button');
+const removeFriendButton = document.getElementsByName('remove_friend_buttons');
+const removeFollowButton = document.getElementsByName('remove_follow_buttons');
+const removeBlockButton = document.getElementsByName('remove_block_buttons');
 
 const change_button_1 = document.getElementById("change_public_fields");
 const public_fields = document.getElementById("change_fields_form");
@@ -99,21 +99,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (removeFriendButton.length > 0) {
             for (i = 0; i < removeFriendButton.length; i++) {
                 let button = removeFriendButton[i];
-                let other = button.parentElement.id;
+                let other = button.parentElement.innerText;
                 button.addEventListener('click', function() { removeFriend(other) });
             }
         }
         if (removeFollowButton.length > 0) {
             for (i = 0; i < removeFollowButton.length; i++) {
                 let button = removeFollowButton[i];
-                let other = button.parentElement.id;
+                let other = button.parentElement.innerText;
                 button.addEventListener('click', function() { removeFollow(other) });
             }
         }
         if (removeBlockButton.length > 0) {
             for (i = 0; i < removeBlockButton.length; i++) {
                 let button = removeBlockButton[i];
-                let other = button.parentElement.id;
+                let other = button.parentElement.innerText;
                 button.addEventListener('click', function() { removeBlocked(other) });
             }
         }
