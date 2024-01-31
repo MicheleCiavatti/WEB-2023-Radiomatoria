@@ -153,7 +153,7 @@
                         <ul>
                             <?php foreach($amici as $amico):?>
                                 <li>
-                                    <img src="<?= '../' . $amico[1] ?>" alt=""/>
+                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
                                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_friend_buttons">Rimuovi</button>
@@ -172,7 +172,7 @@
                         <ul>
                             <?php foreach($seguiti as $seguito):?>
                                 <li>
-                                    <img src="<?= '../' . $seguito[1] ?>" alt=""/>
+                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
                                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_follow_buttons" >Rimuovi</button>

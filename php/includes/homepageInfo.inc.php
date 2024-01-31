@@ -1,0 +1,24 @@
+<?php
+require_once __DIR__ . "/../classes/dbh.classes.php";
+
+function getPosts($username) {
+    $dbh = new Dbh;
+    if ($username == null) {
+
+    } else {
+        $s = $dbh->connect()->prepare(
+            'SELECT * 
+             FROM POST P
+             WHERE P.Creatore IN 
+                (SELECT F.Followed
+                 FROM FOLLOW F
+                 WHERE F.Follower = ?)
+             OR P.Creatore IN 
+                (SELECT A.Amico1
+                 FROM AMICIZIA A
+                 WHERE A.Amico2 = ?)
+             ORDER BY P.DataPost DESC
+             LIMIT 20;'
+        );
+    }
+}

@@ -1,8 +1,8 @@
 <?php
 session_start();
-/*Check for user logged: if we want to allow a user not logged to access this page, this need to be changed*/
-if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
-    header('location: ../../login.html?error=needtologin');
+require_once "includes/homepageInfo.inc.php";
+
+
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -29,7 +29,7 @@ if (!(isset($_SESSION['NomeUtente']) && isset($_SESSION['FotoProfilo'])))
             </ul>
         </nav>
         <main>
-            <!-- Vuoto in un template -->
+            
         </main>
     </body>
 </html>
