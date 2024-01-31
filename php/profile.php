@@ -225,7 +225,7 @@
                                     <img src="<?= '../' . $amico[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
                                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <button class="remove_friend_buttons" id="remove_followed_button">Rimuovi</button>
+                                        <button class="remove_friend_buttons">Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach;?>
@@ -244,7 +244,7 @@
                                     <img src="<?= '../' . $seguito[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
                                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <button class="remove_follow_buttons" id="remove_followed_button">Rimuovi</button>
+                                        <button class="remove_follow_buttons" >Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach;?>
@@ -263,7 +263,7 @@
                                     <img src="<?= $bloccato[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
                                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <button class="access_required" id="remove_block_button">Perdona</button>
+                                        <button class="access_required" >Perdona</button>
                                     <?php endif; ?>
                                 </li>
                                 
