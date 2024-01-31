@@ -3,9 +3,6 @@
 # INSTRUCTIONS XAMPP
 Instructions to run the project with XAMPP:
 - Create a database via phpMyAdmin using the file DB/SQL/LONG_LIGHT.ddl
-- Copy all the project in /xampp/htdocs folder
+- Copy all the project in /xampp/htdocs/WEB-2023-Radiomatoria folder
 - Start Apache and MySQL in XAMPP control panel
-- In the address bar of a browser, type `localhost/login.html` or `localhost/signup.html`
-# INSTRUCTIONS App
-The app requires a login: no user can access the app without a login. Therefore, the first page to open is always 
-the login or signup page. After a successful login, the user is sent to his homepage.
+- In the address bar of a browser, type `localhost` and navigate to  `WEB-2023-Radiomatoria`
