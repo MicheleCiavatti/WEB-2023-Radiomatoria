@@ -3,6 +3,6 @@
 # INSTRUCTIONS XAMPP
 Instructions to run the project with XAMPP:
 - Create a database via phpMyAdmin using the file DB/SQL/LONG_LIGHT.ddl
-- Copy all the project in /xampp/htdocs/WEB-2023-Radiomatoria folder
+- Copy all the project in /xampp/htdocs/WEB-2023-Radiomatoria folder or navigate to /xampp/htdocs and use the bash command `git init https://github.com/MicheleCiavatti/WEB-2023-Radiomatoria.git`.
 - Start Apache and MySQL in XAMPP control panel
 - In the address bar of a browser, type `localhost` and navigate to  `WEB-2023-Radiomatoria`
