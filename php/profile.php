@@ -70,7 +70,6 @@
             </header>
             <aside>
                 <ul>
-                    <li>Indirizzo: <?php echo $utente['Indirizzo']?></li>
                     <li>Città: <?php echo $utente['Città']?></li>
                     <li>Data di Nascita: <?php echo $utente['DataNascita']?></li>
                     <li>Indirizzo e-mail: <?php echo $utente['IndirizzoMail']?></li>
