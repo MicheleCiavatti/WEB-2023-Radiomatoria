@@ -96,7 +96,7 @@
                     <!-- Form for adding frequencies -->
                     <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
                         <form action="includes/addMHz.inc.php" method="post">
-                            <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" type="number" step="any" min="0" required></label>
+                            <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label>
                             <input type="submit" value="Aggiungi">
                         </form>
                     <?php endif; ?>
@@ -121,8 +121,8 @@
                     <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
                         <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
                         <form action="includes/addTimeSlot.inc.php" method="post">
-                            <label for="orainizio">OraInizio:<input name="orainizio" type="time" required></label>
-                            <label for="orafine">OraFine:<input name="orafine" type="time" required></label>
+                            <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
+                            <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
                             <input type="submit" value="Aggiungi">
                         </form>
                     <?php endif; ?>
@@ -136,11 +136,11 @@
                         <li>Indizio: <?= $utente['Indizio']?></li>
                     </ul>
                     <form action="includes/changeClue.inc.php" method="post">
-                        <label for="new_clue">Modifica l'indizio: <input name="new_clue" required></label>
+                        <label for="new_clue">Modifica l'indizio: <input name="new_clue" id="new_clue" required></label>
                         <input type="submit" value="Modifica indizio">
                     </form>
                     <form action="includes/changePW.inc.php" method="post">
-                        <label for="new_pw">Cambia password:<input name="new_pw" type="password" minlength="8" required></label>
+                        <label for="new_pw">Cambia password:<input name="new_pw" type="password" id="new_pw" minlength="8" required></label>
                         <input type="submit" value="Modifica password">
                     </form>
                 </section>

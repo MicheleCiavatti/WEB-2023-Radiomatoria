@@ -1,8 +1,7 @@
 <?php
 session_start();
 require_once "includes/homepageInfo.inc.php";
-
-
+$posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : getPosts(null);
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -29,7 +28,20 @@ require_once "includes/homepageInfo.inc.php";
             </ul>
         </nav>
         <main>
-            
+            <?php foreach ($posts as $post): ?>
+                <article>
+                    <header>
+                        <h2><?= strval($post['Creatore']); ?></h2>
+                        <p><?= strval($post['DataPost']); ?></p>
+                        <?php if ($post['ImmaginePost'] != null): ?>
+                            <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
+                        <?php endif; ?>
+                    </header>
+                    <section>
+                        <p><?= strval($post['TestoPost']); ?></p>
+                    </section>
+                </article>
+            <?php endforeach; ?>      
         </main>
     </body>
 </html>

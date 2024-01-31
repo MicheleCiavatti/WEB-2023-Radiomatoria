@@ -21,4 +21,19 @@ function getPosts($username) {
              LIMIT 20;'
         );
     }
+    if (!$s->execute([$username, $username])) {
+        return false;
+    }
+    $result = $s->fetchAll(PDO::FETCH_ASSOC);
+    $posts = [];
+    foreach ($result as $row) {
+        $posts[] = array(
+            'Creatore' => $row['Creatore'],
+            'NrPost' => $row['NrPost'],
+            'DataPost' => $row['DataPost'],
+            'TestoPost' => $row['TestoPost'],
+            'ImmaginePost' => $row['ImmaginePost'],
+        );
+    }
+    return $posts;
 }
