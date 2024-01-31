@@ -311,14 +311,16 @@
                                 </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" id="add_comment_form">
-                                <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
-                                <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
-                                <input type="hidden" name="post_author" value="<?= $post[0]?>">
-                                <input type="hidden" name="post_number" value="<?= $post[1]?>">
-                                <input type="reset" value="Annulla commento" id="comment_reset">
-                                <input type="submit" value="Pubblica">
-                            </form>
+                            <?php if(isset($_SESSION['NomeUtente'])): ?>
+                                <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" id="add_comment_form">
+                                    <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
+                                    <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
+                                    <input type="hidden" name="post_author" value="<?= $post[0]?>">
+                                    <input type="hidden" name="post_number" value="<?= $post[1]?>">
+                                    <input type="reset" value="Annulla commento" id="comment_reset">
+                                    <input type="submit" value="Pubblica">
+                                </form>
+                            <?php endif; ?>
                         </section>
                     </article>
                 <?php endforeach; ?>
