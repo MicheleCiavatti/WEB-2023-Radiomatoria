@@ -4,7 +4,12 @@ require_once __DIR__ . "/../classes/dbh.classes.php";
 function getPosts($username) {
     $dbh = new Dbh;
     if ($username == null) {
-
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM POST
+             ORDER BY DataPost DESC
+             LIMIT 20;'
+        );
     } else {
         $s = $dbh->connect()->prepare(
             'SELECT * 
@@ -20,9 +25,9 @@ function getPosts($username) {
              ORDER BY P.DataPost DESC
              LIMIT 20;'
         );
-    }
-    if (!$s->execute([$username, $username])) {
-        return false;
+        if (!$s->execute([$username, $username])) {
+            return false;
+        }
     }
     $result = $s->fetchAll(PDO::FETCH_ASSOC);
     $posts = [];
