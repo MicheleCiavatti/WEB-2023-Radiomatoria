@@ -2,6 +2,7 @@ const intestazione = document.getElementById("intestazione_orari").children;
 const riga1 = document.getElementById("riga_orari_mattina").children;
 const riga2 = document.getElementById("riga_orari_sera").children;
 const removeFrequencyButtons = document.getElementsByName('remove_frequency_buttons');
+const removeTimeSlotButtons = document.getElementsByName('remove_timeslot_buttons');
 const timeIntervals = document.getElementsByClassName('timeslots');
 
 const owner = document.getElementById('profile_name').innerHTML;
@@ -135,9 +136,9 @@ document.addEventListener('DOMContentLoaded', function() {
             let start = times[0].trim();
             let end = times[1].trim();
 
-            if(timeIntervals[i].lastChild.type = "button") {
+            if(removeTimeSlotButtons.length > 0) {
                 let id = timeIntervals[i].id;
-                let button = timeIntervals[i].lastChild;
+                let button = removeTimeSlotButtons[i];
                 button.addEventListener('click', function() {removeTimeInterval(start, end, id) });
             }
 
@@ -391,3 +392,97 @@ function mostraFormCommenti(element_id, author, risposta) {
         add_comment.children.item[2].placeholder = "Commento al post di " + author;
     }
 }
+
+/*function selectPost() {
+    const select_form = document.getElementById("select_form");
+
+    select_form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        fetch(select_form.action, {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(select_form))
+        }).then((response) => {
+            document.getElementById("post_list").innerHTML = "<?php $post_list = " + response[0] + ";  require_once 'post_list.php' ?>";
+            document.querySelectorAll("[id$=_comment_list]").hidden = true;
+            decorate(response[1], response[2]);
+        })
+        .catch(err => console.error('Errore durante estrazione post:', err));
+    })
+}
+
+function addLikeOrDislike(element_id, type) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'php/home/addLikeOrDislike.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Reazione aggiunta con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante aggiunta reazione:', xhr.status);
+        }
+    };
+    let data = encodeURI('element_id=' + encodeURIComponent(element_id), '&type=' + encodeURIComponent(type));
+    xhr.send(data);
+}
+
+function removeLikeOrDislike(element_id) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'php/home/removeLikeOrDislike.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Reazione rimossa con successo dal server');
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante rimozione reazione:', xhr.status);
+        }
+    };
+    let data = encodeURI('element_id=' + encodeURIComponent(element_id));
+    xhr.send(data);
+}
+
+function like(element_id) {
+    let like_button = document.getElementById(element_id + '_like_button');
+    if(like_button.textContent.charAt(4)!='d') {
+        if(document.getElementById(element_id + '_dislike_button').textContent.charAt(7)=='d') {
+            dislike(element_id);
+        }
+        addLikeOrDislike(element_id, true);
+        like_button.innerHTML += 'd';
+        like_button.style.color = "cyan";
+    } else {
+        removeLikeOrDislike(element_id);
+        like_button.innerHTML = "Like"
+        like_button.style.color = "black";
+    }
+}
+
+function dislike(element_id) {
+    let dislike_button = document.getElementById(element_id + '_dislike_button');
+    if(dislike_button.textContent.charAt(7)!='d') {
+        if(document.getElementById(element_id + '_like_button').textContent.charAt(4)=='d') {
+            like(element_id);
+        }
+        addLikeOrDislike(element_id, false);
+        dislike_button.innerHTML += 'd';
+        dislike_button.style.color = "magenta";
+    } else {
+        removeLikeOrDislike(element_id);
+        dislike_button.innerHTML = "Dislike"
+        dislike_button.style.color = "black";
+    }
+}
+
+function decorate(element_id_like, element_id_dislike) {
+    element_id_like.foreach((element) => {
+        let active_like = document.getElementById(element + '_like_button');
+        active_like.innerHTML += 'd';
+        active_like.style.color = "cyan";
+    })
+    element_id_dislike.foreach((element) => {
+        let active_like = document.getElementById(element + '_dislike_button');
+        active_like.innerHTML += 'd';
+        active_like.style.color = "magenta";
+    })
+}*/
