@@ -61,6 +61,11 @@
                             <?php endif; ?>
                     </li>
                 </ul>
+                <?php else: ?>
+                    <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
+                        <input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required>
+                        <input type="submit" name="upload_propic" value="Cambia immagine">
+                    </form>
                 <?php endif; ?>
             </header>
             <aside>
@@ -101,80 +106,6 @@
             <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $utente['NomeUtente']): ?>
                 <section>
                     <header><h2>Orari</h2></header>
-                <!--
-                <table>
-                    <caption>Orari di presenza in radio</caption>
-                    <tr id="intestazione_orari">
-                        <th></th>
-                        <th colspan="2">1</th>
-                        <th colspan="2">2</th>
-                        <th colspan="2">3</th>
-                        <th colspan="2">4</th>
-                        <th colspan="2">5</th>
-                        <th colspan="2">6</th>
-                        <th colspan="2">7</th>
-                        <th colspan="2">8</th>
-                        <th colspan="2">9</th>
-                        <th colspan="2">10</th>
-                        <th colspan="2">11</th>
-                        <th colspan="2">12</th>
-                    </tr>
-                    <tr id="riga_orari_mattina">
-                        <th>AM</th>
-                        <td headers="1 AM"></td>
-                        <td headers="1 AM"></td>
-                        <td headers="2 AM"></td>
-                        <td headers="2 AM"></td>
-                        <td headers="3 AM"></td>
-                        <td headers="3 AM"></td>
-                        <td headers="4 AM"></td>
-                        <td headers="4 AM"></td>
-                        <td headers="5 AM"></td>
-                        <td headers="5 AM"></td>
-                        <td headers="6 AM"></td>
-                        <td headers="6 AM"></td>
-                        <td headers="7 AM"></td>
-                        <td headers="7 AM"></td>
-                        <td headers="8 AM"></td>
-                        <td headers="8 AM"></td>
-                        <td headers="9 AM"></td>
-                        <td headers="9 AM"></td>
-                        <td headers="10 AM"></td>
-                        <td headers="10 AM"></td>
-                        <td headers="11 AM"></td>
-                        <td headers="11 AM"></td>
-                        <td headers="12 AM"></td>
-                        <td headers="12 AM"></td>
-                    </tr>
-                    <tr id="riga_orari_sera">
-                        <th>PM</th>
-                        <td headers="1 PM"></td>
-                        <td headers="1 PM"></td>
-                        <td headers="2 PM"></td>
-                        <td headers="2 PM"></td>
-                        <td headers="3 PM"></td>
-                        <td headers="3 PM"></td>
-                        <td headers="4 PM"></td>
-                        <td headers="4 PM"></td>
-                        <td headers="5 PM"></td>
-                        <td headers="5 PM"></td>
-                        <td headers="6 PM"></td>
-                        <td headers="6 PM"></td>
-                        <td headers="7 PM"></td>
-                        <td headers="7 PM"></td>
-                        <td headers="8 PM"></td>
-                        <td headers="8 PM"></td>
-                        <td headers="9 PM"></td>
-                        <td headers="9 PM"></td>
-                        <td headers="10 PM"></td>
-                        <td headers="10 PM"></td>
-                        <td headers="11 PM"></td>
-                        <td headers="11 PM"></td>
-                        <td headers="12 PM"></td>
-                        <td headers="12 PM"></td>
-                    </tr>
-                </table>
-                    -->
                     <ul>
                         <?php foreach($orari as $intervallo): ?>
                         <!-- Time slots displaying and removing done via AJAX -->
