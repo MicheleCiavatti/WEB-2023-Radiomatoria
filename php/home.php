@@ -28,6 +28,14 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
             </ul>
         </nav>
         <main>
+            <section>
+                <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
+                <ul>
+                    <li><input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></li>  
+                    <li><textarea name="post_text" placeholder="Scrivi un post" required></textarea></li>
+                    <li><button type="submit" name="upload_post">Pubblica</button></li>
+                </ul>
+            </section>
             <?php foreach ($posts as $post): ?>
                 <article>
                     <header>
