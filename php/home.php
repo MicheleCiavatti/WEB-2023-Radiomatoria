@@ -15,16 +15,23 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
             <h1>Long Light</h1>
         </header>
         <aside>
-        <img src="<?php echo $_SESSION['FotoProfilo']; ?>" alt=""/>
-        <p><?php echo $_SESSION['NomeUtente']; ?></p>
+            <?php if (isset($_SESSION['NomeUtente'])): ?>
+                <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
+                <p><?= $_SESSION['NomeUtente']; ?></p>
+            <?php endif; ?>
         </aside>
         <nav>
             <ul>
-                <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                    <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                    <li><a href="includes/logout.inc.php">Logout</a></li>
+                    <li><a href="#">Notifiche</a></li>
+                <?php else: ?>
+                    <li><a href="../signup.html">Crea Account</a></li>
+                    <li><a href="../login.html">Login</a></li>
+                <?php endif; ?>
                 <li><a href="#">Home page</a></li>
                 <li><a href="guida.php">Guida</a></li>
-                <li><a href="includes/logout.inc.php">Logout</a></li>
-                <li><a href="#">Notifiche</a></li>
             </ul>
         </nav>
         <main>

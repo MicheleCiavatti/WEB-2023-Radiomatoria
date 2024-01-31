@@ -10,6 +10,9 @@ function getPosts($username) {
              ORDER BY DataPost DESC
              LIMIT 20;'
         );
+        if (!$s->execute()) {
+            return false;
+        }
     } else {
         $s = $dbh->connect()->prepare(
             'SELECT * 
