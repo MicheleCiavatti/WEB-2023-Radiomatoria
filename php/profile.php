@@ -333,10 +333,10 @@
                         <ul>
                             <?php foreach($amici as $amico):?>
                                 <li>
-                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1] ?>" alt=""/>
-                                    <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
+                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1]; ?>" alt=""/>
+                                    <a href="profile.php?id=<?= $amico[0]; ?>"><?= $amico[0]; ?></a>
                                     <?php if($username == $_SESSION['NomeUtente'] || $amico[0] == $_SESSION['NomeUtente']): ?>
-                                        <button class="remove_friend_buttons">Rimuovi</button>
+                                        <button class="access_required" name="remove_friend_buttons">Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach;?>
@@ -352,10 +352,10 @@
                         <ul>
                             <?php foreach($seguiti as $seguito):?>
                                 <li>
-                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1] ?>" alt=""/>
-                                    <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
+                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1]; ?>" alt=""/>
+                                    <a href="profile.php?id=<?= $seguito[0]; ?>"><?= $seguito[0]; ?></a>
                                     <?php if($username == $_SESSION['NomeUtente']): ?>
-                                        <button class="remove_follow_buttons">Rimuovi</button>
+                                        <button class="access_required" name="remove_follow_buttons">Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach;?>
@@ -373,7 +373,7 @@
                                 <li>
                                     <img src="<?= $bloccato[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
-                                    <button class="access_required" >Perdona</button>
+                                    <button class="access_required"  name="remove_block_buttons">Perdona</button>
                                 </li>
                                 
                             <?php endforeach; ?>
