@@ -8,11 +8,6 @@ if (isset($_POST['comment_text'])) {
     $date = date("Y-m-d H:i:s");
     $post_author = $_POST['post_author'];
     $post_number = $_POST['post_number'];
-    if (isset($_POST['comment_pic'])) {
-        $comment_pic = $_POST['comment_pic'];
-    } else {
-        $comment_pic = NULL;
-    }
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
         'SELECT *
@@ -25,6 +20,14 @@ if (isset($_POST['comment_text'])) {
         exit();
     }
     $nrComment = $s->rowCount() + 1;
+    if (isset($_FILES['comment_image']) && !empty($_FILES['comment_image']['name']) && $_FILES['comment_image']['error'] == 0) {
+        $imgDir = __DIR__ . "/../../img/";
+        $imgName = "comment_" . $post_author . "_" . $post_number . "_" . $nrComment . "." . pathinfo($_FILES['comment_image']['name'], PATHINFO_EXTENSION);
+        move_uploaded_file($_FILES['comment_image']['tmp_name'], $imgDir . DIRECTORY_SEPARATOR . $imgName);
+        $comment_pic = "../img/" . $imgName;
+    } else {
+        $comment_pic = null;
+    }
     $s = $dbh->connect()->prepare(
         'INSERT INTO COMMENTI (Creatore, DataCommento, TestoCommento, ImmagineCommento, NrCommento, NrPost, AutoreCommento)
          VALUES (?, ?, ?, ?, ?, ?, ?);'

@@ -138,7 +138,7 @@ function getComments($creatorPost, $nrPost) {
     $result = $s->fetchAll(PDO::FETCH_ASSOC);
     $comments = [];
     foreach ($result as $row) {
-        $comments[] = array($row['AutoreCommento'], $row['DataCommento'], $row['TestoCommento']);
+        $comments[] = array($row['AutoreCommento'], $row['DataCommento'], $row['TestoCommento'], $row['ImmagineCommento']);
     }
     return $comments;
 }

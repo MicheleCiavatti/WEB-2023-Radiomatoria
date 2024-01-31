@@ -231,12 +231,15 @@
                                     foreach($comments as $comment):
                                 ?>
                                 <li>
+                                    <php if($comment[3] != null): ?>
+                                        <img src="<?=strval($comment[3]); ?>" alt=""/>
                                     <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
                                     <p><?=strval($comment[2]);?></p>
                                 </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <form action="includes/addComment.inc.php" method="post">
+                            <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
                                 <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
                                 <input type="hidden" name="post_author" value="<?= $post[0]?>">
                                 <input type="hidden" name="post_number" value="<?= $post[1]?>">
