@@ -19,10 +19,8 @@ const show_comments_buttons = document.getElementsByName("show_comments");
 const remove_post_button = document.getElementsByName("remove_post");
 const remove_comment_button = document.getElementsByName("remove_comment");
 
-const add_comment = document.getElementById("add_comment_form");
 const comment_post_button = document.getElementsByName("comment_post");
 const respond_comment_button = document.getElementsByName("answer_comment");
-const comment_reset = document.getElementById("comment_reset");
 
 function decorateTable(start, end, color) {
     let oraInizio = start.slice(0,2);
@@ -186,6 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let author = button.parentNode.parentNode.firstChild.lastChild.firstChild.innerText;
             button.addEventListener("click", function() { mostraFormCommenti(pid, author, false); });
         }
+        const add_comment = document.getElementById("add_comment_form");
+        add_comment.style.display = "none";
     }
     if(respond_comment_button.length > 0) {
         for(i=0; i<respond_comment_button.length; i++) {
@@ -194,10 +194,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let cid = button.id.slice(8);
             button.addEventListener("click", function() { removeComment(cid, author, true); });
         }
+        const comment_reset = document.getElementById("comment_reset");
+        comment_reset.addEventListener("click", function() { toggle(add_comment); });
     }
-    comment_reset.addEventListener("click", function() { toggle(add_comment); });
 
-    add_comment.style.display = "none";
     if(remove_post_button.length > 0) {
         for(i=0; i<remove_post_button.length; i++) {
             let button = remove_post_button[i];
