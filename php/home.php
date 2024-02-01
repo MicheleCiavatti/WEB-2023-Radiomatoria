@@ -48,7 +48,7 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
             <?php foreach ($posts as $post): ?>
                 <article>
                     <header>
-                        <h2><?= strval($post['Creatore']); ?></h2>
+                        <h2><a href="profile.php?id=<?=strval($post['Creatore'])?>"><?= strval($post['Creatore']); ?></a></h2>
                         <p><?= strval($post['DataPost']); ?></p>
                         <?php if ($post['ImmaginePost'] != null): ?>
                             <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
