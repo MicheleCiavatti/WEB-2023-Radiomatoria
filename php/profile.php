@@ -152,7 +152,7 @@
                         <ul>
                             <?php foreach($amici as $amico):?>
                                 <li>
-                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1] ?>" alt=""/>
+                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/" . $amico[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
                                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_friend_buttons">Rimuovi</button>
