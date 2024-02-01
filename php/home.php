@@ -54,9 +54,22 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                             <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
                         <?php endif; ?>
                     </header>
-                    <section>
-                        <p><?= strval($post['TestoPost']); ?></p>
-                    </section>
+                    <section><?= strval($post['TestoPost']); ?></section>
+                    <?php $comments = getComments($post['Creatore'], $post['NrPost']); if (!empty($comments)): ?>
+                        <section>
+                            <ul>
+                                <?php foreach ($comments as $comment): ?>
+                                    <li>
+                                        <?php if ($comment['ImmagineCommento'] != null): ?>
+                                            <img src="<?= strval($comment['ImmagineCommento']); ?>" alt=""/>
+                                        <?php endif; ?>
+                                        <p><strong><a href="profile.php?id=<?=strval($comment['AutoreCommento']);?>"><?=strval($comment['AutoreCommento'])?></a></strong> <?= strval($comment['DataCommento']);?></p>
+                                        <p><?= strval($comment['TestoCommento']); ?></p>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </section>
+                    <?php endif; ?>
                 </article>
             <?php endforeach; ?>      
         </main>

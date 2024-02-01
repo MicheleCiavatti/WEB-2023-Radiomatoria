@@ -234,8 +234,9 @@
                                     foreach($comments as $comment):
                                 ?>
                                 <li>
-                                    <php if($comment[3] != null): ?>
+                                    <?php if($comment[3] != null): ?>
                                         <img src="<?=strval($comment[3]); ?>" alt=""/>
+                                    <?php endif; ?>
                                     <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
                                     <p><?=strval($comment[2]);?></p>
                                 </li>
