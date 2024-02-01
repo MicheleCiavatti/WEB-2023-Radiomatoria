@@ -11,7 +11,7 @@ if (isset($_POST['new_name']) && isset($_POST['new_address']) && isset($_POST['n
     $mail = $_POST['new_mail'];
     $dbh = new Dbh;
 
-    $s = $dbh->connect()->prepare('SELECT COUNT(*) FROM UTENTI WHERE (NomeUtente = ? OR IndirizzoMail = ?) AND NOT (NomeUtente = ?);');
+    $s = $dbh->connect()->prepare('SELECT * FROM UTENTI WHERE (NomeUtente = ? OR IndirizzoMail = ?) AND NOT (NomeUtente = ?);');
     if (!$s->execute(array($name, $mail, $uid))) {
         $s = null;
         header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
@@ -27,13 +27,13 @@ if (isset($_POST['new_name']) && isset($_POST['new_address']) && isset($_POST['n
             SET NomeUtente = ?, Indirizzo = ?, Città = ?, DataNascita = ?, IndirizzoMail = ?
             WHERE NomeUtente = ?;'
     );
-    if (!$s->execute(array($name, $_POST['new_address'], $_POST['new_city'], $_POST['new_dob'], $mail, $uid))) {
+    if (!$s->execute(array($name, $address, $city, $dob, $mail, $uid))) {
         $s = null;
         header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
         exit();
     }
-    $_SESSION['NomeUtente'] = $_POST['new_name'];
-    header('location: ../profile.php?id=' . $_SESSION['NomeUtente'] .'&error=none');
+    $_SESSION['NomeUtente'] = $name;
+    header('location: ../profile.php?id=' . $_SESSION['NomeUtente'] . '&error=none');
 } else {
     error_log("Variabile non settata");
 }
