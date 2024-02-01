@@ -20,6 +20,19 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', function() { acceptFriend(username, other, section) });
         }
     }
+    /* Handling the remove notification buttons */
+    /* TODO
+    const removeNotificationButtons = document.getElementsByClassName('removenotification');
+    if (removeNotificationButtons.length > 0) {
+        for (i = 0; i < removeNotificationButtons.length; i++) {
+            const button = removeNotificationButtons[i];
+            const section = button.closest('section');
+            const other = section.querySelector('header h3 a').innerHTML;
+            const nid = 
+            button.addEventListener('click', function() { removeNotification(id, section) });
+        }
+    }
+    */
 });
 
 function refuseFriend(username, other, section) {

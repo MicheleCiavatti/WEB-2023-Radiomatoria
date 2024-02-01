@@ -44,7 +44,8 @@
                                     <li><button class="friendaccept" name="friend_accept">Accetta</button></li>
                                 </ul>
                             <?php else: ?>
-                                <button id="removen_<?= strval($n['IdNotifica'])?>" name="remove_notification">Rimiovi notifica</button>
+                                <!--- TODO: add button to remove notification -->
+                                <button class="removenotification" >Rimuovi notifica</button>
                             <?php endif; ?>
                         </section>
                     <?php endforeach; ?>
