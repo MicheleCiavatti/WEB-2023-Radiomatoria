@@ -10,12 +10,6 @@ const removeFriendButton = document.getElementsByName('remove_friend_buttons');
 const removeFollowButton = document.getElementsByName('remove_follow_buttons');
 const removeBlockButton = document.getElementsByName('remove_block_buttons');
 
-const change_button_1 = document.getElementById("change_public_fields");
-const public_fields = document.getElementById("change_fields_form");
-const change_button_2 = document.getElementById("change_private_fields");
-const private_fields = document.getElementById("private_fields");
-const add_post_button = document.getElementById('add_post_button');
-const add_post = document.getElementById('add_post_form');
 const show_comments_buttons = document.getElementsByName("show_comments");
 const remove_post_button = document.getElementsByName("remove_post");
 const remove_comment_button = document.getElementsByName("remove_comment");
@@ -72,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const username = document.getElementById('session_user_name').innerHTML;
         const addFriendButton = document.getElementById('friend_request');
         if (addFriendButton) {
-            addFriendButton.addEventListener('click', function() { notify(true) });
+            addFriendButton.addEventListener('click', function() { notify(username, true) });
         }
         if (removeFriendButton.length > 0) {
             removeFriendButton[0].addEventListener('click', function() { removeFriend(username, owner) });
@@ -80,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const addFollowButton = document.getElementById('follow_button');
         if (addFollowButton) {
             addFollowButton.addEventListener('click', function() {
-                addFollow();
+                addFollow(username);
                 notify(false);
             });
         }
@@ -89,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const addBlockButton = document.getElementById('block_button');
         if (addBlockButton) {
-            addBlockButton.addEventListener('click', function() { addBlock() });
+            addBlockButton.addEventListener('click', function() { addBlock(username) });
         }
         if (removeBlockButton.length > 0) {
             removeBlockButton[0].addEventListener('click', function() { removeBlocked(username, owner) });
@@ -99,22 +93,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (removeFriendButton.length > 0) {
             for (i = 0; i < removeFriendButton.length; i++) {
                 let button = removeFriendButton[i];
-                let other = button.parentElement.innerText;
-                button.addEventListener('click', function() { removeFriend(other) });
+                let other = button.parentElement.id;
+                button.addEventListener('click', function() { removeFriend(owner, other) });
             }
         }
         if (removeFollowButton.length > 0) {
             for (i = 0; i < removeFollowButton.length; i++) {
                 let button = removeFollowButton[i];
-                let other = button.parentElement.innerText;
-                button.addEventListener('click', function() { removeFollow(other) });
+                let other = button.parentElement.id;
+                button.addEventListener('click', function() { removeFollow(owner, other) });
             }
         }
         if (removeBlockButton.length > 0) {
             for (i = 0; i < removeBlockButton.length; i++) {
                 let button = removeBlockButton[i];
-                let other = button.parentElement.innerText;
-                button.addEventListener('click', function() { removeBlocked(other) });
+                let other = button.parentElement.id;
+                button.addEventListener('click', function() { removeBlock(owner, other) });
             }
         }
     }
@@ -156,13 +150,26 @@ document.addEventListener('DOMContentLoaded', function() {
         riga2.item(0).style.color = "blue";
     }
 
-    add_post_button.addEventListener("click", function() { toggle(add_post) });
-    add_post.style.display = "none";
-    change_button_1.addEventListener("click", function() { toggle(public_fields) });
-    public_fields.style.display = "none";
-    change_button_2.addEventListener("click", function() { toggle(private_fields) });
-    private_fields.style.display = "none";
-    
+    const add_post = document.getElementById('add_post_form');
+    if(add_post) {
+        const add_post_button = document.getElementById('add_post_button');
+
+        add_post_button.addEventListener("click", function() { toggle(add_post) });
+        add_post.style.display = "none";
+    }
+
+    const change_button_1 = document.getElementById("change_public_fields");
+    if(change_button_1) {
+        const public_fields = document.getElementById("change_fields_form");
+        const change_button_2 = document.getElementById("change_private_fields");
+        const private_fields = document.getElementById("private_fields");
+        
+        change_button_1.addEventListener("click", function() { toggle(public_fields) });
+        public_fields.style.display = "none";
+        change_button_2.addEventListener("click", function() { toggle(private_fields) });
+        private_fields.style.display = "none";
+    }
+   
     if(show_comments_buttons.length > 0) {
         for(i=0; i<show_comments_buttons.length; i++) {
             let button = show_comments_buttons[i];
@@ -250,7 +257,7 @@ function removeTimeInterval(start, end, id) {
     xhr.send();
 }
 
-function addFollow() {
+function addFollow(username) {
     let xhr = new XMLHttpRequest();
     let url = 'functions/addFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
     xhr.open('GET', url, true);
@@ -266,7 +273,7 @@ function addFollow() {
     xhr.send();
 }
 
-function addBlock() {
+function addBlock(username) {
     let xhr = new XMLHttpRequest();
     let url = 'functions/addBlock.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
     xhr.open('GET', url, true);
@@ -282,9 +289,25 @@ function addBlock() {
     xhr.send();
 }
 
-function removeFollow(other) {
+function removeBlock(username, other) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/removeFollow.php?username=' + encodeURIComponent(owner) + '&other=' + encodeURIComponent(other);
+    let url = 'functions/removeBlock.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Blocco rimosso con successo dal server');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione del blocco:', xhr.status);
+        }
+    };
+    xhr.send();
+}
+
+function removeFollow(username, other) {
+    let xhr = new XMLHttpRequest();
+    let url = 'functions/removeFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -298,10 +321,10 @@ function removeFollow(other) {
     xhr.send();
 }
 
-function removeFriend(other) {
+function removeFriend(username, other) {
     console.log(owner + ' ' + other);
     const xhr = new XMLHttpRequest();
-    const url = 'functions/removeFriend.php?username=' + encodeURIComponent(owner) + '&other=' + encodeURIComponent(other);
+    const url = 'functions/removeFriend.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -315,7 +338,7 @@ function removeFriend(other) {
     xhr.send();
 }
 
-function notify(request) {
+function notify(username, request) {
     let xhr = new XMLHttpRequest();
     let url = 'functions/notify.php?username=' + encodeURIComponent(username) + '&receiver=' + encodeURIComponent(owner) + '&request=' + encodeURIComponent(request);
     xhr.open('GET', url, true);
@@ -333,8 +356,8 @@ function notify(request) {
 
 function removePost(pid) {
     let xhr = new XMLHttpRequest();
-    let url = 'php/home/removePost.php?pid=' + encodeURIComponent(pid);
-    xhr.open('POST', url, true);
+    let url = 'functions/removePost.php?pid=' + encodeURIComponent(pid);
+    xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     post_to_remove = document.getElementById('post' + pid);
     post_to_remove.parentElement.removeChild(post_to_remove);
@@ -356,8 +379,8 @@ function removePost(pid) {
 
 function removeComment(cid) {
     let xhr = new XMLHttpRequest();
-    let url = 'php/home/removeComment.php?cid=' + encodeURIComponent(cid);
-    xhr.open('POST', url, true);
+    let url = 'functions/removeComment.php?cid=' + encodeURIComponent(cid);
+    xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     comment_to_remove = document.getElementById('comment' + cid);
     if(isset(comment_to_remove)) {
