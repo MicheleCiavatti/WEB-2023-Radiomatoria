@@ -23,8 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (removeFriendButton) {
         removeFriendButton.addEventListener('click', function() { removeFriend(username, other) });
     }
-    //TODO add friend button
-    
+    const addFriendButton = document.getElementById('add_friend');
+    if (addFriendButton) {
+        addFriendButton.addEventListener('click', function() { requestFriend(username, other) });
+    }
     /* Handling remove friend buttons in the list of friends */
     const removeFriendButtons = document.getElementsByClassName('remove_friend_buttons');
     if (removeFriendButtons.length > 0) {
@@ -125,7 +127,6 @@ function removeFollow(username, other) {
 }
 
 function removeFriend(username, other) {
-    console.log(username + ' ' + other);
     const xhr = new XMLHttpRequest();
     const url = 'functions/removeFriend.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
@@ -136,6 +137,29 @@ function removeFriend(username, other) {
             location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante la rimozione dell\'amico:', xhr.status);
+        }
+    };
+    xhr.send();
+}
+
+function requestFriend(username, other) {
+    const xhr = new XMLHttpRequest();
+    const text = username + ' ti ha inviato una richiesta di amicizia!';
+    const request = 1; // In MySQL, 1 means true for TINYINT(1)
+    const read = 0; // In MySQL, 0 means false for TINYINT(1)
+    const url = 'functions/requestFriend.php?username=' + encodeURIComponent(username) 
+        + '&other=' + encodeURIComponent(other)
+        + '&text=' + encodeURIComponent(text)
+        + '&request=' + encodeURIComponent(request)
+        + '&read=' + encodeURIComponent(read);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Richiesta di amicizia inviata con successo al server');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante l\'invio della richiesta di amicizia:', xhr.status);
         }
     };
     xhr.send();

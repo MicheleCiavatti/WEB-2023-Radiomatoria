@@ -50,7 +50,7 @@
                             <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
                                 <button id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
                             <?php else: ?>
-                                <button type="button" value="Richiedi amicizia">Richiedi amicizia</button>
+                                <button id="add_friend" type="button" value="Richiedi amicizia">Richiedi amicizia</button>
                             <?php endif; ?>
                     </li>
                     <li>

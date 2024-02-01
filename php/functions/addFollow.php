@@ -8,10 +8,6 @@ if (isset($_GET['username']) && isset($_GET['other'])) {
         'INSERT INTO FOLLOW (Followed, Follower)
          VALUES (?, ?);'
     );
-    if ($s == false) {
-        error_log("Errore nella preparazione della query INSERT.");
-        exit();
-    }
     if(!$s->execute(array($other, $user))) {
         error_log("Errore nell'esecuzione della query INSERT: " . print_r($s->errorInfo(), true));
     }
