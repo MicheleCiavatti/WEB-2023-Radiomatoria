@@ -38,11 +38,12 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <section>
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
-                    <ul>
-                        <li><input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></li>  
-                        <li><textarea name="post_text" placeholder="Scrivi un post" required></textarea></li>
-                        <li><button type="submit" name="upload_post">Pubblica</button></li>
-                    </ul>
+                        <ul>
+                            <li><input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></li>  
+                            <li><textarea name="post_text" placeholder="Scrivi un post" required></textarea></li>
+                            <li><button type="submit" name="upload_post">Pubblica</button></li>
+                        </ul>
+                    </form>
                 </section>
             <?php endif; ?>
             <?php foreach ($posts as $post): ?>
@@ -68,6 +69,13 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
+                            <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
+                                <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea>
+                                <input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>">
+                                <input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>">
+                                <input type="submit" value="Pubblica">
+                            </form>
                         </section>
                     <?php endif; ?>
                 </article>
