@@ -10,6 +10,10 @@
     $seguiti = $data[4]; 
     $bloccati = $data[5];
     $post_list = $data[6];
+    if(!isset($_SESSION['NomeUtente'])) {
+        //$_SESSION['NomeUtente'] = null;
+        $_SESSION['NomeUtente'] = "DanieleC";//TEST!!!!!!!!!!!!!!!!!!
+    }
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -44,30 +48,30 @@
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
                 <p id='profile_name'><?= $utente["NomeUtente"] ?></p>
                 <?php if ($username != $_SESSION['NomeUtente']): ?>
-                <ul>
-                    <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
-                    <li>
-                            <?php if (isFriend($username)): ?>
-                                <button class="access_required" name="remove_friend_button">Rescindi amicizia</button>
-                            <?php else: ?>
-                                <button class="access_required" name="friend_request">Richiedi amicizia</button>
-                            <?php endif; ?>
-                    </li>
-                    <li>
-                            <?php if (isFollowed($username)): ?>
-                                <button class="access_required" name="remove_follow_button">Rimuovi follow</button>
-                            <?php else: ?>
-                                <button class="access_required" id="follow_button">Segui</button>
-                            <?php endif; ?>
-                    </li>
-                    <li>
-                            <?php if (isBlocked($username)): ?>
-                                <button class="access_required" name="remove_block_button">Solleva blocco</button>
-                            <?php else: ?>
-                                <button class="access_required" id="block_button">Blocca</button>
-                            <?php endif; ?>
-                    </li>
-                </ul>
+                    <ul id="comandi">
+                        <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
+                        <li>
+                                <?php if (isFriend($username)): ?>
+                                    <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
+                                <?php else: ?>
+                                    <button class="access_required" id="friend_request">Richiedi amicizia</button>
+                                <?php endif; ?>
+                        </li>
+                        <li>
+                                <?php if (isFollowed($username)): ?>
+                                    <button class="access_required" name="remove_follow_buttons">Rimuovi follow</button>
+                                <?php else: ?>
+                                    <button class="access_required" id="follow_button">Segui</button>
+                                <?php endif; ?>
+                        </li>
+                        <li>
+                                <?php if (isBlocked($username)): ?>
+                                    <button class="access_required" name="remove_block_buttons">Solleva blocco</button>
+                                <?php else: ?>
+                                    <button class="access_required" id="block_button">Blocca</button>
+                                <?php endif; ?>
+                        </li>
+                    </ul>
                 <?php else: ?>
                     <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
                         <input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required>
@@ -262,7 +266,7 @@
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
                 <header><h2>Post</h2></header>
-                <?php if($username == $_SESSION['NomeUtente']): ?>
+                <?php if(isset($_SESSION['NomeUtente'])): ?>
                     <button id="add_post_button" class="access_required">Aggiungi post</button>
                     <p>
                         <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
@@ -332,7 +336,7 @@
                     <p>
                         <ul>
                             <?php foreach($amici as $amico):?>
-                                <li>
+                                <li id="<?= $amico[0]; ?>">
                                     <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $amico[0]; ?>"><?= $amico[0]; ?></a>
                                     <?php if($username == $_SESSION['NomeUtente'] || $amico[0] == $_SESSION['NomeUtente']): ?>
@@ -351,7 +355,7 @@
                     <p>
                         <ul>
                             <?php foreach($seguiti as $seguito):?>
-                                <li>
+                                <li id="<?= $seguito[0]; ?>">
                                     <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $seguito[0]; ?>"><?= $seguito[0]; ?></a>
                                     <?php if($username == $_SESSION['NomeUtente']): ?>
@@ -370,7 +374,7 @@
                     <p>
                         <ul>
                             <?php foreach($bloccati as $bloccato): ?>
-                                <li>
+                                <li id="<?= $bloccato[0]; ?>">
                                     <img src="<?= $bloccato[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
                                     <button class="access_required"  name="remove_block_buttons">Perdona</button>
