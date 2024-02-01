@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', function() { removeFollow(username, other) });
         }
     }
-    /* Handling remove-add friend button on top of the page*/
+    /* Handling remove-add friend button on top of the page, and cancel request*/
     const removeFriendButton = document.getElementById('remove_friend');
     if (removeFriendButton) {
         removeFriendButton.addEventListener('click', function() { removeFriend(username, other) });
@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const addFriendButton = document.getElementById('add_friend');
     if (addFriendButton) {
         addFriendButton.addEventListener('click', function() { requestFriend(username, other) });
+    }
+    const cancelRequestButton = document.getElementById('cancel_request');
+    if (cancelRequestButton) {
+        cancelRequestButton.addEventListener('click', function() { removeFriendRequest(username, other) });
     }
     /* Handling remove friend buttons in the list of friends */
     const removeFriendButtons = document.getElementsByClassName('remove_friend_buttons');
@@ -165,3 +169,18 @@ function requestFriend(username, other) {
     xhr.send();
 }
 
+function removeFriendRequest(username, other) {
+    const xhr = new XMLHttpRequest();
+    const url = 'functions/removeFriendRequest.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Richiesta di amicizia rimossa con successo dal server');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione della richiesta di amicizia:', xhr.status);
+        }
+    };
+    xhr.send();
+}
