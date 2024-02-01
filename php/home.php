@@ -25,7 +25,7 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li><a href="includes/logout.inc.php">Logout</a></li>
-                    <li><a href="#">Notifiche</a></li>
+                    <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
                 <?php else: ?>
                     <li><a href="../signup.html">Crea Account</a></li>
                     <li><a href="../login.html">Login</a></li>

@@ -1,19 +1,19 @@
 <?php
-session_start();
-if (!isset($_COOKIE['NomeUtente'])) {
-    header('location: login.html?error=needtologin');
-}
-require_once './php/list_notifications.php';
-$data = list_notifications();
-$notifiche_non_lette = $data[0];
-$notifiche_lette = $data[1];
+    session_start();
+    if (!isset($_GET['id'])) {
+        header('location: home.php?notifications_not_available_without_login');
+    }
+    require_once './includes/notificationsInfo.inc.php';
+    $username = $_GET['id'];
+    $notifications = notificationAccess($username);
 ?>
+
 <!DOCTYPE html>
 <html lang="it">
     <head>
         <title>Notifiche</title>
         <meta charset="UTF-8"/>
-        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <header>
@@ -21,14 +21,38 @@ $notifiche_lette = $data[1];
         </header>
         <nav>
             <ul>
-                <li id="pag_profilo"><a href="profile.php?id=<?= $_COOKIE['NomeUtente']; ?>">Profilo</a></li>
-                <li id="pag_principale"><a href="index.php">Home page</a></li>
+                <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                <li><a href="home.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                <li id="pag_notifiche"><a href="notifiche.php">Notifiche </a></li>
+                <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
                 <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
             </ul>
         </nav>
         <main>
+            
+            <header><h2>Le tue notifiche</h2></header>
+            <p id="session_user_name"><?= $_SESSION['NomeUtente']; ?></p> <!-- Hidden field containing session user name-->
+            <?php if (!empty($notifications)): ?>
+                <section>
+                    <?php foreach ($notifications as $n): ?>
+                        <section>
+                            <header><h3>Notifica da <a href="profile.php?id=<?=strval($n['Mandante'])?>"><?= strval($n['Mandante']); ?></a></h3></header>
+                            <p><?= strval($n['TestoNotifica']); ?></p>
+                            <?php if ($n['Richiesta'] == true): ?>
+                                <ul>
+                                    <li><button class="friendrefuse" name="friend_refuse">Rifiuta</button></li>
+                                    <li><button class="friendaccept" name="friend_accept">Accetta</button></li>
+                                </ul>
+                            <?php else: ?>
+                                <button id="removen_<?= strval($n['IdNotifica'])?>" name="remove_notification">Rimiovi notifica</button>
+                            <?php endif; ?>
+                        </section>
+                    <?php endforeach; ?>
+                </section>
+            <?php else: ?>
+                <p>Non hai nessuna notifica</p>
+            <?php endif; ?>
+            <?php /*
             <h2 id="notifications_total">Notifiche totali: </h2>
             <section>
                 <h3>Da leggere</h3>
@@ -64,7 +88,8 @@ $notifiche_lette = $data[1];
                     <?php endforeach; ?>
                 </ul>
             </section>
+            */ ?>
         </main>
-        <script src="js/notifiche.js" type="text/javascript"></script>
+        <script src="../js/notifiche.js" type="text/javascript"></script>
     </body>
 </html>

@@ -30,7 +30,7 @@
                 <li><a href="home.php">Home page</a></li>
                 <li><a href="guida.php">Guida</a></li>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
-                    <li><a href="notifiche.php">Notifiche</a></li>
+                    <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
                     <li><a href="./includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
                     <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
@@ -156,7 +156,7 @@
                         <ul>
                             <?php foreach($amici as $amico):?>
                                 <li>
-                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/" . $amico[1] ?>" alt=""/>
+                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/"  . $amico[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
                                     <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_friend_buttons">Rimuovi</button>
