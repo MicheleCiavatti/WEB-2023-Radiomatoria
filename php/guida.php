@@ -8,7 +8,7 @@
     </head>
     <body>
         <header>
-            <h1>Long Light</h1>
+            <h1>LongLight</h1>
         </header>
         <!-- Nav differs if user logged in or not -->
         <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
