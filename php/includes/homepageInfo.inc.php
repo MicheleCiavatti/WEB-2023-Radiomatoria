@@ -45,3 +45,41 @@ function getPosts($username) {
     }
     return $posts;
 }
+
+function getComments($creatorPost, $nrPost) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM COMMENTI
+         WHERE Creatore = ? AND NrPost = ?
+         ORDER BY DataCommento DESC;'
+    );
+    if (!$s->execute(array($creatorPost, $nrPost))) {
+        $s = null;
+        header('location: ../profile.php?id=' . $creatorPost . '&error=stmtfailed');
+        exit();
+    }
+    $result = $s->fetchAll(PDO::FETCH_ASSOC);
+    $comments = [];
+    foreach ($result as $row) {
+        $comments[] = array('AutoreCommento' => $row['AutoreCommento'], 
+                            'DataCommento' => $row['DataCommento'], 
+                            'TestoCommento' => $row['TestoCommento'], 
+                            'ImmagineCommento' => $row['ImmagineCommento']);
+    }
+    return $comments;
+}
+
+function resetPropic($username) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'UPDATE UTENTI
+         SET FotoProfilo = "../img/default.png"
+         WHERE NomeUtente = ?;'
+    );
+    if (!$s->execute(array($username))) {
+        $s = null;
+        header('location: ../home.php?error=stmtfailed');
+        exit();
+    }
+}

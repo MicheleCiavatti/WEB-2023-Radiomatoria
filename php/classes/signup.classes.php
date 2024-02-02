@@ -24,13 +24,13 @@ class Signup extends Dbh {
         );
         // For security, we save an hashed password in the database
         $hashedPw = password_hash($pw, PASSWORD_DEFAULT);
-        if(!$s->execute(array($uid,'./img/default.png', $address, $city, $hashedPw, $birthdate, $mail, $clue))) {
+        if(!$s->execute(array($uid,'../img/default.png', $address, $city, $hashedPw, $birthdate, $mail, $clue))) {
             $s = null;
             header('location: ../../signup.html?errorstmtfailed');
             exit();
         }
         session_start();
-        $this->access($uid, './img/default.png', $address, $city, $birthdate, $mail, $clue);
+        $this->access($uid, '../img/default.png', $address, $city, $birthdate, $mail, $clue);
         $s = null;
     }
 }

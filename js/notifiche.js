@@ -1,80 +1,68 @@
-const read_list = document.getElementById('read_notifications_list')
+document.addEventListener('DOMContentLoaded', function() {
+    const username = document.getElementById('session_user_name');
+    /* Handling the refuse friendship buttons */
+    const refuseFriendButtons = document.getElementsByClassName('friendrefuse');
+    if (refuseFriendButtons.length > 0) {
+        for (i = 0; i < refuseFriendButtons.length; i++) {
+            const button = refuseFriendButtons[i];
+            let section = button.closest('section');
+            const other = section.querySelector('header h3 a').innerHTML;
+            button.addEventListener('click', function() { refuseFriend(username, other, section) });
+        }
+    }
+    /* Handling the accept friendship buttons */
+    const acceptFriendButtons = document.getElementsByClassName('friendaccept');
+    if (acceptFriendButtons.length > 0) {
+        for (i = 0; i < acceptFriendButtons.length; i++) {
+            const button = acceptFriendButtons[i];
+            let section = button.closest('section');
+            const other = section.querySelector('header h3 a').innerHTML;
+            button.addEventListener('click', function() { acceptFriend(username, other, section) });
+        }
+    }
+    /* Handling the remove notification buttons */
+    /* TODO
+    const removeNotificationButtons = document.getElementsByClassName('removenotification');
+    if (removeNotificationButtons.length > 0) {
+        for (i = 0; i < removeNotificationButtons.length; i++) {
+            const button = removeNotificationButtons[i];
+            const section = button.closest('section');
+            const other = section.querySelector('header h3 a').innerHTML;
+            const nid = 
+            button.addEventListener('click', function() { removeNotification(id, section) });
+        }
+    }
+    */
+});
 
-function readNotification(nid) {
-    let element = document.querySelector('#nid' + nid);
-    element.removeAttribute("onclick");
-    read_list.appendChild(element);
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'functions/notifiche/readNotification.php', true);
+function refuseFriend(username, other, section) {
+    section.innerHTML = `<p>Hai rifiutato la richiesta di amicizia di ${other}</p>`
+    const xhr = new XMLHttpRequest();
+    const url = 'functions/refuseFriendRequest.php?username=' + encodeURIComponent(username.innerHTML) + '&other=' + encodeURIComponent(other);
+    xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
     xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Notifica segnata come letta dal server');
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error('Errore durante la lettura della notifica:', xhr.status);
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log('Richiesta di amicizia rifiutata con successo dal server');
+        } else if (xhr.readyState == 4 && xhr.status != 200) {
+            console.error('Errore durante il rifiuto della richiesta di amicizia:', xhr.status);
         }
     };
-    let data = encodeURI('nid=' + encodeURIComponent(nid));
-    xhr.send(data);
+    xhr.send();
 }
 
-function removeNotification(nid) {
-    let element = document.querySelector('#nid' + nid);
-    element.parentNode.removeChild(element);
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'functions/notifiche/removeNotification.php', true);
+function acceptFriend(username, other, section) {
+    section.innerHTML = `<p>Hai accettato la richiesta di amicizia di ${other}</p>`
+    const xhr = new XMLHttpRequest();
+    const url = 'functions/acceptFriendRequest.php?username=' + encodeURIComponent(username.innerHTML) + '&other=' + encodeURIComponent(other);
+    xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
     xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Notifica rimossa con successo dal server');
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error('Errore durante la lettura della notifica:', xhr.status);
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log('Richiesta di amicizia accettata con successo dal server');
+        } else if (xhr.readyState == 4 && xhr.status != 200) {
+            console.error('Errore durante l\'accettazione della richiesta di amicizia:', xhr.status);
         }
     };
-    let data = encodeURI('nid=' + encodeURIComponent(nid));
-    xhr.send(data);
-}
-
-function outcomeNotification(nid, senderid, outcome) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'functions/notifiche/outcomeNotification.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            removeNotification(nid);
-            console.log('Risposta inviata con successo dal server');
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error('Errore durante la creazione della risposta:', xhr.status);
-        }
-    };
-    let data = encodeURI('nid=' + encodeURIComponent(nid) + '&senderid=' + encodeURIComponent(senderid) + '&outcome=' + encodeURIComponent(outcome));
-    xhr.send(data);
-}
-
-function addFriend(nid, senderid) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'functions/notifiche/addFriend.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            outcomeNotification(nid, senderid, "ha accettato la tua richiesta di amicizia");
-            console.log('Amico aggiunto con successo dal server');
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error('Errore durante aggiunta amico:', xhr.status);
-        }
-    };
-    let data = encodeURI('senderid=' + encodeURIComponent(senderid));
-    xhr.send(data);
-}
-
-function count() {
-    document.getElementById("notifications_total").innerHTML += document.getElementById("unread_notifications_list").childElementCount + document.getElementById("read_notifications_list").childElementCount;
-}
-
-function countRead() {
-    document.getElementById("pag_notifiche").firstChild.innerHTML += document.getElementById("unread_notifications_list").childElementCount;
+    xhr.send();
 }

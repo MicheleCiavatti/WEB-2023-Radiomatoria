@@ -46,7 +46,7 @@
                 <li><a href="home.php">Home page</a></li>
                 <li><a href="guida.php">Guida</a></li>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
-                    <li><a href="notifiche.php">Notifiche</a></li>
+                    <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
                     <li><a href="./includes/logout.inc.php">Logout</a></li>
                 <?php else: ?>
                     <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
@@ -65,6 +65,8 @@
                         <li>
                                 <?php if (isFriend($username)): ?>
                                     <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
+                                <?php else if (friendshipRequested($username)): ?>
+                                    <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
                                 <?php else: ?>
                                     <button class="access_required" id="friend_request">Richiedi amicizia</button>
                                 <?php endif; ?>
@@ -454,6 +456,53 @@
                     </p>
                 </section>
             <?php endif; ?>
+            <!--************************************* HANDLING POSTS **************************************-->
+            <section>
+                    <header><h2>Post</h2></header>
+                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                    <p>
+                        <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
+                            <input type="file" name="post_image" accept=".jpg, .jpeg, .png">
+                            <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
+                            <input type="submit" name="upload_post" value="Pubblica">
+                        </form>
+                    </p>
+                <?php endif; ?>
+                <?php foreach($post_list as $post): ?>
+                    <article class="post">
+                        <header>
+                            <?php if ($post[4] != null): ?>
+                                <img src="<?= $post[4]; ?>" alt=""/>
+                            <?php endif; ?>
+                            <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
+                        </header>
+                        <section><?= $post[3]; ?></section>
+                        <section>
+                            <ul>
+                                <?php 
+                                    $comments = getComments($post[0], $post[1]);
+                                    foreach($comments as $comment):
+                                ?>
+                                <li>
+                                    <?php if($comment[3] != null): ?>
+                                        <img src="<?=strval($comment[3]); ?>" alt=""/>
+                                    <?php endif; ?>
+                                    <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
+                                    <p><?=strval($comment[2]);?></p>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
+                                <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
+                                <input type="hidden" name="post_author" value="<?= $post[0]?>">
+                                <input type="hidden" name="post_number" value="<?= $post[1]?>">
+                                <input type="submit" value="Pubblica">
+                            </form>
+                        </section>
+                    </article>
+                <?php endforeach; ?>
+            </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
     </body>
