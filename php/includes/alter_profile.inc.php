@@ -32,7 +32,9 @@ if (isset($_POST['new_name']) && isset($_POST['new_address']) && isset($_POST['n
         header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
         exit();
     }
-    $_SESSION['NomeUtente'] = $name;
+    if($uid != $name) {
+        $_SESSION['NomeUtente'] = $name;
+    }
     header('location: ../profile.php?id=' . $_SESSION['NomeUtente'] . '&error=none');
 } else {
     error_log("Variabile non settata");
