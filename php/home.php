@@ -18,26 +18,33 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
         <header>
             <h1>LongLight</h1>
         </header>
-        <aside>
-            <?php if (isset($_SESSION['NomeUtente'])): ?>
-                <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
-                <p><?= $_SESSION['NomeUtente']; ?></p>
-            <?php endif; ?>
-        </aside>
-        <nav>
-            <ul>
-                <?php if (isset($_SESSION['NomeUtente'])): ?>
+        <?php if (isset($_SESSION['NomeUtente'])): ?>
+            <aside>
+                    <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
+                    <p><?= $_SESSION['NomeUtente']; ?></p>
+            </aside>
+        <?php endif; ?>
+        <!-- Nav differs if user logged in or not -->
+        <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
+            <nav class="nav4">
+                <ul>
+                    <li><a href="#">Home page</a></li>
+                    <li><a href="guida.php">Guida</a></li>
+                    <li><a href="../signup.html">Crea Account</a></li>
+                    <li><a href="../login.html">Login</a></li>
+                </ul>
+            </nav>
+        <?php else: ?> <!-- If user is logged in -->
+            <nav>
+                <ul>
+                    <li><a href="#">Home page</a></li>
+                    <li><a href="guida.php">Guida</a></li>
                     <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li><a href="includes/logout.inc.php">Logout</a></li>
                     <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
-                <?php else: ?>
-                    <li><a href="../signup.html">Crea Account</a></li>
-                    <li><a href="../login.html">Login</a></li>
-                <?php endif; ?>
-                <li><a href="#">Home page</a></li>
-                <li><a href="guida.php">Guida</a></li>
-            </ul>
-        </nav>
+                </ul>
+            </nav>
+        <?php endif; ?>
         <main>
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <section>

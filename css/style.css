@@ -41,9 +41,10 @@ nav {
 nav ul {
     list-style: none;
 }
+
 nav ul li {
     display: inline-block;
-    width: 22%;
+    width: 19%;
     background-color: rgb(87, 53, 53);
     text-align: center;
     margin: 10px 0 0;
@@ -56,6 +57,10 @@ nav ul li a {
 
 nav ul li a:hover {
     color: rgb(217, 53, 53);
+}
+
+.nav4 > ul > li {
+    width: 24%;
 }
 
 ul {

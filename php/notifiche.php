@@ -21,11 +21,11 @@
         </header>
         <nav>
             <ul>
-                <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
-                <li><a href="home.php">Home page</a></li>
-                <li id="pag_guida"><a href="guida.php">Guida</a></li>
+                <li><a href="#">Home page</a></li>
+                <li><a href="guida.php">Guida</a></li>
+                <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                <li><a href="includes/logout.inc.php">Logout</a></li>
                 <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
-                <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
             </ul>
         </nav>
         <main>
