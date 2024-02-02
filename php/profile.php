@@ -1,6 +1,6 @@
 <?php
     require_once './includes/profileInfo.inc.php';
-    $username = $_GET['id']; //Get user owner of the profile
+    $username = $_GET['id']; //Get owner of the profile
     $data = profileAccess($username); 
     /*Adding user's info in local variables*/
     $utente = $data[0]; 
