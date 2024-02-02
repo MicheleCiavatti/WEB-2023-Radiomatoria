@@ -149,3 +149,7 @@ footer {
 #session_user_name {
     display: none;
 }
+
+article > header > h2 {
+    display: inline-block;
+}

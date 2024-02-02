@@ -60,7 +60,10 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
             <?php foreach ($posts as $post): ?>
                 <article>
                     <header>
-                        <h2><a href="profile.php?id=<?=strval($post['Creatore'])?>"><?= strval($post['Creatore']); ?></a></h2>
+                        <?php if ($post['ImmaginePost'] != null): ?>
+                            <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
+                        <?php endif; ?>
+                        <p><a href="profile.php?id=<?=strval($post['Creatore'])?>"><?= strval($post['Creatore']); ?></a></p>
                         <p><?= strval($post['DataPost']); ?></p>
                         <?php if ($post['ImmaginePost'] != null): ?>
                             <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
