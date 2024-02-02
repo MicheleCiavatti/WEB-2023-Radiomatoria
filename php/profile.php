@@ -22,7 +22,6 @@
     $post_list = $data[0];
     $element_id_like = $data[1];
     $element_id_dislike = $data[2];
-                        $_SESSION['NomeUtente'] = "DanieleC";//TEST!!!!!!!!!!!!!!!!!!
     if(!isset($_SESSION['NomeUtente'])) {
         $_SESSION['NomeUtente'] = null;
     }
