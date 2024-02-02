@@ -152,7 +152,7 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
                 $condition = " WHERE INTERAZIONI.Creatore = ? AND INTERAZIONI.Tipo = ?";
                 break;
         case "comment":
-            $condition = " WHERE COMMENTI.Creatore = ?";
+            $condition = " WHERE COMMENTI.AutoreCommento = ?";
             break;
         case "none":
             default:
@@ -196,13 +196,13 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
     switch($relation_selection) {
         case "like": 
             if(isset($_SESSION['NomeUtente'])) {
-                if(!$deco->execute(array($utente['NomeUtente'], true, $_SESSION['NomeUtente'], false))) {
+                if(!$deco->execute(array($username, true, $_SESSION['NomeUtente'], false))) {
                     $deco = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
                 }
                 $element_id_dislike = $deco->fetchAll(PDO::FETCH_NUM);
-                if(!$deco->execute(array($utente['NomeUtente'], true, $_SESSION['NomeUtente'], true))) {
+                if(!$deco->execute(array($username, true, $_SESSION['NomeUtente'], true))) {
                     $deco = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
@@ -210,13 +210,13 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
                 $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
             }
             if($sort_selection == "like") {
-                if(!$stmt->execute(array($utente['NomeUtente'], true, true))) {
+                if(!$stmt->execute(array($username, true, true))) {
                     $stmt = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
                 }
             } else {
-                if(!$stmt->execute(array($utente['NomeUtente'], true))) {
+                if(!$stmt->execute(array($username, true))) {
                     $stmt = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
@@ -225,13 +225,13 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
             break;
         case "dislike":
             if(isset($_SESSION['NomeUtente'])) {
-                if(!$deco->execute(array($utente['NomeUtente'], false, $_SESSION['NomeUtente'], false))) {
+                if(!$deco->execute(array($username, false, $_SESSION['NomeUtente'], false))) {
                     $deco = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
                 }
                 $element_id_dislike = $deco->fetchAll(PDO::FETCH_NUM);
-                if(!$deco->execute(array($utente['NomeUtente'], false, $_SESSION['NomeUtente'], true))) {
+                if(!$deco->execute(array($username, false, $_SESSION['NomeUtente'], true))) {
                     $deco = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
@@ -239,13 +239,13 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
                 $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
             }
             if($sort_selection == "like") {
-                if(!$stmt->execute(array($utente['NomeUtente'], false, true))) {
+                if(!$stmt->execute(array($username, false, true))) {
                     $stmt = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
                 }
             } else {
-                if(!$stmt->execute(array($utente['NomeUtente'], false))) {
+                if(!$stmt->execute(array($username, false))) {
                     $stmt = null;
                     header('location: ../../login.html?error=stmtfailed');
                     exit();
@@ -255,13 +255,13 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
         case "create":
             case "comment":
                 if(isset($_SESSION['NomeUtente'])) {
-                    if(!$deco->execute(array($utente['NomeUtente'], $_SESSION['NomeUtente'], false))) {
+                    if(!$deco->execute(array($username, $_SESSION['NomeUtente'], false))) {
                         $deco = null;
                         header('location: ../../login.html?error=stmtfailed');
                         exit();
                     }
                     $element_id_dislike = $deco->fetchAll(PDO::FETCH_NUM);
-                    if(!$deco->execute(array($utente['NomeUtente'], $_SESSION['NomeUtente'], true))) {
+                    if(!$deco->execute(array($username, $_SESSION['NomeUtente'], true))) {
                         $deco = null;
                         header('location: ../../login.html?error=stmtfailed');
                         exit();
@@ -269,13 +269,13 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
                     $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
                 }
                 if($sort_selection == "like") {
-                    if(!$stmt->execute(array($utente['NomeUtente'], true))) {
+                    if(!$stmt->execute(array($username, true))) {
                         $stmt = null;
                         header('location: ../../login.html?error=stmtfailed');
                         exit();
                     }
                 } else {
-                    if(!$stmt->execute(array($utente['NomeUtente']))) {
+                    if(!$stmt->execute($username)) {
                         $stmt = null;
                         header('location: ../../login.html?error=stmtfailed');
                         exit();
