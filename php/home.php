@@ -2,7 +2,7 @@
 session_start();
 require_once "includes/homepageInfo.inc.php";
 $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : getPosts(null);
-    if (empty(glob($_SESSION['FotoProfilo']))) {
+    if (isset($_SESSION['NomeUtente']) && empty(glob($_SESSION['FotoProfilo']))) {
         $_SESSION['FotoProfilo'] = '../img/default.png';
         resetPropic($_SESSION['NomeUtente']);
     }
@@ -16,7 +16,7 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
     </head>
     <body>
         <header>
-            <h1>Long Light</h1>
+            <h1>LongLight</h1>
         </header>
         <aside>
             <?php if (isset($_SESSION['NomeUtente'])): ?>

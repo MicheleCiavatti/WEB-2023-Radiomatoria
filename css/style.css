@@ -35,14 +35,15 @@ h2 {
 }
 
 nav {
-    margin: 0 1%;
+    margin: 0 5%;
 }
 
+nav ul {
+    list-style: none;
+}
 nav ul li {
     display: inline-block;
     width: 22%;
-    max-width: 220px;
-    min-width: 60px;
     background-color: rgb(87, 53, 53);
     text-align: center;
     margin: 10px 0 0;
