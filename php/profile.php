@@ -1,6 +1,15 @@
 <?php
     require_once './includes/profileInfo.inc.php';
     $username = $_GET['id']; //Get user owner of the profile
+    if(isset($_GET['relation'])) {
+        $relation = $_GET['relation'];
+        $sort = $_GET['sort'];
+        $order = $_GET['order'];
+    } else {
+        $relation = "none";
+        $sort = "data";
+        $order = 1;
+    }
     $data = profileAccess($username); 
     /*Adding user's info in local variables*/
     $utente = $data[0]; 
@@ -9,11 +18,15 @@
     $amici = $data[3]; 
     $seguiti = $data[4]; 
     $bloccati = $data[5];
-    $post_list = $data[6];
+    $data = selectPostProfile($username, $relation, $sort, $order);
+    $post_list = $data[0];
+    $element_id_like = $data[1];
+    $element_id_dislike = $data[2];
+                        $_SESSION['NomeUtente'] = "DanieleC";//TEST!!!!!!!!!!!!!!!!!!
     if(!isset($_SESSION['NomeUtente'])) {
-        //$_SESSION['NomeUtente'] = null;
-        $_SESSION['NomeUtente'] = "DanieleC";//TEST!!!!!!!!!!!!!!!!!!
+        $_SESSION['NomeUtente'] = null;
     }
+    $commentable = false;
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -91,9 +104,9 @@
                     <button class="access_required" id="change_public_fields">Modifica campi pubblici</button>
                     <form action="includes/alter_profile.inc.php" method="post" id="change_fields_form">
                         <table>
-                            <tr>
-                                <td><label for="new_name">Nome Utente: </label></td>
-                                <td><input type="text" name="new_name" id="new_name" value="<?= $utente["NomeUtente"]; ?>" required/></td>
+                        <tr>
+                                <td><label for="new_address">Nome utente: </label></td>
+                                <td><input type="text" name="new_name" id="new_name" value="<?= $utente['NomeUtente']; ?>" required/></td>
                             </tr>
                             <tr>
                                 <td><label for="new_address">Indirizzo: </label></td>
@@ -146,7 +159,6 @@
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
-            <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $username): ?>
                 <section>
                     <header><h2>Orari</h2></header>
                     <section>
@@ -223,28 +235,29 @@
                             </tr>
                         </table>
                     </section>
-                    <ul>
-                        <?php foreach($orari as $intervallo): ?>
-                        <!-- Time slots displaying and removing done via AJAX -->
-                        <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="timeslots">
-                            <?= $intervallo[0] ?> - <?= $intervallo[1]?>
-                            <?php if ($_SESSION['NomeUtente'] == $username):?>
-                                <button class="access_required" name="remove_timeslot_buttons" type="button">Rimuovi</button> 
-                            <?php endif; ?>
-                        </li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <!-- Form for adding time slots -->
-                    <?php if ($_SESSION['NomeUtente'] == $username):?>
-                        <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
-                        <form action="includes/addTimeSlot.inc.php" method="post">
-                            <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
-                            <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
-                            <input type="submit" value="Aggiungi">
-                        </form>
+                    <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $username): ?>
+                        <ul>
+                            <?php foreach($orari as $intervallo): ?>
+                            <!-- Time slots displaying and removing done via AJAX -->
+                            <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="timeslots">
+                                <?= $intervallo[0] ?> - <?= $intervallo[1]?>
+                                <?php if ($_SESSION['NomeUtente'] == $username):?>
+                                    <button class="access_required" name="remove_timeslot_buttons" type="button">Rimuovi</button> 
+                                <?php endif; ?>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <!-- Form for adding time slots -->
+                        <?php if ($_SESSION['NomeUtente'] == $username):?>
+                            <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
+                            <form action="includes/addTimeSlot.inc.php" method="post">
+                                <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
+                                <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
+                                <input type="submit" value="Aggiungi">
+                            </form>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </section>
-            <?php endif; ?>
             <!--************************************* HANDLING PASSWORD AND CLUE **************************************-->
             <?php if($username == $_SESSION['NomeUtente']): ?>
                 <button class="access_required" id="change_private_fields">Modifica campi privati</button>
@@ -265,69 +278,126 @@
             <?php endif; ?>
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
-                <header><h2>Post</h2></header>
-                <?php if(isset($_SESSION['NomeUtente'])): ?>
-                    <button id="add_post_button" class="access_required">Aggiungi post</button>
-                    <p>
+                <form action="includes/selectPostProfile.php" method="post" name="select_form_profile" id="select_form">
+                    <input type="hidden" name="username" id="username" value="<?= $utente['NomeUtente'] ?>"/>
+                    <label for="relation">Seleziona post in base alla relazione col proprietario del profilo</label>
+                    <select name="relation" id="relation" onchange="this.form.submit()">
+                        <option value="none" selected>Nessuna</option>
+                        <option value="create" >Creati</option>
+                        <option value="like">Apprezzati</option>
+                        <option value="dislike">Disapprovati</option>
+                        <option value="comment">Commentati</option>
+                    </select>
+                    <label for="sort">Ordina per</label>
+                    <select name="sort" id="sort" onchange="this.form.submit()">
+                        <option value="none" selected>Seleziona</option>
+                        <option value="data">Data</option>
+                        <option value="like">Like</option>
+                        <option value="comm">Commenti</option>
+                    </select>
+                    <label for="order">In ordine decrescente</label>
+                    <input type="checkbox" name="order" id="order" checked/>
+                </form>
+            </section>
+            <section id="post_column">
+                <header>
+                    <h2>Post</h2>
+                    <?php if(isset($_SESSION['NomeUtente'])): ?>
+                        <button id="add_post_button" class="access_required">Aggiungi post</button>
                         <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
                             <input type="file" name="post_image" accept=".jpg, .jpeg, .png">
                             <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
                             <input type="submit" name="upload_post" value="Pubblica">
                         </form>
-                    </p>
-                <?php endif; ?>
-                <?php foreach($post_list as $post): ?>
-                    <article class="post" id="post<?= $post[1]; ?>">
+                    <?php endif; ?>
+                </header>
+                <?php
+                    if(!empty($post_list)):
+                        foreach($post_list as $post):
+                ?>
+                    <article class="post" id="post<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
                         <header>
-                            <?php if ($post[4] != null): ?>
-                                <img src="<?= $post[4]; ?>" alt=""/>
+                            <?php if ($post['ImmaginePost'] != null): ?>
+                                <img src="<?= $post['ImmaginePost']; ?>" alt=""/>
                             <?php endif; ?>
-                            <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
+                            <p><a href="profile.php?id=<?= $post['Creatore']; ?>"><?= $post['Creatore']; ?></a> <?= $post['DataPost']; ?></p>
                         </header>
-                        <section><?= $post[3]; ?></section>
+                        <section>
+                            <p><?= $post['TestoPost']; ?></p>
+                            <table>
+                                <tr>
+                                    <td id="like_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['LikePost']; ?></td>
+                                    <td><button id="like_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" class="preference_button" name="like_button">Like</button></td>
+                                </tr>
+                                <tr>
+                                    <td id="dislike_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['DislikePost']; ?></td>
+                                    <td><button id="dislike_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" class="preference_button" name="dislike_button">Dislike</button></td>
+                                </tr>
+                            </table>
                             <?php if(isset($_SESSION['NomeUtente'])): ?>
-                                <?php if($post[0] != $_SESSION['NomeUtente']): ?>
-                                    <button class="access_required" name="comment_post" id="comment_<?= $post[1]; ?>">Commenta</button>
+                                <?php if($post['Creatore'] != $_SESSION['NomeUtente']):
+                                    $commentable = true; ?>
+                                    <button class="access_required" name="comment_post" id="comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">Commenta</button>
                                 <?php else: ?>
-                                    <button class="access_required" name="remove_post" id="remove_<?= $post[1]; ?>">Rimuovi</button>
+                                    <button class="access_required" name="remove_post" id="remove_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">Rimuovi</button>
                                 <?php endif; ?>
                             <?php endif; ?>
+                        </section>
                         <section>
-                            <button id="show_<?= $post[1]; ?>" name="show_comments">Mostra commenti</button>
-                            <ul id="<?= $post[1]; ?>_comment_list">
-                                <?php 
-                                    $comments = getComments($post[0], $post[1]);
-                                    foreach($comments as $comment):
-                                ?>
-                                <li class="comment" id="comment<?= $comment[1]; ?>">
-                                    <?php if($comment[3] != null): ?>
-                                        <img src="<?=strval($comment[3]); ?>" alt=""/>
-                                    <?php endif; ?>
-                                    <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
-                                    <p><?=strval($comment[2]);?></p>
-                                    <?php if(isset($_SESSION['NomeUtente'])): ?>
-                                        <?php if($comment[0] != $_SESSION['NomeUtente']): ?>
-                                            <button class="access_required" name="answer_comment" id="comment_<?= $comment[1]; ?>">Rispondi</button>
-                                        <?php else: ?>
-                                            <button class="access_required" name="remove_comment" id="remove_<?= $comment[1]; ?>">Rimuovi</button>
+                            <?php
+                                $comments = getComments($post['Creatore'], $post['NrPost']);
+                                if(!empty($comments)):
+                            ?>
+                                <button id="show_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>" name="show_comments">Mostra commenti</button>
+                                <ul id="<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_comment_list" name="comment_list">
+                                    <?php foreach($comments as $comment): ?>
+                                    <li class="comment" id="comment<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>">
+                                        <?php if($comment['ImmagineCommento'] != null): ?>
+                                            <img src="<?=strval($comment['ImmagineCommento']); ?>" alt=""/>
                                         <?php endif; ?>
-                                    <?php endif; ?>
-                                </li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <?php if(isset($_SESSION['NomeUtente'])): ?>
-                                <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" id="add_comment_form">
-                                    <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
-                                    <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
-                                    <input type="hidden" name="post_author" value="<?= $post[0]?>">
-                                    <input type="hidden" name="post_number" value="<?= $post[1]?>">
-                                    <input type="reset" value="Annulla commento" id="comment_reset">
-                                    <input type="submit" value="Pubblica">
-                                </form>
+                                        <p><strong><a href="profile.php?id=<?=strval($comment['AutoreCommento']);?>"><?=strval($comment['AutoreCommento']);?></a></strong> <?= strval($comment['NrCommento']);?></p>
+                                        <p><?=strval($comment['TestoCommento']);?></p>
+                                        <table>
+                                            <tr>
+                                                <td id="like_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $post['LikeCommento']; ?></td>
+                                                <td><button id="like_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>" class="preference_button" name="like_button">Like</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="dislike_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $post['DislikeCommento']; ?></td>
+                                                <td><button id="dislike_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>" class="preference_button" name="dislike_button">Dislike</button></td>
+                                            </tr>
+                                        </table>
+                                        <footer>
+                                            <?php if(isset($_SESSION['NomeUtente'])): ?>
+                                                <?php if($comment['AutoreCommento'] != $_SESSION['NomeUtente']):
+                                                    $commentable = true; ?>
+                                                    <button class="access_required" name="answer_comment" id="comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>">Rispondi a <?= $comment['AutoreCommento']; ?></button>
+                                                <?php else: ?>
+                                                    <button class="access_required" name="remove_comment" id="remove_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>">Rimuovi</button>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </footer>
+                                    </li>
+                                    <?php endforeach; ?>
+                                </ul>
                             <?php endif; ?>
                         </section>
                     </article>
-                <?php endforeach; ?>
+                <?php
+                        endforeach;
+                    endif;?>
+                <footer>
+                    <?php if(isset($_SESSION['NomeUtente']) && ($commentable)): ?>
+                        <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" id="add_comment_form">
+                            <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
+                            <textarea name="comment_text" rows="2" cols="50" required></textarea>
+                            <input type="hidden" name="post_author"/>
+                            <input type="hidden" name="post_number"/>
+                            <input type="reset" value="Annulla commento" id="comment_reset">
+                            <input type="submit" value="Pubblica">
+                        </form>
+                    <?php endif; ?>
+                </footer>
             </section>
             <!--************************************* HANDLING FRIEND LIST **************************************-->
             <?php if(!empty($amici)): ?>
