@@ -80,13 +80,15 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
-                                <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
-                                <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea>
-                                <input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>">
-                                <input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>">
-                                <input type="submit" value="Pubblica">
-                            </form>
+                            <?php if (isset($_SESSION['NomeUtente'])): ?>
+                                <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
+                                    <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
+                                    <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea>
+                                    <input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>">
+                                    <input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>">
+                                    <input type="submit" value="Pubblica">
+                                </form>
+                            <?php endif; ?>
                         </section>
                     <?php endif; ?>
                 </article>

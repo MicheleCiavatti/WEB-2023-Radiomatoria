@@ -48,33 +48,35 @@
                 <!--- Profile pic, name and buttons for friendship/follow --->
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
                 <p id='profile_name'><?= $utente["NomeUtente"] ?></p>
-                <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
-                <ul>
-                    <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
-                    <li>
-                            <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                <button id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
-                            <?php else: ?>
-                                <?php if (friendshipRequested($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                    <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
-                                <?php else: ?>
-                                    <button id="add_friend" type="button" value="Richiedi amicizia">Richiedi amicizia</button>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                    </li>
-                    <li>
-                            <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                <button id="remove_follow" type="button">Rimuovi follow</button>
-                            <?php else: ?>
-                                <button id="follow_button" type="button">Segui</button>
-                            <?php endif; ?>
-                    </li>
-                </ul>
-                <?php else: ?>
-                    <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
-                        <input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required>
-                        <input type="submit" name="upload_propic" value="Cambia immagine">
-                    </form>
+                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                    <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
+                        <ul>
+                            <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
+                            <li>
+                                    <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
+                                        <button id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
+                                    <?php else: ?>
+                                        <?php if (friendshipRequested($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
+                                            <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
+                                        <?php else: ?>
+                                            <button id="add_friend" type="button" value="Richiedi amicizia">Richiedi amicizia</button>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                            </li>
+                            <li>
+                                    <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
+                                        <button id="remove_follow" type="button">Rimuovi follow</button>
+                                    <?php else: ?>
+                                        <button id="follow_button" type="button">Segui</button>
+                                    <?php endif; ?>
+                            </li>
+                        </ul>
+                    <?php else: ?>
+                        <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
+                            <input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required>
+                            <input type="submit" name="upload_propic" value="Cambia immagine">
+                        </form>
+                    <?php endif; ?>
                 <?php endif; ?>
             </header>
             <aside>
@@ -85,44 +87,60 @@
                 </ul>
             </aside>
             <!--************************************* HANDLING USER FREQUENCIES **************************************-->
-            <?php if(!empty($frequenze) || $_SESSION['NomeUtente'] == $utente['NomeUtente']): ?>
+            <!-- The user is not logged in or the user is not the owner of the profile -->
+            <?php if (!isset($_SESSION['NomeUtente']) || $_SESSION['NomeUtente'] != $utente['NomeUtente']): ?>
+                <?php if (!empty($frequenze)): ?>
+                    <section>
+                        <header><h2>Frequenze</h2></header>
+                        <ul>
+                            <?php foreach($frequenze as $f): ?>
+                            <li><?= $f ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </section>
+                <?php endif; ?>
+            <?php else: ?>
+                <!-- The user is logged in and owner of the profile -->
                 <section>
                     <header><h2>Frequenze</h2></header>
                     <ul>
-                        <?php
-                            foreach($frequenze as $f):
-                        ?>
-                        <!-- Frequency displaying and removing done via AJAX -->
+                        <?php foreach($frequenze as $f): ?>
                         <li id="f<?= str_replace('.', '_', $f)?>" class="remove_frequency_buttons">
                             <?= $f ?>
-                            <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                                <button type="button" value="<?= $f ?>">Rimuovi</button>
-                            <?php endif; ?>
+                            <button type="button" value="<?= $f ?>">Rimuovi</button>
                         </li>
                         <?php endforeach; ?>
                     </ul>
                     <!-- Form for adding frequencies -->
-                    <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
-                        <form action="includes/addMHz.inc.php" method="post">
-                            <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label>
-                            <input type="submit" value="Aggiungi">
-                        </form>
-                    <?php endif; ?>
+                    <form action="includes/addMHz.inc.php" method="post">
+                        <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label>
+                        <input type="submit" value="Aggiungi">
+                    </form>
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
-            <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $utente['NomeUtente']): ?>
+            <!-- The user is not logged in or the user is not the owner of the profile -->
+            <?php if (!isset($_SESSION['NomeUtente']) || $_SESSION['NomeUtente'] != $utente['NomeUtente']): ?>
+                <?php if (!empty($orari)): ?>
+                    <section>
+                        <header><h2>Orari</h2></header>
+                        <ul>
+                            <?php foreach($orari as $intervallo): ?>
+                            <li><?= $intervallo[0] ?> - <?= $intervallo[1]?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </section>
+                <?php endif; ?>
+            <?php else: ?>
+                <!-- The user is logged in and owner of the profile -->
                 <section>
                     <header><h2>Orari</h2></header>
                     <ul>
                         <?php foreach($orari as $intervallo): ?>
-                        <!-- Time slots displaying and removing done via AJAX -->
-                        <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
-                            <?= $intervallo[0] ?> - <?= $intervallo[1]?>
-                            <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
+                            <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
+                                <?= $intervallo[0] ?> - <?= $intervallo[1]?>
                                 <button type="button">Rimuovi</button> 
-                            <?php endif; ?>
-                        </li>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                     <!-- Form for adding time slots -->
@@ -137,7 +155,7 @@
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING PASSWORD AND CLUE **************************************-->
-            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+            <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                 <section>
                     <header><h2>Modifica password e indizio</h2></header>
                     <ul>
@@ -163,7 +181,7 @@
                                 <li>
                                     <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
-                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_friend_buttons">Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
@@ -182,7 +200,7 @@
                                 <li>
                                     <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1] ?>" alt=""/>
                                     <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
-                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                                         <button class="remove_follow_buttons" >Rimuovi</button>
                                     <?php endif; ?>
                                 </li>
@@ -192,7 +210,7 @@
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING BLOCKED LIST **************************************-->
-            <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente'] && !empty($bloccati)): ?>
+            <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente'] && !empty($bloccati)): ?>
                 <section>
                     <header><h2>Bloccati</h2></header>
                     <p>
@@ -201,7 +219,7 @@
                                 <li>
                                     <img src="<?= $bloccato[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
-                                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                                         <button class="access_required" >Perdona</button>
                                     <?php endif; ?>
                                 </li>
@@ -214,49 +232,55 @@
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
                     <header><h2>Post</h2></header>
-                    <?php if($utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                    <p>
-                        <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
-                            <input type="file" name="post_image" accept=".jpg, .jpeg, .png">
-                            <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
-                            <input type="submit" name="upload_post" value="Pubblica">
-                        </form>
-                    </p>
-                <?php endif; ?>
-                <?php foreach($post_list as $post): ?>
-                    <article class="post">
-                        <header>
-                            <?php if ($post[4] != null): ?>
-                                <img src="<?= $post[4]; ?>" alt=""/>
-                            <?php endif; ?>
-                            <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
-                        </header>
-                        <section><?= $post[3]; ?></section>
-                        <section>
-                            <ul>
-                                <?php 
-                                    $comments = getComments($post[0], $post[1]);
-                                    foreach($comments as $comment):
-                                ?>
-                                <li>
-                                    <?php if($comment[3] != null): ?>
-                                        <img src="<?=strval($comment[3]); ?>" alt=""/>
-                                    <?php endif; ?>
-                                    <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
-                                    <p><?=strval($comment[2]);?></p>
-                                </li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
-                                <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
-                                <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
-                                <input type="hidden" name="post_author" value="<?= $post[0]?>">
-                                <input type="hidden" name="post_number" value="<?= $post[1]?>">
-                                <input type="submit" value="Pubblica">
+                    <?php if (isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                        <p>
+                            <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="post_image" accept=".jpg, .jpeg, .png">
+                                <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
+                                <input type="submit" name="upload_post" value="Pubblica">
                             </form>
-                        </section>
-                    </article>
-                <?php endforeach; ?>
+                        </p>
+                    <?php endif; ?>
+                <?php if (empty($post_list)): ?>
+                    <p><?= $utente['NomeUtente'] ?> non ha alcun post.</p>
+                <?php else: ?>
+                    <?php foreach($post_list as $post): ?>
+                        <article class="post">
+                            <header>
+                                <?php if ($post[4] != null): ?>
+                                    <img src="<?= $post[4]; ?>" alt=""/>
+                                <?php endif; ?>
+                                <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
+                            </header>
+                            <section><?= $post[3]; ?></section>
+                            <section>
+                                <ul>
+                                    <?php 
+                                        $comments = getComments($post[0], $post[1]);
+                                        foreach($comments as $comment):
+                                    ?>
+                                    <li>
+                                        <?php if($comment[3] != null): ?>
+                                            <img src="<?=strval($comment[3]); ?>" alt=""/>
+                                        <?php endif; ?>
+                                        <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
+                                        <p><?=strval($comment[2]);?></p>
+                                    </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                                    <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
+                                        <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
+                                        <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea>
+                                        <input type="hidden" name="post_author" value="<?= $post[0]?>">
+                                        <input type="hidden" name="post_number" value="<?= $post[1]?>">
+                                        <input type="submit" value="Pubblica">
+                                    </form>
+                                <?php endif; ?>
+                            </section>
+                        </article>
+                    <?php endforeach; ?>
+            <?php endif; ?>
             </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
