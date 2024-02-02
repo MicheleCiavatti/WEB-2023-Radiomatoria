@@ -21,7 +21,7 @@
         </header>
         <nav>
             <ul>
-                <li><a href="home.php">Home page</a></li>
+                <li><a href="home.php">Home</a></li>
                 <li><a href="guida.php">Guida</a></li>
                 <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                 <li><a href="includes/logout.inc.php">Logout</a></li>

@@ -28,16 +28,16 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
         <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
             <nav class="nav4">
                 <ul>
-                    <li class="current_page"><a href="home.php">Home page</a></li>
+                    <li class="current_page"><a href="home.php">Home</a></li>
                     <li><a href="guida.php">Guida</a></li>
-                    <li><a href="../signup.html">Crea Account</a></li>
+                    <li><a href="../signup.html">Signup</a></li>
                     <li><a href="../login.html">Login</a></li>
                 </ul>
             </nav>
         <?php else: ?> <!-- If user is logged in -->
             <nav>
                 <ul>
-                    <li class="current_page"><a href="home.php">Home page</a></li>
+                    <li class="current_page"><a href="home.php">Home</a></li>
                     <li><a href="guida.php">Guida</a></li>
                     <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li><a href="includes/logout.inc.php">Logout</a></li>
