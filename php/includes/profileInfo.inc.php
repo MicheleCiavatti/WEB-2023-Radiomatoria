@@ -11,6 +11,11 @@
             exit();
         }
         $utente = $stmt->fetch(PDO::FETCH_ASSOC);
+        $propic = glob($utente['FotoProfilo']);
+        if (empty($propic)) {
+            $utente['FotoProfilo'] = '../img/default.png';
+            resetPropic($username);
+        }
     
         $stmt = $dbh->connect()->prepare("SELECT BANDE.MHz FROM BANDE WHERE BANDE.NomeUtente = ? ORDER BY BANDE.MHz");
         if(!$stmt->execute(array($username))) {
@@ -156,5 +161,19 @@ function friendshipRequested($user, $other) {
         exit();
     }
     return $s->rowCount() > 0;
+}
+
+function resetPropic($username) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'UPDATE UTENTI
+         SET FotoProfilo = "../img/default.png"
+         WHERE NomeUtente = ?;'
+    );
+    if (!$s->execute(array($username))) {
+        $s = null;
+        header('location: ../profile.php?id=' . $username . '&error=stmtfailed');
+        exit();
+    }
 }
     

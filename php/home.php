@@ -2,6 +2,10 @@
 session_start();
 require_once "includes/homepageInfo.inc.php";
 $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : getPosts(null);
+    if (empty(glob($_SESSION['FotoProfilo']))) {
+        $_SESSION['FotoProfilo'] = '../img/default.png';
+        resetPropic($_SESSION['NomeUtente']);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="it">

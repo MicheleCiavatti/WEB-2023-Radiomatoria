@@ -69,3 +69,17 @@ function getComments($creatorPost, $nrPost) {
     }
     return $comments;
 }
+
+function resetPropic($username) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'UPDATE UTENTI
+         SET FotoProfilo = "../img/default.png"
+         WHERE NomeUtente = ?;'
+    );
+    if (!$s->execute(array($username))) {
+        $s = null;
+        header('location: ../home.php?error=stmtfailed');
+        exit();
+    }
+}
