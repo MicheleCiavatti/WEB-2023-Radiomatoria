@@ -161,7 +161,7 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
     }
 
     $query .= $condition;
-    $query .= " GROUP BY POST.NrPost";
+    $query .= " GROUP BY POST.NrPost, POST.Creatore";
     switch($sort_selection) {
         case "data":
             $query .= " ORDER BY DataPost";                
@@ -299,7 +299,7 @@ function selectPostProfile($username, $relation_selection, $sort_selection, $ord
                     $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
                 }
                 if($sort_selection == "like") {
-                    if(!$stmt->execute(array(true))) {
+                    if(!$stmt->execute(true)) {
                         $stmt = null;
                         header('location: ../../login.html?error=stmtfailed');
                         exit();
@@ -365,4 +365,3 @@ function getComments($creatorPost, $nrPost) {
     }
     return $comments;
 }
-    
