@@ -17,15 +17,15 @@
     </head>
     <body>
         <header>
-            <h1>Long Light</h1>
+            <h1>LongLight</h1>
         </header>
         <nav>
             <ul>
-                <li><a href="#">Home page</a></li>
+                <li><a href="home.php">Home page</a></li>
                 <li><a href="guida.php">Guida</a></li>
                 <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                 <li><a href="includes/logout.inc.php">Logout</a></li>
-                <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                <li class="current_page"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
             </ul>
         </nav>
         <main>

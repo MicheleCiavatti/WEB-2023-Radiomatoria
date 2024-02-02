@@ -15,7 +15,7 @@
             <nav class="nav4">
                 <ul>
                     <li><a href="home.php">Home page</a></li>
-                    <li><a href="guida.php">Guida</a></li>
+                    <li class="current_page"><a href="guida.php">Guida</a></li>
                     <li><a href="../signup.html">Crea Account</a></li>
                     <li><a href="../login.html">Login</a></li>
                 </ul>
@@ -24,7 +24,7 @@
             <nav>
                 <ul>
                     <li><a href="home.php">Home page</a></li>
-                    <li><a href="guida.php">Guida</a></li>
+                    <li class="current_page"><a href="guida.php">Guida</a></li>
                     <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li><a href="includes/logout.inc.php">Logout</a></li>
                     <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>

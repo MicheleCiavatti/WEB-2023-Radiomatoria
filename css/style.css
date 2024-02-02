@@ -69,6 +69,15 @@ nav ul li a:hover {
     width: 24%;
 }
 
+.current_page {
+    background-color: rgb(119, 53, 217);
+}
+
+.current_page a:hover{
+    color: bisque;
+    background-color: inherit;
+}
+
 ul {
     list-style-type: none;
     line-height: 150%;

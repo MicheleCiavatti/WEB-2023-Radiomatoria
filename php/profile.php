@@ -20,7 +20,7 @@
     </head>
     <body>
         <header>
-            <h1>Long Light</h1>
+            <h1>LongLight</h1>
         </header>
         <!-- Nav differs if user logged in or not -->
         <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
@@ -37,7 +37,7 @@
                 <ul>
                     <li><a href="home.php">Home page</a></li>
                     <li><a href="guida.php">Guida</a></li>
-                    <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                    <li <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']) echo 'class="current_page"'; ?>><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li><a href="includes/logout.inc.php">Logout</a></li>
                     <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
                 </ul>
