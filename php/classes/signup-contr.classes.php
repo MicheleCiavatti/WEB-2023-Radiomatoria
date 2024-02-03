@@ -56,11 +56,11 @@ class SignupContr extends Signup {
             exit();
         }
         if($this->invalidUid()) {
-            header('location: ../../signup.html?error=username');
+            header('location: ../../signup.html?error=invaliduid');
             exit();
         }
         if($this->invalidMail()) {
-            header('location: ../../signup.html?error=email');
+            header('location: ../../signup.html?error=invalidmail');
             exit();
         }
         if($this->pwNotMatch()) {

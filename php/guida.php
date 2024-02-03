@@ -8,24 +8,29 @@
     </head>
     <body>
         <header>
-            <h1>Long Light</h1>
+            <h1>LongLight</h1>
         </header>
-        <nav>
-            <ul>
-                <?php if (isset($_SESSION['NomeUtente'])): ?>
-                    <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
-                <?php endif; ?>
-                <li id="pag_principale"><a href="home.php">Home page</a></li>
-                <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                <?php if (isset($_SESSION['NomeUtente'])): ?>
+        <!-- Nav differs if user logged in or not -->
+        <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
+            <nav class="nav4">
+                <ul>
+                    <li><a href="home.php">Home</a></li>
+                    <li class="current_page"><a href="guida.php">Guida</a></li>
+                    <li><a href="../signup.html">Signup</a></li>
+                    <li><a href="../login.html">Login</a></li>
+                </ul>
+            </nav>
+        <?php else: ?> <!-- If user is logged in -->
+            <nav>
+                <ul>
+                    <li><a href="home.php">Home</a></li>
+                    <li class="current_page"><a href="guida.php">Guida</a></li>
+                    <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                    <li><a href="includes/logout.inc.php">Logout</a></li>
                     <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
-                    <li><a href="./includes/logout.inc.php">Logout</a></li>
-                <?php else: ?>
-                    <li id="pag_creazione"><a href="signup.html">Crea account</a></li>
-                    <li id="pag_accesso"><a href="login.html">Login</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
+                </ul>
+            </nav>
+        <?php endif; ?>
         <main>
             <article>
                     <header><h2>Il progetto LongLight</h2></header>
@@ -191,7 +196,7 @@
                         </p>
                 </aside>
             <?php endif; ?>
-            <footer>LongLight è un progetto di Cacciaguerra Alessandro e Ciavatti Michele.</footer>
         </main>
+        <footer>LongLight è un progetto di Cacciaguerra Alessandro e Ciavatti Michele.</footer>
     </body>
 </html>

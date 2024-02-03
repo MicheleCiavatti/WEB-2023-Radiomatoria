@@ -18,7 +18,7 @@
     </head>
     <body>
         <header>
-            <h1>Long Light</h1>
+            <h1>LongLight</h1>
         </header>
         <nav>
             <ul>
