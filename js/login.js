@@ -1,25 +1,16 @@
+const error = new URLSearchParams(window.location.search).get('error');
+console.log(error);
+if (error) {
+    let main = document.querySelector('main');
+    switch (error) {
+        case 'usernotfound': main.innerHTML += `<p class="error">Mail non registrata</p>`; break;
+        case 'wrongpassword': main.innerHTML += `<p class="error">Password errata</p>`; break;
+        default: main.innerHTML += `<p class="error">Errore sconosciuto</p>`;
+    }
+}
+
 function mostraIndizio() {
     let indizio = getClue(document.getElementById('address'));
     document.getElementById('clue').innerHTML = indizio;
 }
 
-function login_result() {
-    let login_form = document.getElementByName("login_form");
-
-    login_form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        fetch(login_form.action, {
-            method: 'POST',
-            body: new URLSearchParams(new FormData(login_form))
-        }).then((response) => response.text())
-        .then((response) => {
-            if(cookiesSet()) {
-                accessProfile(response);
-            } else {
-                document.getElementById("login_fail").innerHTML = response;
-            }
-        })
-        .catch(err => document.getElementById("login_fail").innerHTML = err)
-    })
-    
-}

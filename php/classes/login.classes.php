@@ -10,7 +10,7 @@ class Login extends Dbh {
         );
         if (!$s->execute(array($address))) {
             $s = null;
-            header('location: ../../login.html?errorstmtfailed');
+            header('location: ../../login.html?error=stmtfailed');
             exit();
         }
         if($s->rowCount() == 0) {

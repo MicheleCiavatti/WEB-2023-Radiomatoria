@@ -9,6 +9,5 @@ if(isset($_POST['address']) && isset($_POST['pw'])) {
     require "../classes/login-contr.classes.php";
     $login = new LoginContr($address, $pw);
     $login->loginUser();
-    header('location: ../home.php?error=none');
-}
-else echo 'error';
+    header('location: ../home.php');
+} else header('location: ../../login.html?error=varnotset');
