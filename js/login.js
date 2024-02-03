@@ -1,5 +1,4 @@
 const error = new URLSearchParams(window.location.search).get('error');
-console.log(error);
 if (error) {
     let main = document.querySelector('main');
     switch (error) {
