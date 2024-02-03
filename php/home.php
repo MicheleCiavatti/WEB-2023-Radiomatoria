@@ -18,12 +18,6 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
         <header>
             <h1>LongLight</h1>
         </header>
-        <?php if (isset($_SESSION['NomeUtente'])): ?>
-            <aside>
-                    <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
-                    <p><?= $_SESSION['NomeUtente']; ?></p>
-            </aside>
-        <?php endif; ?>
         <!-- Nav differs if user logged in or not -->
         <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
             <nav class="nav4">
@@ -46,6 +40,12 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
             </nav>
         <?php endif; ?>
         <main>
+        <?php if (isset($_SESSION['NomeUtente'])): ?>
+            <header>
+                    <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
+                    <p><?= $_SESSION['NomeUtente']; ?></p>
+        </header>
+        <?php endif; ?>
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <section>
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
