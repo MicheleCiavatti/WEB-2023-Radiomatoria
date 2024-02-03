@@ -26,7 +26,7 @@ function getPosts($username) {
                  FROM AMICIZIA A
                  WHERE A.Amico2 = ?)
              ORDER BY P.DataPost DESC
-             LIMIT 20;'
+             LIMIT 10;'
         );
         if (!$s->execute([$username, $username])) {
             return false;
@@ -42,6 +42,37 @@ function getPosts($username) {
             'TestoPost' => $row['TestoPost'],
             'ImmaginePost' => $row['ImmaginePost'],
         );
+    }
+    if ($username != null) {
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM POST
+             WHERE CREATORE NOT IN 
+                (SELECT F.Followed
+                 FROM FOLLOW F
+                 WHERE F.Follower = ?)
+             AND CREATORE NOT IN
+                (SELECT A.Amico1
+                 FROM AMICIZIA A
+                 WHERE A.Amico2 = ?)
+             AND CREATORE != ?
+             ORDER BY DataPost DESC
+             LIMIT 3;'
+        );
+        if (!$s->execute([$username, $username, $username])) {
+            return false;
+        }
+        $result = $s->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            error_log(print_r($row, true));
+            array_unshift($posts, array(
+                'Creatore' => $row['Creatore'],
+                'NrPost' => $row['NrPost'],
+                'DataPost' => $row['DataPost'],
+                'TestoPost' => $row['TestoPost'],
+                'ImmaginePost' => $row['ImmaginePost'],
+            ));
+        }
     }
     return $posts;
 }
