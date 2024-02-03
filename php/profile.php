@@ -174,7 +174,7 @@
             <!--************************************* HANDLING FRIEND LIST **************************************-->
             <?php if(!empty($amici)): ?>
                 <section>
-                    <header><h2>Amici</h2><header>
+                    <header><h2>Amici</h2></header>
                     <p>
                         <ul>
                             <?php foreach($amici as $amico):?>
@@ -193,7 +193,7 @@
             <!--************************************* HANDLING FOLLOWED LIST **************************************-->
             <?php if(!empty($seguiti)): ?>
                 <section>
-                    <header><h2>Following</h2><header>
+                    <header><h2>Following</h2></header>
                     <p>
                         <ul>
                             <?php foreach($seguiti as $seguito):?>
