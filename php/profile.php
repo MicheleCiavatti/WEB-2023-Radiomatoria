@@ -247,27 +247,14 @@
                     <?php foreach($post_list as $post): ?>
                         <article class="post">
                             <header>
+                                <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a></p>
+                                <p><?= $post[2]; ?></p>
                                 <?php if ($post[4] != null): ?>
                                     <img src="<?= $post[4]; ?>" alt=""/>
                                 <?php endif; ?>
-                                <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a> <?= $post[2]; ?></p>
                             </header>
                             <section><?= $post[3]; ?></section>
                             <section>
-                                <ul>
-                                    <?php 
-                                        $comments = getComments($post[0], $post[1]);
-                                        foreach($comments as $comment):
-                                    ?>
-                                    <li>
-                                        <?php if($comment[3] != null): ?>
-                                            <img src="<?=strval($comment[3]); ?>" alt=""/>
-                                        <?php endif; ?>
-                                        <p><strong><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a></strong> <?= strval($comment[1]);?></p>
-                                        <p><?=strval($comment[2]);?></p>
-                                    </li>
-                                    <?php endforeach; ?>
-                                </ul>
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
                                         <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
@@ -277,6 +264,20 @@
                                         <input type="submit" value="Pubblica">
                                     </form>
                                 <?php endif; ?>
+                                <ul>
+                                    <?php 
+                                        $comments = getComments($post[0], $post[1]);
+                                        foreach($comments as $comment):
+                                    ?>
+                                    <li>
+                                        <p><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a> <?= strval($comment[1]);?></p>
+                                        <p><?=strval($comment[2]);?></p>
+                                        <?php if($comment[3] != null): ?>
+                                            <img src="<?=strval($comment[3]); ?>" alt=""/>
+                                        <?php endif; ?>
+                                    </li>
+                                    <?php endforeach; ?>
+                                </ul>
                             </section>
                         </article>
                     <?php endforeach; ?>

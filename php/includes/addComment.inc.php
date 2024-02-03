@@ -2,8 +2,10 @@
 require_once "../classes/dbh.classes.php";
 session_start();
 
-if (isset($_POST['comment_text'])) {
+if (isset($_POST['comment_text'])) {   
     $uid = $_SESSION['NomeUtente'];
+    if (isset($_SESSION['from_home'])) $stringHeader = 'location: ../home.php';
+    else $stringHeader = 'location: ../profile.php?id=' . $uid;     
     $comment_text = $_POST['comment_text'];
     $date = date("Y-m-d H:i:s");
     $post_author = $_POST['post_author'];
@@ -16,7 +18,7 @@ if (isset($_POST['comment_text'])) {
     );
     if (!$s->execute(array($post_author, $post_number))) {
         $s = null;
-        header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
+        header($stringHeader . '&error=stmtfailed');
         exit();
     }
     $nrComment = $s->rowCount() + 1;
@@ -34,8 +36,8 @@ if (isset($_POST['comment_text'])) {
     );
     if (!$s->execute(array($post_author, $date, $comment_text, $comment_pic, $nrComment, $post_number, $uid))) {
         $s = null;
-        header('location: ../profile.php?id=' . $post_author . '&error=stmtfailed');
+        header($stringHeader. '&error=stmtfailed');
         exit();
     }
-    header('location: ../profile.php?id=' . $post_author . '&error=none');
+    header($stringHeader);
 }

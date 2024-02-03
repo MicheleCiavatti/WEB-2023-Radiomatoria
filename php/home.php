@@ -60,9 +60,6 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
             <?php foreach ($posts as $post): ?>
                 <article>
                     <header>
-                        <?php if ($post['ImmaginePost'] != null): ?>
-                            <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
-                        <?php endif; ?>
                         <p><a href="profile.php?id=<?=strval($post['Creatore'])?>"><?= strval($post['Creatore']); ?></a></p>
                         <p><?= strval($post['DataPost']); ?></p>
                         <?php if ($post['ImmaginePost'] != null): ?>
@@ -70,30 +67,30 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                         <?php endif; ?>
                     </header>
                     <section><?= strval($post['TestoPost']); ?></section>
-                    <?php $comments = getComments($post['Creatore'], $post['NrPost']); if (!empty($comments)): ?>
-                        <section>
-                            <ul>
-                                <?php foreach ($comments as $comment): ?>
-                                    <li>
-                                        <?php if ($comment['ImmagineCommento'] != null): ?>
-                                            <img src="<?= strval($comment['ImmagineCommento']); ?>" alt=""/>
-                                        <?php endif; ?>
-                                        <p><strong><a href="profile.php?id=<?=strval($comment['AutoreCommento']);?>"><?=strval($comment['AutoreCommento'])?></a></strong> <?= strval($comment['DataCommento']);?></p>
-                                        <p><?= strval($comment['TestoCommento']); ?></p>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <?php if (isset($_SESSION['NomeUtente'])): ?>
-                                <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
-                                    <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
-                                    <label>Testo commento<textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea></label>
-                                    <input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>">
-                                    <input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>">
-                                    <input type="submit" value="Pubblica">
-                                </form>
-                            <?php endif; ?>
-                        </section>
-                    <?php endif; ?>
+                    <?php $comments = getComments($post['Creatore'], $post['NrPost']);?>
+                    <section>
+                        <?php if (isset($_SESSION['NomeUtente'])): ?>
+                            <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
+                                <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
+                                <label>Testo commento<textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea></label>
+                                <input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>">
+                                <input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>">
+                                <input type="hidden" name="from_home">
+                                <input type="submit" value="Pubblica">
+                            </form>
+                        <?php endif; ?>
+                        <ul>
+                            <?php foreach ($comments as $comment): ?>
+                                <li>
+                                    <p><a href="profile.php?id=<?=strval($comment['AutoreCommento']);?>"><?=strval($comment['AutoreCommento'])?></a> <?= strval($comment['DataCommento']);?></p>
+                                    <p><?= strval($comment['TestoCommento']); ?></p>
+                                    <?php if ($comment['ImmagineCommento'] != null): ?>
+                                        <img src="<?= strval($comment['ImmagineCommento']); ?>" alt=""/>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </section>
                 </article>
             <?php endforeach; ?>      
         </main>
