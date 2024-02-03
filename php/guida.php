@@ -196,7 +196,7 @@
                         </p>
                 </aside>
             <?php endif; ?>
-            <footer>LongLight è un progetto di Cacciaguerra Alessandro e Ciavatti Michele.</footer>
         </main>
+        <footer>LongLight è un progetto di Cacciaguerra Alessandro e Ciavatti Michele.</footer>
     </body>
 </html>
