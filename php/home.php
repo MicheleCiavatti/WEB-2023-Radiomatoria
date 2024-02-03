@@ -50,8 +50,8 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                 <section>
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
                         <ul>
-                            <li><input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></li>  
-                            <li><textarea name="post_text" placeholder="Scrivi un post" required></textarea></li>
+                            <li><label hidden>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></label></li>  
+                            <li><label hidden>Testo post<textarea name="post_text" placeholder="Scrivi un post" required></textarea></label></li>
                             <li><button type="submit" name="upload_post">Pubblica</button></li>
                         </ul>
                     </form>
@@ -85,8 +85,8 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                             </ul>
                             <?php if (isset($_SESSION['NomeUtente'])): ?>
                                 <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
-                                    <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
-                                    <textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea>
+                                    <label hidden>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
+                                    <label hidden>Testo commento<textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea></label>
                                     <input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>">
                                     <input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>">
                                     <input type="submit" value="Pubblica">
