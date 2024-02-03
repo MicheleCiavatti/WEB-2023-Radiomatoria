@@ -11,6 +11,7 @@ const removeFollowButton = document.getElementsByName('remove_follow_buttons');
 const removeBlockButton = document.getElementsByName('remove_block_buttons');
 
 const show_comments_buttons = document.getElementsByName("show_comments");
+const comment_lists = document.getElementsByName("comment_list");
 const remove_post_button = document.getElementsByName("remove_post");
 const remove_comment_button = document.getElementsByName("remove_comment");
 
@@ -69,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const username = document.getElementById('session_user_name').innerHTML;
         const addFriendButton = document.getElementById('friend_request');
         if (addFriendButton) {
-            addFriendButton.addEventListener('click', function() { notify(username, true) });
+            addFriendButton.addEventListener('click', function() { notify(username, 1) });
         }
         const cancelRequestButton = document.getElementById('cancel_request');
         if (cancelRequestButton) {
-            cancelRequestButton.addEventListener('click', function() { removeFriendRequest(username, other) });
+            cancelRequestButton.addEventListener('click', function() { removeFriendRequest(username) });
         }
         if (removeFriendButton.length > 0) {
             removeFriendButton[0].addEventListener('click', function() { removeFriend(username, owner) });
@@ -82,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (addFollowButton) {
             addFollowButton.addEventListener('click', function() {
                 addFollow(username);
-                notify(false);
             });
         }
         if (removeFollowButton.length > 0) {
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addBlockButton.addEventListener('click', function() { addBlock(username) });
         }
         if (removeBlockButton.length > 0) {
-            removeBlockButton[0].addEventListener('click', function() { removeBlocked(username, owner) });
+            removeBlockButton[0].addEventListener('click', function() { removeBlock(username, owner) });
         }
     } else {
         /* Handling of buttons in the bottom of the page */
@@ -157,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
         riga2.item(0).style.color = "blue";
     }
 
+    /* Handling profile modification */
     const change_button_1 = document.getElementById("change_public_fields");
     if(change_button_1) {
         const public_fields = document.getElementById("change_fields_form");
@@ -168,62 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
         change_button_2.addEventListener("click", function() { toggle(private_fields) });
         private_fields.style.display = "none";
     }
-   
-    if(show_comments_buttons.length > 0) {
-        for(i=0; i<show_comments_buttons.length; i++) {
-            let button = show_comments_buttons[i];
-            let pid = button.id.slice(5);
-            cid = pid + "_comment_list";
-            list = document.getElementById(cid);
-            button.addEventListener("click", function() {
-                toggle(list);
-                if (button.innerText == "Mostra commenti") {
-                    button.innerText = "Nascondi commenti";
-                } else {
-                    button.innerText = "Mostra commenti";
-                }
-            });
-        }
-    }
-    if(comment_post_button.length > 0) {
-        const add_comment = document.getElementById("add_comment_form");
-        add_comment.style.display = "none";
-        const comment_reset = document.getElementById("comment_reset");
-        comment_reset.addEventListener("click", function() { toggle(add_comment); });
-        for(i=0; i<comment_post_button.length; i++) {
-            let button = comment_post_button[i];
-            let pid = button.id.split("_")[1];
-            let author = button.id.split("_")[2];
-            button.addEventListener("click", function() { mostraFormCommenti(add_comment, pid, author, false); });
-        }
-    }
-    if(respond_comment_button.length > 0) {
-        for(i=0; i<respond_comment_button.length; i++) {
-            let button = respond_comment_button[i];
-            let author = button.innerText.slice(11);
-            let cid = button.id.slice(8);
-            button.addEventListener("click", function() { removeComment(cid, author, true); });
-        }
-    }
-
-    if(remove_post_button.length > 0) {
-        for(i=0; i<remove_post_button.length; i++) {
-            let button = remove_post_button[i];
-            let pid = button.id.split("_")[1];
-            let creator = button.id.split("_")[2];
-            button.addEventListener("click", function() { removePost(pid, creator); });
-        }
-    }
-    if(remove_comment_button.length > 0) {
-        for(i=0; i<remove_comment_button.length; i++) {
-            let button = remove_comment_button[i];
-            let pid = button.id.split("_")[1];
-            let creator = button.id.split("_")[2];
-            let cid = button.id.split("_")[3];
-            button.addEventListener("click", function() { removeComment(pid, creator, cid); });
-        }
-    }
     
+    /* Handling post selection */
     select_form.addEventListener("submit", (event) => {
         event.preventDefault();
         selections = new FormData(select_form)
@@ -236,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    /* Handling comment and post addition */
     const user = document.getElementById("pag_profilo");
     if(user) {
         const add_post = document.getElementById('add_post_form');
@@ -257,6 +205,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let dislike_button = dislike_buttons[i];
             dislike_button.addEventListener("click", function() { dislike(author, post_id, creator, comment_id); });
+        }
+    }
+
+    /* Handling comment and post removal */
+    if(remove_post_button.length > 0) {
+        for(i=0; i<remove_post_button.length; i++) {
+            let button = remove_post_button[i];
+            let pid = button.id.split("_")[1];
+            let creator = button.id.split("_")[2];
+            button.addEventListener("click", function() { removePost(pid, creator); });
+        }
+    }
+    if(remove_comment_button.length > 0) {
+        for(i=0; i<remove_comment_button.length; i++) {
+            let button = remove_comment_button[i];
+            let pid = button.id.split("_")[1];
+            let creator = button.id.split("_")[2];
+            let cid = button.id.split("_")[3];
+            button.addEventListener("click", function() { removeComment(pid, creator, cid); });
+        }
+    }
+   
+    /* Handling other comment and post buttons */
+    if(show_comments_buttons.length > 0) {
+        for(i=0; i<show_comments_buttons.length; i++) {
+            let button = show_comments_buttons[i];
+            let list = comment_lists[i];
+            button.addEventListener("click", function() {
+                toggle(list);
+                if (button.innerText == "Mostra commenti") {
+                    button.innerText = "Nascondi commenti";
+                } else {
+                    button.innerText = "Mostra commenti";
+                }
+            });
+        }
+    }
+    if(comment_post_button.length + respond_comment_button.length > 0) {
+        const add_comment = document.getElementById("add_comment_form");
+        add_comment.style.display = "none";
+        const comment_reset = document.getElementById("comment_reset");
+        comment_reset.addEventListener("click", function() { toggle(add_comment); });
+        const comment_text = document.getElementById("comment_text");
+        if(comment_post_button.length > 0) {
+            for(i=0; i<comment_post_button.length; i++) {
+                let button = comment_post_button[i];
+                let pid = button.id.split("_")[1];
+                let author = button.id.split("_")[2];
+                button.addEventListener("click", function() { mostraFormCommenti(add_comment, pid, author, null); });
+            }
+        }
+        if(respond_comment_button.length > 0) {
+            for(i=0; i<respond_comment_button.length; i++) {
+                let button = respond_comment_button[i];
+                let author = button.innerText.slice(11);
+                let pid = button.id.split("_")[1];
+                let creator = button.id.split("_")[2];
+                button.addEventListener("click", function() { mostraFormCommenti(add_comment, pid, creator, author); });
+            }
         }
     }
 });
@@ -304,7 +311,7 @@ function addFollow(username) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log('Follow aggiunto con successo al server');
-            location.reload();
+            notify(username, 0);
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error("Errore durante l'aggiunta del follow:", xhr.status);
         }
@@ -319,7 +326,7 @@ function addBlock(username) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Blocco aggiunto con successo al server');
+            console.log('Blocco aggiunto con successo dal server');
             location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error("Errore durante l'aggiunta del blocco:", xhr.status);
@@ -360,6 +367,22 @@ function removeFollow(username, other) {
     xhr.send();
 }
 
+function removeFriendRequest(username) {
+    const xhr = new XMLHttpRequest();
+    const url = 'functions/removeFriendRequest.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Richiesta di amicizia rimossa con successo dal server');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante la rimozione della richiesta di amicizia:', xhr.status);
+        }
+    };
+    xhr.send();
+}
+
 function removeFriend(username, other) {
     const xhr = new XMLHttpRequest();
     const url = 'functions/removeFriend.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
@@ -383,10 +406,10 @@ function notify(username, request) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Follow aggiunto con successo al server');
-            location.reload();
+            console.log('Notifica inviata');
+            //location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error("Errore durante l'aggiunta del follow:", xhr.status);
+            console.error("Errore durante l'invio della notifica:", xhr.status);
         }
     };
     xhr.send();
@@ -400,10 +423,6 @@ function removePost(pid, creator) {
     
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            //comments_to_remove = xhr.response;
-            //for(i=1; i<=comments_to_remove; i++) {
-            //    removeComment(pid, creator, i);
-            //}
             location.reload();
             console.log('Post rimosso con successo dal server');
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
@@ -429,22 +448,6 @@ function removeComment(pid, creator, cid) {
     xhr.send();
 }
 
-function removeFriendRequest(username, other) {
-    const xhr = new XMLHttpRequest();
-    const url = 'functions/removeFriendRequest.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Richiesta di amicizia rimossa con successo dal server');
-            location.reload();
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            console.error('Errore durante la rimozione della richiesta di amicizia:', xhr.status);
-        }
-    };
-    xhr.send();
-}
-
 function toggle(element) {
     if (element.style.display == "none") {
         element.style.display = "block";
@@ -455,12 +458,14 @@ function toggle(element) {
 
 function mostraFormCommenti(add_comment, element_id, author, risposta) {
     toggle(add_comment);
+    document.getElementById("post_author").value = author;
+    document.getElementById("post_number").value = element_id;
     add_comment.children.item[3].innerHTML = element_id;
     add_comment.children.item[4].innerHTML = author;
     if(risposta) {
-        add_comment.children.item[2].placeholder = "Risposta al commento di " + author;
+        document.getElementById("comment_text").value = "@" + risposta;
     } else {
-        add_comment.children.item[2].placeholder = "Commento al post di " + author;
+        document.getElementById("comment_text").placeholder = "Commento al post di " + author;
     }
 }
 
