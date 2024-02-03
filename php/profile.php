@@ -73,7 +73,7 @@
                         </ul>
                     <?php else: ?>
                         <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
-                            <label hidden>Nuova immagine profile<input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required></label>
+                            <label class="label_invisible">Nuova immagine profilo<input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required></label>
                             <input type="submit" name="upload_propic" value="Cambia immagine">
                         </form>
                     <?php endif; ?>
@@ -235,8 +235,8 @@
                     <?php if (isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                         <p>
                             <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
-                                <label hidden>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label>
-                                <label hidden>Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
+                                <label>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label>
+                                <label>Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
                                 <input type="submit" name="upload_post" value="Pubblica">
                             </form>
                         </p>
@@ -270,8 +270,8 @@
                                 </ul>
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
-                                        <label hidden>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
-                                        <label hidden>Testo commento<textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea></label>
+                                        <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
+                                        <label>Testo commento<textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea></label>
                                         <input type="hidden" name="post_author" value="<?= $post[0]?>">
                                         <input type="hidden" name="post_number" value="<?= $post[1]?>">
                                         <input type="submit" value="Pubblica">
