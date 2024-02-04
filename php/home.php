@@ -45,12 +45,13 @@
             </nav>
         <?php endif; ?>
         <main>
-        <?php if (isset($_SESSION['NomeUtente'])): ?>
-            <header>
-                    <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
-                    <p><?= $_SESSION['NomeUtente']; ?></p>
-        </header>
-        <?php endif; ?>
+            <?php if (isset($_SESSION['NomeUtente'])): ?>
+                <header>
+                        <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
+                        <p><?= $_SESSION['NomeUtente']; ?></p>
+                </header>
+            <?php endif; ?>
+            
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <section>
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
