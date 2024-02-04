@@ -176,4 +176,19 @@ function resetPropic($username) {
         exit();
     }
 }
+
+function getNotifications($username) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT COUNT(*) AS N_Notifiche
+         FROM NOTIFICHE
+         WHERE Ricevente = ?;'
+    );
+    if (!$s->execute(array($username))) {
+        $s = null;
+        header('location: ../notifiche.php?id=' . $username . '&error=stmtfailed');
+        exit();
+    }
+    return $s->fetch()['N_Notifiche'];
+}
     

@@ -1,11 +1,12 @@
 <?php
-session_start();
-require_once "includes/homepageInfo.inc.php";
-$posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : getPosts(null);
-    if (isset($_SESSION['NomeUtente']) && empty(glob($_SESSION['FotoProfilo']))) {
-        $_SESSION['FotoProfilo'] = '../img/default.png';
-        resetPropic($_SESSION['NomeUtente']);
-    }
+    session_start();
+    require_once "includes/homepageInfo.inc.php";
+    $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : getPosts(null);
+        if (isset($_SESSION['NomeUtente']) && empty(glob($_SESSION['FotoProfilo']))) {
+            $_SESSION['FotoProfilo'] = '../img/default.png';
+            resetPropic($_SESSION['NomeUtente']);
+        }
+    $n_notifications = isset($_SESSION['NomeUtente']) ? getNotifications($_SESSION['NomeUtente']) : null;
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -35,7 +36,11 @@ $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : ge
                     <li><a href="guida.php">Guida</a></li>
                     <li><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li><a href="includes/logout.inc.php">Logout</a></li>
-                    <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                    <?php if ($n_notifications == 0): ?>
+                        <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                    <?php else: ?>
+                        <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche<sup>(<?= $n_notifications; ?>)</sup></a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
         <?php endif; ?>

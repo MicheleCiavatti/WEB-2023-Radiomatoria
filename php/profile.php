@@ -10,6 +10,7 @@
     $seguiti = $data[4]; 
     $bloccati = $data[5];
     $post_list = $data[6];
+    $n_notifications = isset($_SESSION['NomeUtente']) ? getNotifications($_SESSION['NomeUtente']) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -39,7 +40,11 @@
                     <li><a href="guida.php">Guida</a></li>
                     <li <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']) echo 'class="current_page"'; ?>><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li><a href="includes/logout.inc.php">Logout</a></li>
-                    <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                    <?php if ($n_notifications == 0): ?>
+                        <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                    <?php else: ?>
+                        <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche<sup>(<?= $n_notifications; ?>)</sup></a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
         <?php endif; ?>
