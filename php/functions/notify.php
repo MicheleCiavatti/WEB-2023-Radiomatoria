@@ -23,12 +23,22 @@ if (isset($_GET['username']) && isset($_GET['receiver'])) {
     } else {
         $text = "è diventato un tuo follower";
     }
-    $nid = rand(1,9999);
+    $idcheck = $dbh->connect()->prepare("SELECT COUNT(*) FROM NOTIFICHE WHERE IdNotifica = ?");
+    if($idcheck === false) {
+        error_log("Errore nella preparazione della query SELECT.");
+    }
+    do {
+        $nid = rand(1,999);
+        if(!$idcheck->execute(array($nid))) {
+            error_log("Errore nell'esecuzione della query SELECT: " . print_r($idcheck->errorInfo(), true));
+        }
+        $result = $idcheck->fetch(PDO::FETCH_NUM);
+    } while ($result[0] > 0);
     $stmt = $dbh->connect()->prepare("INSERT INTO NOTIFICHE (Ricevente, Mandante, IdNotifica, TestoNotifica, Richiesta, Lettura) VALUES (?, ?, ?, ?, ?, ?)");
     if(!$stmt->execute(array($receiver, $uid, $nid, $text, $request, 0))) {
         $stmt = null;
         header('location: ../../login.html?error=stmtfailed');
         exit();
     }
-exit();//
+exit();
 }
