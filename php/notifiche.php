@@ -61,7 +61,7 @@
                                     <header><h4>Notifica da <a href="profile.php?id=<?=strval($n['Mandante'])?>"><?= strval($n['Mandante']); ?></a></h4></header>
                                     <p><?= strval($n['TestoNotifica']); ?></p>
                                     <?php if ($n['Richiesta'] == true): ?>
-                                        <button class="removenotification" name="friend_refuse">Rifiuta</button>
+                                        <button class="friendrefuse" name="friend_refuse">Rifiuta</button>
                                         <button class="friendaccept" name="friend_accept">Accetta</button>
                                     <?php else: ?>
                                         <button class="removenotification" >Rimuovi notifica</button>

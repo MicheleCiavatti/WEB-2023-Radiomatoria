@@ -18,14 +18,10 @@
     $amici = $data[3]; 
     $seguiti = $data[4]; 
     $bloccati = $data[5];
-    $data = selectPostProfile($username, $relation, $sort, $order);
-    $post_list = $data[0];
-    $element_id_like = $data[1];
-    $element_id_dislike = $data[2];
+    $post_list = getPosts($username);
     if(!isset($_SESSION['NomeUtente'])) {
         $_SESSION['NomeUtente'] = null;
     }
-    $commentable = false;
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -42,20 +38,20 @@
         <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
             <nav class="nav4">
                 <ul>
-                    <li><a href="home.php">Home</a></li>
-                    <li><a href="guida.php">Guida</a></li>
-                    <li><a href="../signup.html">Signup</a></li>
-                    <li><a href="../login.html">Login</a></li>
+                    <li id="pag_principale"><a href="home.php">Home</a></li>
+                    <li id="pag_guida"><a href="guida.php">Guida</a></li>
+                    <li id="pag_creazione"><a href="../signup.html">Signup</a></li>
+                    <li id="pag_accesso"><a href="../login.html">Login</a></li>
                 </ul>
             </nav>
         <?php else: ?> <!-- If user is logged in -->
             <nav>
                 <ul>
-                    <li><a href="home.php">Home</a></li>
-                    <li><a href="guida.php">Guida</a></li>
-                    <li <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']) echo 'class="current_page"'; ?>><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
-                    <li><a href="includes/logout.inc.php">Logout</a></li>
-                    <li><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                    <li id="pag_principale"><a href="home.php">Home</a></li>
+                    <li id="pag_guida"><a href="guida.php">Guida</a></li>
+                    <li id="pag_profilo" <?php if ($_SESSION['NomeUtente'] == $username) echo 'class="current_page"'; ?>><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                    <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
+                    <li id="pag_notifiche"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
                 </ul>
             </nav>
         <?php endif; ?>
@@ -65,38 +61,39 @@
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
                 <p id='profile_name'><?= $utente["NomeUtente"] ?></p>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
-                <?php if ($username != $_SESSION['NomeUtente']): ?>
-                    <ul id="comandi">
-                        <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
-                        <li>
-                                <?php if (isFriend($username)): ?>
-                                    <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
-                                <?php else if (friendshipRequested($username)): ?>
-                                    <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
-                                <?php else: ?>
-                                    <button class="access_required" id="friend_request">Richiedi amicizia</button>
-                                <?php endif; ?>
-                        </li>
-                        <li>
-                                <?php if (isFollowed($username)): ?>
-                                    <button class="access_required" name="remove_follow_buttons">Rimuovi follow</button>
-                                <?php else: ?>
-                                    <button class="access_required" id="follow_button">Segui</button>
-                                <?php endif; ?>
-                        </li>
-                        <li>
-                                <?php if (isBlocked($username)): ?>
-                                    <button class="access_required" name="remove_block_buttons">Solleva blocco</button>
-                                <?php else: ?>
-                                    <button class="access_required" id="block_button">Blocca</button>
-                                <?php endif; ?>
-                        </li>
-                    </ul>
-                <?php else: ?>
-                    <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
-                        <input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required>
-                        <input type="submit" name="upload_propic" value="Cambia immagine">
-                    </form>
+                    <?php if ($username != $_SESSION['NomeUtente']): ?>
+                        <ul id="comandi">
+                            <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
+                            <li>
+                                    <?php if (isFriend($username)): ?>
+                                        <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
+                                    <?php elseif (friendshipRequested($username)): ?>
+                                        <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
+                                    <?php else: ?>
+                                        <button class="access_required" id="friend_request">Richiedi amicizia</button>
+                                    <?php endif; ?>
+                            </li>
+                            <li>
+                                    <?php if (isFollowed($username)): ?>
+                                        <button class="access_required" name="remove_follow_buttons">Rimuovi follow</button>
+                                    <?php else: ?>
+                                        <button class="access_required" id="follow_button">Segui</button>
+                                    <?php endif; ?>
+                            </li>
+                            <li>
+                                    <?php if (isBlocked($username)): ?>
+                                        <button class="access_required" name="remove_block_buttons">Solleva blocco</button>
+                                    <?php else: ?>
+                                        <button class="access_required" id="block_button">Blocca</button>
+                                    <?php endif; ?>
+                            </li>
+                        </ul>
+                    <?php else: ?>
+                        <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
+                            <input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required>
+                            <input type="submit" name="upload_propic" value="Cambia immagine">
+                        </form>
+                    <?php endif; ?>
                 <?php endif; ?>
             </header>
             <!--************************************* HANDLING PUBLIC SINGULAR FIELDS **************************************-->
@@ -167,105 +164,106 @@
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING USER TIME SLOTS **************************************-->
+            <section>
+                <header><h2>Orari</h2></header>
                 <section>
-                    <header><h2>Orari</h2></header>
-                    <section>
-                        <table>
-                            <caption>Orari di presenza in radio</caption>
-                            <tr id="intestazione_orari">
-                                <th></th>
-                                <th colspan="2">1</th>
-                                <th colspan="2">2</th>
-                                <th colspan="2">3</th>
-                                <th colspan="2">4</th>
-                                <th colspan="2">5</th>
-                                <th colspan="2">6</th>
-                                <th colspan="2">7</th>
-                                <th colspan="2">8</th>
-                                <th colspan="2">9</th>
-                                <th colspan="2">10</th>
-                                <th colspan="2">11</th>
-                                <th colspan="2">12</th>
-                            </tr>
-                            <tr id="riga_orari_mattina">
-                                <th>AM</th>
-                                <td headers="1 AM"></td>
-                                <td headers="1 AM"></td>
-                                <td headers="2 AM"></td>
-                                <td headers="2 AM"></td>
-                                <td headers="3 AM"></td>
-                                <td headers="3 AM"></td>
-                                <td headers="4 AM"></td>
-                                <td headers="4 AM"></td>
-                                <td headers="5 AM"></td>
-                                <td headers="5 AM"></td>
-                                <td headers="6 AM"></td>
-                                <td headers="6 AM"></td>
-                                <td headers="7 AM"></td>
-                                <td headers="7 AM"></td>
-                                <td headers="8 AM"></td>
-                                <td headers="8 AM"></td>
-                                <td headers="9 AM"></td>
-                                <td headers="9 AM"></td>
-                                <td headers="10 AM"></td>
-                                <td headers="10 AM"></td>
-                                <td headers="11 AM"></td>
-                                <td headers="11 AM"></td>
-                                <td headers="12 AM"></td>
-                                <td headers="12 AM"></td>
-                            </tr>
-                            <tr id="riga_orari_sera">
-                                <th>PM</th>
-                                <td headers="1 PM"></td>
-                                <td headers="1 PM"></td>
-                                <td headers="2 PM"></td>
-                                <td headers="2 PM"></td>
-                                <td headers="3 PM"></td>
-                                <td headers="3 PM"></td>
-                                <td headers="4 PM"></td>
-                                <td headers="4 PM"></td>
-                                <td headers="5 PM"></td>
-                                <td headers="5 PM"></td>
-                                <td headers="6 PM"></td>
-                                <td headers="6 PM"></td>
-                                <td headers="7 PM"></td>
-                                <td headers="7 PM"></td>
-                                <td headers="8 PM"></td>
-                                <td headers="8 PM"></td>
-                                <td headers="9 PM"></td>
-                                <td headers="9 PM"></td>
-                                <td headers="10 PM"></td>
-                                <td headers="10 PM"></td>
-                                <td headers="11 PM"></td>
-                                <td headers="11 PM"></td>
-                                <td headers="12 PM"></td>
-                                <td headers="12 PM"></td>
-                            </tr>
-                        </table>
-                    </section>
-                    <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $username): ?>
-                        <ul>
-                            <?php foreach($orari as $intervallo): ?>
-                            <!-- Time slots displaying and removing done via AJAX -->
-                            <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="timeslots">
-                                <?= $intervallo[0] ?> - <?= $intervallo[1]?>
-                                <?php if ($_SESSION['NomeUtente'] == $username):?>
-                                    <button class="access_required" name="remove_timeslot_buttons" type="button">Rimuovi</button> 
-                                <?php endif; ?>
-                            </li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <!-- Form for adding time slots -->
-                        <?php if ($_SESSION['NomeUtente'] == $username):?>
-                            <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
-                            <form action="includes/addTimeSlot.inc.php" method="post">
-                                <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
-                                <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
-                                <input type="submit" value="Aggiungi">
-                            </form>
-                        <?php endif; ?>
-                    <?php endif; ?>
+                    <table>
+                        <caption>Orari di presenza in radio</caption>
+                        <tr id="intestazione_orari">
+                            <th></th>
+                            <th colspan="2">1</th>
+                            <th colspan="2">2</th>
+                            <th colspan="2">3</th>
+                            <th colspan="2">4</th>
+                            <th colspan="2">5</th>
+                            <th colspan="2">6</th>
+                            <th colspan="2">7</th>
+                            <th colspan="2">8</th>
+                            <th colspan="2">9</th>
+                            <th colspan="2">10</th>
+                            <th colspan="2">11</th>
+                            <th colspan="2">12</th>
+                        </tr>
+                        <tr id="riga_orari_mattina">
+                            <th>AM</th>
+                            <td headers="1 AM"></td>
+                            <td headers="1 AM"></td>
+                            <td headers="2 AM"></td>
+                            <td headers="2 AM"></td>
+                            <td headers="3 AM"></td>
+                            <td headers="3 AM"></td>
+                            <td headers="4 AM"></td>
+                            <td headers="4 AM"></td>
+                            <td headers="5 AM"></td>
+                            <td headers="5 AM"></td>
+                            <td headers="6 AM"></td>
+                            <td headers="6 AM"></td>
+                            <td headers="7 AM"></td>
+                            <td headers="7 AM"></td>
+                            <td headers="8 AM"></td>
+                            <td headers="8 AM"></td>
+                            <td headers="9 AM"></td>
+                            <td headers="9 AM"></td>
+                            <td headers="10 AM"></td>
+                            <td headers="10 AM"></td>
+                            <td headers="11 AM"></td>
+                            <td headers="11 AM"></td>
+                            <td headers="12 AM"></td>
+                            <td headers="12 AM"></td>
+                        </tr>
+                        <tr id="riga_orari_sera">
+                            <th>PM</th>
+                            <td headers="1 PM"></td>
+                            <td headers="1 PM"></td>
+                            <td headers="2 PM"></td>
+                            <td headers="2 PM"></td>
+                            <td headers="3 PM"></td>
+                            <td headers="3 PM"></td>
+                            <td headers="4 PM"></td>
+                            <td headers="4 PM"></td>
+                            <td headers="5 PM"></td>
+                            <td headers="5 PM"></td>
+                            <td headers="6 PM"></td>
+                            <td headers="6 PM"></td>
+                            <td headers="7 PM"></td>
+                            <td headers="7 PM"></td>
+                            <td headers="8 PM"></td>
+                            <td headers="8 PM"></td>
+                            <td headers="9 PM"></td>
+                            <td headers="9 PM"></td>
+                            <td headers="10 PM"></td>
+                            <td headers="10 PM"></td>
+                            <td headers="11 PM"></td>
+                            <td headers="11 PM"></td>
+                            <td headers="12 PM"></td>
+                            <td headers="12 PM"></td>
+                        </tr>
+                    </table>
                 </section>
+                <!-- There are time slots to display or the user is the owner of the profile -->
+                <?php if(!empty($orari) || $_SESSION['NomeUtente'] == $username): ?>
+                    <ul>
+                        <?php foreach($orari as $intervallo): ?>
+                        <!-- Time slots displaying and removing done via AJAX -->
+                        <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="timeslots">
+                            <?= $intervallo[0] ?> - <?= $intervallo[1]?>
+                            <?php if ($_SESSION['NomeUtente'] == $username):?>
+                                <button class="access_required" name="remove_timeslot_buttons" type="button">Rimuovi</button> 
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <!-- Form for adding time slots -->
+                    <?php if ($_SESSION['NomeUtente'] == $username):?>
+                        <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
+                        <form action="includes/addTimeSlot.inc.php" method="post">
+                            <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
+                            <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
+                            <input type="submit" value="Aggiungi">
+                        </form>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </section>
             <!--************************************* HANDLING PASSWORD AND CLUE **************************************-->
             <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                 <button class="access_required" id="change_private_fields">Modifica campi privati</button>
@@ -276,52 +274,33 @@
                         <label for="new_clue">Modifica l'indizio: <input name="new_clue" id="new_clue" required/></label>
                         <input type="submit" value="Modifica indizio">
                     </form>
-                    <span>Password: <?= $utente['Password']?></span>
                     <form action="includes/changePW.inc.php" method="post">
-                        <label for="new_pw1">Cambia password (almeno 8 caratteri):<input name="new_pw1" type="password" id="new_pw1" minlength="8" required></label>
-                        <label for="new_pw2">Conferma nuova password:<input name="new_pw2" type="password" id="new_pw2" minlength="8" required></label>
+                        <label for="new_pw1">Cambia password (almeno 8 caratteri):<input name="new_pw1" type="password" id="new_pw1" minlength="8" required></label></br>
+                        <label for="new_pw2">Conferma nuova password:<input name="new_pw2" type="password" id="new_pw2" minlength="8" required></label></br>
+                        <label for="old_pw">Vecchia password:<input name="old_pw" type="password" id="old_pw" minlength="8" required></label>
                         <input type="submit" value="Modifica password">
                     </form>
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING POSTS **************************************-->
-            <section>
-                <form action="includes/selectPostProfile.php" method="post" name="select_form_profile" id="select_form">
-                    <input type="hidden" name="username" id="username" value="<?= $utente['NomeUtente'] ?>"/>
-                    <label for="relation">Seleziona post in base alla relazione col proprietario del profilo</label>
-                    <select name="relation" id="relation" onchange="this.form.submit()">
-                        <option value="none" selected>Nessuna</option>
-                        <option value="create" >Creati</option>
-                        <option value="like">Apprezzati</option>
-                        <option value="dislike">Disapprovati</option>
-                        <option value="comment">Commentati</option>
-                    </select>
-                    <label for="sort">Ordina per</label>
-                    <select name="sort" id="sort" onchange="this.form.submit()">
-                        <option value="none" selected>Seleziona</option>
-                        <option value="data">Data</option>
-                        <option value="like">Like</option>
-                        <option value="comm">Commenti</option>
-                    </select>
-                    <label for="order">In ordine decrescente</label>
-                    <input type="checkbox" name="order" id="order" checked/>
-                </form>
-            </section>
             <section id="post_column">
                 <header>
                     <h2>Post</h2>
                     <?php if(isset($_SESSION['NomeUtente'])): ?>
                         <button id="add_post_button" class="access_required">Aggiungi post</button>
-                        <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
-                            <input type="file" name="post_image" accept=".jpg, .jpeg, .png">
-                            <textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea>
-                            <input type="submit" name="upload_post" value="Pubblica">
-                        </form>
+                        <p>
+                            <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
+                                <label>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></br>
+                                <label>Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
+                                <input type="submit" name="upload_post" value="Pubblica">
+                            </form>
+                        </p>
                     <?php endif; ?>
                 </header>
-                <?php
-                    if(!empty($post_list)):
-                        foreach($post_list as $post):
+                <?php if (empty($post_list)): ?>
+                    <p><?= $utente['NomeUtente'] ?> non ha alcun post.</p>
+                <?php else:
+                    foreach($post_list as $post):
                 ?>
                     <article class="post" id="post<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
                         <header>
@@ -343,15 +322,25 @@
                                 </tr>
                             </table>
                             <?php if(isset($_SESSION['NomeUtente'])): ?>
-                                <?php if($post['Creatore'] != $_SESSION['NomeUtente']):
-                                    $commentable = true; ?>
-                                    <button class="access_required" name="comment_post" id="comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">Commenta</button>
-                                <?php else: ?>
+                                <button class="access_required" name="comment_post" id="comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">Commenta</button>
+                                <?php if($post['Creatore'] == $_SESSION['NomeUtente']): ?>
                                     <button class="access_required" name="remove_post" id="remove_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">Rimuovi</button>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </section>
                         <section>
+                            <header>
+                                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                                    <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" class="add_comment_form" id="add_comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
+                                        <input type="hidden" name="post_author" value="<?= $post['Creatore']; ?>"/>
+                                        <input type="hidden" name="post_number" value="<?= $post['NrPost']; ?>"/>
+                                        <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
+                                        <label>Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
+                                        <input type="reset" class="comment_reset" value="Annulla commento"/>
+                                        <input type="submit" value="Pubblica"/>
+                                    </form>
+                                <?php endif; ?>
+                            </header>
                             <?php
                                 $comments = getComments($post['Creatore'], $post['NrPost']);
                                 if(!empty($comments)):
@@ -363,7 +352,7 @@
                                         <?php if($comment['ImmagineCommento'] != null): ?>
                                             <img src="<?=strval($comment['ImmagineCommento']); ?>" alt=""/>
                                         <?php endif; ?>
-                                        <p><strong><a href="profile.php?id=<?=strval($comment['AutoreCommento']);?>"><?=strval($comment['AutoreCommento']);?></a></strong> <?= strval($comment['NrCommento']);?></p>
+                                        <p><strong><a href="profile.php?id=<?=strval($comment['AutoreCommento']);?>"><?=strval($comment['AutoreCommento']);?></a></strong> <?= strval($comment['DataCommento']);?></p>
                                         <p><?=strval($comment['TestoCommento']);?></p>
                                         <table>
                                             <tr>
@@ -377,13 +366,12 @@
                                         </table>
                                         <footer>
                                             <?php if(isset($_SESSION['NomeUtente'])): ?>
-                                                <?php if($comment['AutoreCommento'] != $_SESSION['NomeUtente']):
-                                                    $commentable = true; ?>
-                                                    <button class="access_required" name="answer_comment" id="comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>">Rispondi a <?= $comment['AutoreCommento']; ?></button>
+                                                <?php if($comment['AutoreCommento'] != $_SESSION['NomeUtente']): ?>
+                                                    <button class="access_required" name="answer_comment" id="comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>-<?= $comment['NrCommento']; ?>">Rispondi a <?= $comment['AutoreCommento']; ?></button>
                                                 <?php else: ?>
                                                     <button class="access_required" name="remove_comment" id="remove_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>">Rimuovi</button>
-                                                <?php endif; ?>
-                                            <?php endif; ?>
+                                                <?php endif;
+                                                endif; ?>
                                         </footer>
                                     </li>
                                     <?php endforeach; ?>
@@ -391,21 +379,8 @@
                             <?php endif; ?>
                         </section>
                     </article>
-                <?php
-                        endforeach;
-                    endif;?>
-                <footer>
-                    <?php if(isset($_SESSION['NomeUtente']) && ($commentable)): ?>
-                        <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" id="add_comment_form">
-                            <input type="file" name="comment_image" accept=".jpg, .jpeg, .png">
-                            <textarea name="comment_text" rows="2" cols="50" required></textarea>
-                            <input type="hidden" name="post_author"/>
-                            <input type="hidden" name="post_number"/>
-                            <input type="reset" value="Annulla commento" id="comment_reset">
-                            <input type="submit" value="Pubblica">
-                        </form>
-                    <?php endif; ?>
-                </footer>
+                <?php endforeach;
+                    endif; ?>
             </section>
             <!--************************************* HANDLING FRIEND LIST **************************************-->
             <?php if(!empty($amici)): ?>
@@ -462,60 +437,6 @@
                     </p>
                 </section>
             <?php endif; ?>
-            <!--************************************* HANDLING POSTS **************************************-->
-            <section>
-                    <header><h2>Post</h2></header>
-                    <?php if (isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                        <p>
-                            <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
-                                <label>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label>
-                                <label>Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
-                                <input type="submit" name="upload_post" value="Pubblica">
-                            </form>
-                        </p>
-                    <?php endif; ?>
-                <?php if (empty($post_list)): ?>
-                    <p><?= $utente['NomeUtente'] ?> non ha alcun post.</p>
-                <?php else: ?>
-                    <?php foreach($post_list as $post): ?>
-                        <article class="post">
-                            <header>
-                                <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a></p>
-                                <p><?= $post[2]; ?></p>
-                                <?php if ($post[4] != null): ?>
-                                    <img src="<?= $post[4]; ?>" alt=""/>
-                                <?php endif; ?>
-                            </header>
-                            <section><?= $post[3]; ?></section>
-                            <section>
-                                <?php if (isset($_SESSION['NomeUtente'])): ?>
-                                    <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
-                                        <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
-                                        <label>Testo commento<textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea></label>
-                                        <input type="hidden" name="post_author" value="<?= $post[0]?>">
-                                        <input type="hidden" name="post_number" value="<?= $post[1]?>">
-                                        <input type="submit" value="Pubblica">
-                                    </form>
-                                <?php endif; ?>
-                                <ul>
-                                    <?php 
-                                        $comments = getComments($post[0], $post[1]);
-                                        foreach($comments as $comment):
-                                    ?>
-                                    <li>
-                                        <p><a href="profile.php?id=<?=strval($comment[0]);?>"><?=strval($comment[0]);?></a> <?= strval($comment[1]);?></p>
-                                        <p><?=strval($comment[2]);?></p>
-                                        <?php if($comment[3] != null): ?>
-                                            <img src="<?=strval($comment[3]); ?>" alt=""/>
-                                        <?php endif; ?>
-                                    </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </section>
-                        </article>
-                    <?php endforeach; ?>
-            <?php endif; ?>
-            </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
     </body>
