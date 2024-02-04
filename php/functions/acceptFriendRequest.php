@@ -1,28 +1,24 @@
 <?php
 require_once "../classes/dbh.classes.php";
+require_once "Notify.php";
 $dbh = new Dbh;
+
 if (isset($_GET['username']) && isset($_GET['other'])) {
-    $user = $_GET['username'];
-    $other = $_GET['other'];
-    $s = $dbh->connect()->prepare(
-        'DELETE FROM NOTIFICHE
-         WHERE Mandante = ? AND Ricevente = ? AND Richiesta = 1;'
-    );
-    if (!$s->execute(array($other, $user))) {
-        error_log("Errore nell'esecuzione della query DELETE: " . print_r($s->errorInfo(), true));
-    }
+    $receiver = $_GET['username'];
+    $sender = $_GET['other'];
+    removeNotification($sender, $receiver, 0, 1);
     $s = $dbh->connect()->prepare(
         'INSERT INTO AMICIZIA (Amico1, Amico2)
          VALUES (?, ?);'
     );
-    if (!$s->execute(array($user, $other))) {
+    if (!$s->execute(array($receiver, $sender))) {
         error_log("Errore nell'esecuzione della query INSERT: " . print_r($s->errorInfo(), true));
     }
     $s = $dbh->connect()->prepare(
         'INSERT INTO AMICIZIA (Amico2, Amico1)
          VALUES (?, ?);'
     );
-    if (!$s->execute(array($user, $other))) {
+    if (!$s->execute(array($receiver, $sender))) {
         error_log("Errore nell'esecuzione della query INSERT: " . print_r($s->errorInfo(), true));
     }
 } else {

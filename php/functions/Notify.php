@@ -27,7 +27,7 @@ function removeNotification($sender, $receiver, $nid, $request) {
             'DELETE FROM NOTIFICHE
              WHERE Mandante = ? AND Ricevente = ? AND Richiesta = 1;'
         );
-        if(!$s->execute(array($sender, $receiver, $nid))) {
+        if(!$s->execute(array($sender, $receiver))) {
             error_log("Errore nell'esecuzione della query DELETE: " . print_r($s->errorInfo(), true));
         }
     } else {
