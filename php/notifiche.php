@@ -45,6 +45,7 @@
                                 </ul>
                             <?php else: ?>
                                 <!--- TODO: add button to remove notification -->
+                                <input type="hidden" name="notification_id" value="<?= strval($n['IdNotifica']); ?>">
                                 <button class="removenotification" >Rimuovi notifica</button>
                             <?php endif; ?>
                         </section>
