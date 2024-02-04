@@ -1,6 +1,7 @@
 <?php
 require_once 'Notify.php';
 require_once '../classes/dbh.classes.php';
+
 if (isset($_GET['post_author']) && isset($_GET['post_number']) && isset($_GET['liker'])) {
     $stringHeader = 'location: ../home.php';
     $dbh = new Dbh;
@@ -13,6 +14,7 @@ if (isset($_GET['post_author']) && isset($_GET['post_number']) && isset($_GET['l
         header($stringHeader . '?error=stmtfailed');
         exit();
     }
+    notify($_GET['liker'], $_GET['post_author'], $_GET['liker'] . " ha messo like al tuo post", 0, 0);
     header($stringHeader);
     exit();
 }
