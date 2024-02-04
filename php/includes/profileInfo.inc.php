@@ -191,4 +191,35 @@ function getNotifications($username) {
     }
     return $s->fetch()['N_Notifiche'];
 }
+
+function isLiked($username, $creatorPost, $nrPost) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM INTERAZIONI
+         WHERE Creatore = ? AND ElementId = ? AND Interagente = ? AND Tipo = 1;' // Tipo 1 = like
+    );
+    error_log('creatorPost: ' . $creatorPost . ' nrPost: ' . $nrPost . ' username: ' . $username);
+    if (!$s->execute(array($creatorPost, $nrPost, $username))) {
+        $s = null;
+        header('location: ../home.php?error=stmtfailed');
+        exit();
+    }
+    return $s->rowCount() > 0;
+}
+
+function getLikes($creatorPost, $nrPost) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT COUNT(*) AS N_Likes
+         FROM INTERAZIONI
+         WHERE Creatore = ? AND ElementId = ? AND Tipo = 1;' // Tipo 1 = like
+    );
+    if (!$s->execute(array($creatorPost, $nrPost))) {
+        $s = null;
+        header('location: ../home.php?error=stmtfailed');
+        exit();
+    }
+    return $s->fetch()['N_Likes'];
+}
     

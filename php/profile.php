@@ -258,7 +258,13 @@
                                     <img src="<?= $post[4]; ?>" alt=""/>
                                 <?php endif; ?>
                             </header>
-                            <section><?= $post[3]; ?></section>
+                            <section>
+                                <p><?= $post[3]; ?></p>
+                                <!-- like/un-like button -->
+                                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                                    <footer>Likes: <?= getLikes($post[0], $post[1]) ?></footer>
+                                <?php endif; ?>
+                            </section>
                             <section>
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
