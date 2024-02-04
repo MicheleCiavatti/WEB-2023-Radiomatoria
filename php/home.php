@@ -51,9 +51,10 @@
                         <p><?= $_SESSION['NomeUtente']; ?></p>
                 </header>
             <?php endif; ?>
-            
+            <!-- post form -->
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <section>
+                    <p id="session_user_name"><?= $_SESSION['NomeUtente']; ?></p>
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
                         <ul>
                             <li><label>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></label></li>  
@@ -63,6 +64,7 @@
                     </form>
                 </section>
             <?php endif; ?>
+            <!-- posts -->
             <?php foreach ($posts as $post): ?>
                 <article>
                     <header>
@@ -71,8 +73,23 @@
                         <?php if ($post['ImmaginePost'] != null): ?>
                             <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
                         <?php endif; ?>
+                    <section>
+                        <p><?= strval($post['TestoPost']); ?></p>
+                        <!-- like/un-like button -->
+                        <?php if (isset($_SESSION['NomeUtente'])): ?>
+                            <footer>
+                            <input type="hidden" value="<?= strval($post['Creatore']); ?>">
+                                <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
+                                    <button class="like_button">Like</button>
+                                <?php else: ?>
+                                    <button class="unlike_button">Un-like</button>
+                                <?php endif; ?>
+                            <input type="hidden" value="<?= strval($post['NrPost']); ?>">
+                            </footer>
+                        <?php endif; ?>
                     </header>
-                    <section><?= strval($post['TestoPost']); ?></section>
+                    <!-- comments -->
+                    </section>
                     <?php $comments = getComments($post['Creatore'], $post['NrPost']);?>
                     <section>
                         <?php if (isset($_SESSION['NomeUtente'])): ?>
@@ -100,5 +117,6 @@
                 </article>
             <?php endforeach; ?>      
         </main>
+        <script src="../js/home.js" ></script>
     </body>
 </html>

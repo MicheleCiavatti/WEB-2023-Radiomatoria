@@ -64,7 +64,6 @@ function getPosts($username) {
         }
         $result = $s->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $row) {
-            error_log(print_r($row, true));
             array_unshift($posts, array(
                 'Creatore' => $row['Creatore'],
                 'NrPost' => $row['NrPost'],
@@ -128,4 +127,20 @@ function getNotifications($username) {
         exit();
     }
     return $s->fetch()['N_Notifiche'];
+}
+
+function isLiked($username, $creatorPost, $nrPost) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM INTERAZIONI
+         WHERE Creatore = ? AND ElementId = ? AND Interagente = ? AND Tipo = 1;' // Tipo 1 = like
+    );
+    error_log('creatorPost: ' . $creatorPost . ' nrPost: ' . $nrPost . ' username: ' . $username);
+    if (!$s->execute(array($creatorPost, $nrPost, $username))) {
+        $s = null;
+        header('location: ../home.php?error=stmtfailed');
+        exit();
+    }
+    return $s->rowCount() > 0;
 }

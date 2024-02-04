@@ -58,8 +58,9 @@ create table BLOCCO (
 create table INTERAZIONI (
      Creatore varchar(50) not null,
      ElementId int not null,
+     Interagente varchar(50) not null,
      Tipo char not null,
-     constraint IDINTERAZIONI primary key (Creatore, ElementId));
+     constraint IDINTERAZIONI primary key (Creatore, ElementId, Interagente));
 
 create table NOTIFICHE (
      Ricevente varchar(50) not null,
