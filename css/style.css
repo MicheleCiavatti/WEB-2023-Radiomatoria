@@ -285,7 +285,7 @@ body > footer {
     height: auto;
 }
 
-section footer ul li {
+footer ul li {
     list-style: none;
     display: inline-block;
 }
