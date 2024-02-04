@@ -3,14 +3,14 @@ require_once "../classes/dbh.classes.php";
 function notify($sender, $receiver, $text, $request, $read) {
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
-        'SELECT *
+        'SELECT MAX(IdNotifica) AS MaxNotifica
          FROM NOTIFICHE
          WHERE Mandante = ? AND Ricevente = ?;'
     );
     if(!$s->execute(array($sender, $receiver))) {
         error_log("Errore nell'esecuzione della query SELECT: " . print_r($s->errorInfo(), true));
     }
-    $nid = $s->rowCount() + 1;
+    $nid = $s->fetch()['MaxNotifica'] + 1;
     $s = $dbh->connect()->prepare(
         'INSERT INTO NOTIFICHE (Mandante, Ricevente, IdNotifica, TestoNotifica, Richiesta, Lettura)
          VALUES (?, ?, ?, ?, ?, ?);'
