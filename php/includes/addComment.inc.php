@@ -4,15 +4,18 @@ session_start();
 
 if (isset($_POST['comment_text'])) {   
     $uid = $_SESSION['NomeUtente'];
-    if (isset($_SESSION['from_home'])) $stringHeader = 'location: ../home.php';
-    else $stringHeader = 'location: ../profile.php?id=' . $uid;     
+    if (isset($_POST['from_home'])) {
+        $stringHeader = 'location: ../home.php';
+    } else {
+        $stringHeader = 'location: ../profile.php?id=' . $uid;
+    }
     $comment_text = $_POST['comment_text'];
     $date = date("Y-m-d H:i:s");
     $post_author = $_POST['post_author'];
     $post_number = $_POST['post_number'];
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
-        'SELECT *
+        'SELECT MAX(NrCommento)
          FROM COMMENTI
          WHERE Creatore = ? AND NrPost = ?;'
     );
@@ -21,7 +24,7 @@ if (isset($_POST['comment_text'])) {
         header($stringHeader . '&error=stmtfailed');
         exit();
     }
-    $nrComment = $s->rowCount() + 1;
+    $nrComment = ($s->fetch(PDO::FETCH_NUM))[0] + 1;
     if (isset($_FILES['comment_image']) && !empty($_FILES['comment_image']['name']) && $_FILES['comment_image']['error'] == 0) {
         $imgDir = __DIR__ . "/../../img/";
         $imgName = "comment_" . $post_author . "_" . $post_number . "_" . $nrComment . "." . pathinfo($_FILES['comment_image']['name'], PATHINFO_EXTENSION);
@@ -36,7 +39,7 @@ if (isset($_POST['comment_text'])) {
     );
     if (!$s->execute(array($post_author, $date, $comment_text, $comment_pic, $nrComment, $post_number, $uid))) {
         $s = null;
-        header($stringHeader. '&error=stmtfailed');
+        header($stringHeader . '&error=stmtfailed');
         exit();
     }
     header($stringHeader);

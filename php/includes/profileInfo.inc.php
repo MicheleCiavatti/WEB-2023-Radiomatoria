@@ -92,12 +92,103 @@ function profileAccess($username) {
     return array($utente, $frequenze, $orari, $amici, $seguiti, $bloccati, $post);
 }
 
+function getPosts($username) {
+    $dbh = new Dbh;
+    if ($username == null) {
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM POST
+             ORDER BY DataPost DESC
+             LIMIT 20;'
+        );
+        if (!$s->execute()) {
+            return false;
+        }
+    } else {
+        $s = $dbh->connect()->prepare(
+            'SELECT * 
+             FROM POST P
+             WHERE P.Creatore IN 
+                (SELECT F.Followed
+                 FROM FOLLOW F
+                 WHERE F.Follower = ?)
+             OR P.Creatore IN 
+                (SELECT A.Amico1
+                 FROM AMICIZIA A
+                 WHERE A.Amico2 = ?)
+             ORDER BY P.DataPost DESC
+             LIMIT 10;'
+        );
+        if (!$s->execute([$username, $username])) {
+            return false;
+        }
+    }
+    $result = $s->fetchAll(PDO::FETCH_ASSOC);
+    $posts = [];
+    foreach ($result as $row) {
+        $posts[] = array(
+            'Creatore' => $row['Creatore'],
+            'NrPost' => $row['NrPost'],
+            'DataPost' => $row['DataPost'],
+            'TestoPost' => $row['TestoPost'],
+            'ImmaginePost' => $row['ImmaginePost'],
+        );
+    }
+    if ($username != null) {
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM POST
+             WHERE CREATORE NOT IN 
+                (SELECT F.Followed
+                 FROM FOLLOW F
+                 WHERE F.Follower = ?)
+             AND CREATORE NOT IN
+                (SELECT A.Amico1
+                 FROM AMICIZIA A
+                 WHERE A.Amico2 = ?)
+             AND CREATORE != ?
+             ORDER BY DataPost DESC
+             LIMIT 3;'
+        );
+        if (!$s->execute([$username, $username, $username])) {
+            return false;
+        }
+        $result = $s->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            error_log(print_r($row, true));
+            array_unshift($posts, array(
+                'Creatore' => $row['Creatore'],
+                'NrPost' => $row['NrPost'],
+                'DataPost' => $row['DataPost'],
+                'TestoPost' => $row['TestoPost'],
+                'ImmaginePost' => $row['ImmaginePost'],
+            ));
+        }
+    }
+    return $posts;
+}
+
 function isFriend($other) {
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
         'SELECT *
          FROM AMICIZIA
          WHERE Amico1 = ? AND Amico2 = ?;'
+    );
+    if (!$s->execute(array($_SESSION['NomeUtente'], $other))) {
+        $s = null;
+        header('location: ../profile.php?id=' . $other . '&error=stmtfailed');
+        exit();
+    }
+    return $s->rowCount() > 0;
+}
+
+function friendshipRequested($other) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM NOTIFICHE
+         WHERE Mandante = ? AND Ricevente = ? AND Richiesta = 1;'
     );
     if (!$s->execute(array($_SESSION['NomeUtente'], $other))) {
         $s = null;
@@ -137,200 +228,20 @@ function isBlocked($other) {
     return $s->rowCount() > 0;
 }
 
-function selectPostProfile($username, $relation_selection, $sort_selection, $order) {
+function resetPropic($username) {
     $dbh = new Dbh;
-    $query = "SELECT POST.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikePost
-    FROM (POST LEFT JOIN INTERAZIONI ON POST.NrPost = INTERAZIONI.ElementIdPost AND POST.Creatore = INTERAZIONI.ElementCreator AND INTERAZIONI.ElementIdCommento IS NULL)
-    LEFT JOIN COMMENTI ON POST.NrPost = COMMENTI.NrPost AND POST.Creatore = COMMENTI.Creatore";
-
-    switch($relation_selection) {
-        case "create":
-            $condition = " WHERE POST.Creatore = ?";
-            break;
-        case "like":
-            case "dislike":
-                $condition = " WHERE INTERAZIONI.Creatore = ? AND INTERAZIONI.Tipo = ?";
-                break;
-        case "comment":
-            $condition = " WHERE COMMENTI.AutoreCommento = ?";
-            break;
-        case "none":
-            default:
-                $condition = "";
-                break;
+    $s = $dbh->connect()->prepare(
+        'UPDATE UTENTI
+         SET FotoProfilo = "../img/default.png"
+         WHERE NomeUtente = ?;'
+    );
+    if (!$s->execute(array($username))) {
+        $s = null;
+        header('location: ../profile.php?id=' . $username . '&error=stmtfailed');
+        exit();
     }
-
-    $query .= $condition;
-    $query .= " GROUP BY POST.NrPost, POST.Creatore";
-    switch($sort_selection) {
-        case "data":
-            $query .= " ORDER BY DataPost";                
-            break;
-        case "like":
-            $query .= " HAVING INTERAZIONI.Tipo = ? ORDER BY COUNT(INTERAZIONI.Tipo)";  
-            break;
-        case "comm":
-            $query .= " ORDER BY COUNT(COMMENTI.NrCommento)";                
-            break;
-        case "none":
-            default:
-                $order = false;
-                break;
-    }
-    if ($order == true) {
-        $query .= " DESC";
-    }
-    $stmt = $dbh->connect()->prepare($query);
-
-    if(isset($_SESSION['NomeUtente'])) {
-        $decor = "SELECT CONCAT(INTERAZIONI.ElementIdPost, '_', INTERAZIONI.ElementCreator, '_', INTERAZIONI.ElementIdCommento) FROM
-        (INTERAZIONI LEFT JOIN POST ON INTERAZIONI.ElementIdPost = POST.NrPost AND INTERAZIONI.ElementCreator = POST.Creatore AND INTERAZIONI.ElementIdCommento IS NULL)
-        LEFT JOIN COMMENTI ON INTERAZIONI.ElementIdPost = COMMENTI.NrPost AND INTERAZIONI.ElementCreator = COMMENTI.Creatore AND INTERAZIONI.ElementIdCommento = COMMENTI.NrCommento";
-        $decor .= $condition;
-        $decor .= " AND INTERAZIONI.Creatore = ? AND INTERAZIONI.Tipo = ?";
-        $deco = $dbh->connect()->prepare($decor);
-        $element_id_like = [];
-        $element_id_dislike = [];
-    }
-            
-    switch($relation_selection) {
-        case "like": 
-            if(isset($_SESSION['NomeUtente'])) {
-                if(!$deco->execute(array($username, true, $_SESSION['NomeUtente'], false))) {
-                    $deco = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-                $element_id_dislike = $deco->fetchAll(PDO::FETCH_NUM);
-                if(!$deco->execute(array($username, true, $_SESSION['NomeUtente'], true))) {
-                    $deco = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-                $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
-            }
-            if($sort_selection == "like") {
-                if(!$stmt->execute(array($username, true, true))) {
-                    $stmt = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-            } else {
-                if(!$stmt->execute(array($username, true))) {
-                    $stmt = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-            }
-            break;
-        case "dislike":
-            if(isset($_SESSION['NomeUtente'])) {
-                if(!$deco->execute(array($username, false, $_SESSION['NomeUtente'], false))) {
-                    $deco = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-                $element_id_dislike = $deco->fetchAll(PDO::FETCH_NUM);
-                if(!$deco->execute(array($username, false, $_SESSION['NomeUtente'], true))) {
-                    $deco = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-                $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
-            }
-            if($sort_selection == "like") {
-                if(!$stmt->execute(array($username, false, true))) {
-                    $stmt = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-            } else {
-                if(!$stmt->execute(array($username, false))) {
-                    $stmt = null;
-                    header('location: ../../login.html?error=stmtfailed');
-                    exit();
-                }
-            }
-            break;
-        case "create":
-            case "comment":
-                if(isset($_SESSION['NomeUtente'])) {
-                    if(!$deco->execute(array($username, $_SESSION['NomeUtente'], false))) {
-                        $deco = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                    $element_id_dislike = $deco->fetchAll(PDO::FETCH_NUM);
-                    if(!$deco->execute(array($username, $_SESSION['NomeUtente'], true))) {
-                        $deco = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                    $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
-                }
-                if($sort_selection == "like") {
-                    if(!$stmt->execute(array($username, true))) {
-                        $stmt = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                } else {
-                    if(!$stmt->execute($username)) {
-                        $stmt = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                }
-                break;
-        case "none":
-            default:
-                if(isset($_SESSION['NomeUtente'])) {
-                    if(!$deco->execute(array($_SESSION['NomeUtente'], false))) {
-                        $deco = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                    $element_id_dislike = $deco->fetchAll(PDO::FETCH_NUM);
-                    if(!$deco->execute(array($_SESSION['NomeUtente'], true))) {
-                        $deco = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                    $element_id_like = $deco->fetchAll(PDO::FETCH_NUM);
-                }
-                if($sort_selection == "like") {
-                    if(!$stmt->execute(true)) {
-                        $stmt = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                } else {
-                    if(!$stmt->execute()) {
-                        $stmt = null;
-                        header('location: ../../login.html?error=stmtfailed');
-                        exit();
-                    }
-                }
-                break;
-    }
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if(!isset($result[0]['Creatore'])) {
-        return array(null, null, null);
-    }
-    $post_list = [];
-    foreach ($result as $row) {
-        $post_list[] = array(
-            'Creatore' => $row['Creatore'],
-            'NrPost' => $row['NrPost'],
-            'DataPost' => $row['DataPost'],
-            'TestoPost' => $row['TestoPost'],
-            'ImmaginePost' => $row['ImmaginePost'],
-            'LikePost' => $row['LikePost'],
-            'DislikePost' => $row['DislikePost']
-        );
-    }
-    return array($post_list, $element_id_like, $element_id_dislike);
 }
+
 
 function getComments($creatorPost, $nrPost) {
     $dbh = new Dbh;
@@ -338,6 +249,7 @@ function getComments($creatorPost, $nrPost) {
         'SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikeCommento
          FROM COMMENTI LEFT JOIN INTERAZIONI ON (COMMENTI.NrPost = INTERAZIONI.ElementIdPost AND COMMENTI.Creatore = INTERAZIONI.ElementCreator AND COMMENTI.NrCommento = INTERAZIONI.ElementIdCommento)
          WHERE COMMENTI.Creatore = ? AND COMMENTI.NrPost = ?
+         GROUP BY COMMENTI.Creatore, COMMENTI.NrPost, COMMENTI.NrCommento
          ORDER BY DataCommento DESC;'
     );
     if (!$s->execute(array($creatorPost, $nrPost))) {
@@ -364,34 +276,4 @@ function getComments($creatorPost, $nrPost) {
         );
     }
     return $comments;
-}
-
-  
-function friendshipRequested($user, $other) {
-    $dbh = new Dbh;
-    $s = $dbh->connect()->prepare(
-        'SELECT *
-         FROM NOTIFICHE
-         WHERE Mandante = ? AND Ricevente = ? AND Richiesta = 1;'
-    );
-    if (!$s->execute(array($user, $other))) {
-        $s = null;
-        header('location: ../profile.php?id=' . $other . '&error=stmtfailed');
-        exit();
-    }
-    return $s->rowCount() > 0;
-}
-
-function resetPropic($username) {
-    $dbh = new Dbh;
-    $s = $dbh->connect()->prepare(
-        'UPDATE UTENTI
-         SET FotoProfilo = "../img/default.png"
-         WHERE NomeUtente = ?;'
-    );
-    if (!$s->execute(array($username))) {
-        $s = null;
-        header('location: ../profile.php?id=' . $username . '&error=stmtfailed');
-        exit();
-    }
 }

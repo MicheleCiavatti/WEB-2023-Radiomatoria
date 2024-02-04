@@ -4,11 +4,16 @@ require_once "../classes/dbh.classes.php";
 
 if (isset($_POST['post_text'])) {
     $uid = $_SESSION['NomeUtente'];
+    if (isset($_POST['from_home'])) {
+        $stringHeader = 'location: ../home.php';
+    } else {
+        $stringHeader = 'location: ../profile.php?id=' . $uid;
+    }
     $text = $_POST['post_text'];
     $date = date("Y-m-d H:i:s");
     $dbh = new Dbh;
     $stmt = $dbh->connect()->prepare(
-        'SELECT *
+        'SELECT MAX(NrPost)
          FROM POST
          WHERE Creatore = ?;'
     );
@@ -17,7 +22,7 @@ if (isset($_POST['post_text'])) {
         header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
         exit();
     }
-    $nrPost = $stmt->rowCount() + 1;
+    $nrPost = ($stmt->fetch(PDO::FETCH_NUM))[0] + 1;
     if (isset($_FILES['post_image']) && !empty($_FILES['post_image']['name']) && $_FILES['post_image']['error'] == 0) {
         $imgDir = __DIR__ . "/../../img/";
         $imgName = "post_" . $uid . "_" . $nrPost . "." . pathinfo($_FILES['post_image']['name'], PATHINFO_EXTENSION);
@@ -32,8 +37,8 @@ if (isset($_POST['post_text'])) {
     );
     if (!$s->execute(array($uid, $date, $text, $image, $nrPost))) {
         $s = null;
-        header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
+        header($stringHeader . '&error=stmtfailed');
         exit();
     }
-    header('location: ../profile.php?id=' . $uid . '&error=none');
+    header($stringHeader);
 }

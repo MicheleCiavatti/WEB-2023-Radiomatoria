@@ -80,9 +80,10 @@ function getPosts($username) {
 function getComments($creatorPost, $nrPost) {
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
-        'SELECT *
-         FROM COMMENTI
-         WHERE Creatore = ? AND NrPost = ?
+        'SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikeCommento
+         FROM COMMENTI LEFT JOIN INTERAZIONI ON (COMMENTI.NrPost = INTERAZIONI.ElementIdPost AND COMMENTI.Creatore = INTERAZIONI.ElementCreator AND COMMENTI.NrCommento = INTERAZIONI.ElementIdCommento)
+         WHERE COMMENTI.Creatore = ? AND COMMENTI.NrPost = ?
+         GROUP BY COMMENTI.Creatore, COMMENTI.NrPost, COMMENTI.NrCommento
          ORDER BY DataCommento DESC;'
     );
     if (!$s->execute(array($creatorPost, $nrPost))) {
@@ -91,12 +92,22 @@ function getComments($creatorPost, $nrPost) {
         exit();
     }
     $result = $s->fetchAll(PDO::FETCH_ASSOC);
+    if(!isset($result[0]['Creatore'])) {
+        return null;
+    }
     $comments = [];
     foreach ($result as $row) {
-        $comments[] = array('AutoreCommento' => $row['AutoreCommento'], 
-                            'DataCommento' => $row['DataCommento'], 
-                            'TestoCommento' => $row['TestoCommento'], 
-                            'ImmagineCommento' => $row['ImmagineCommento']);
+        $comments[] = array(
+            'Creatore' => $row['Creatore'],
+            'NrPost' => $row['NrPost'],
+            'AutoreCommento' => $row['AutoreCommento'],
+            'NrCommento' => $row['NrCommento'],
+            'DataCommento' => $row['DataCommento'],
+            'TestoCommento' => $row['TestoCommento'],
+            'ImmagineCommento' => $row['ImmagineCommento'],
+            'LikeCommento' => $row['LikeCommento'],
+            'DislikeCommento' => $row['DislikeCommento']
+        );
     }
     return $comments;
 }
