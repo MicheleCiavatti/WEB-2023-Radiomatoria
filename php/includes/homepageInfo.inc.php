@@ -144,3 +144,18 @@ function isLiked($username, $creatorPost, $nrPost) {
     }
     return $s->rowCount() > 0;
 }
+
+function getLikes($creatorPost, $nrPost) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT COUNT(*) AS N_Likes
+         FROM INTERAZIONI
+         WHERE Creatore = ? AND ElementId = ? AND Tipo = 1;' // Tipo 1 = like
+    );
+    if (!$s->execute(array($creatorPost, $nrPost))) {
+        $s = null;
+        header('location: ../home.php?error=stmtfailed');
+        exit();
+    }
+    return $s->fetch()['N_Likes'];
+}

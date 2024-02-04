@@ -78,13 +78,18 @@
                         <!-- like/un-like button -->
                         <?php if (isset($_SESSION['NomeUtente'])): ?>
                             <footer>
-                            <input type="hidden" value="<?= strval($post['Creatore']); ?>">
-                                <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
-                                    <button class="like_button">Like</button>
-                                <?php else: ?>
-                                    <button class="unlike_button">Un-like</button>
-                                <?php endif; ?>
-                            <input type="hidden" value="<?= strval($post['NrPost']); ?>">
+                                <ul>
+                                    <li>Likes: <?= getLikes($post['Creatore'], $post['NrPost']) ?></li>
+                                    <li>
+                                        <input type="hidden" value="<?= strval($post['Creatore']); ?>">
+                                            <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
+                                                <button class="like_button">Like</button>
+                                            <?php else: ?>
+                                                <button class="unlike_button">Un-like</button>
+                                            <?php endif; ?>
+                                        <input type="hidden" value="<?= strval($post['NrPost']); ?>">
+                                    </li>
+                                </ul>
                             </footer>
                         <?php endif; ?>
                     </header>

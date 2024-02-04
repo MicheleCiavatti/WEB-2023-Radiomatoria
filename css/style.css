@@ -284,3 +284,7 @@ body > footer {
     width: 100%;
     height: auto;
 }
+
+footer  ul  li {
+    display: inline-block;
+}
