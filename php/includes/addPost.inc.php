@@ -8,7 +8,7 @@ if (isset($_POST['post_text'])) {
     $date = date("Y-m-d H:i:s");
     $dbh = new Dbh;
     $stmt = $dbh->connect()->prepare(
-        'SELECT *
+        'SELECT MAX(NrPost) AS MaxPost
          FROM POST
          WHERE Creatore = ?;'
     );
@@ -17,7 +17,7 @@ if (isset($_POST['post_text'])) {
         header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
         exit();
     }
-    $nrPost = $stmt->rowCount() + 1;
+    $nrPost = $stmt->fetch()['MaxPost'] + 1;
     if (isset($_FILES['post_image']) && !empty($_FILES['post_image']['name']) && $_FILES['post_image']['error'] == 0) {
         $imgDir = __DIR__ . "/../../img/";
         $imgName = "post_" . $uid . "_" . $nrPost . "." . pathinfo($_FILES['post_image']['name'], PATHINFO_EXTENSION);
