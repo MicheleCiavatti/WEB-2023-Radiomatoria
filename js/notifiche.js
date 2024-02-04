@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     /* Handling the refuse friendship buttons */
-    const refuseFriendButtons = document.getElementsByClassName('removenotification');
+    const refuseFriendButtons = document.getElementsByClassName('friendrefuse');
     if (refuseFriendButtons.length > 0) {
         for (i = 0; i < refuseFriendButtons.length; i++) {
             let button = refuseFriendButtons[i];
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
             let nid = li.id.slice(3);
             button.addEventListener('click', function() {
                 outcomeNotification(nid, other, "ha rifiutato la tua richiesta di amicizia");
-                removeNotification(li);
             });
         }
     }
@@ -57,7 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let button = acceptFriendButtons[i];
             let li = button.closest('li');
             let other = li.querySelector('header h4 a').innerHTML;
-            button.addEventListener('click', function() { acceptFriend(other, li) });
+            let nid = li.id.slice(3);
+            button.addEventListener('click', function() { acceptFriend(other, nid) });
         }
     }
     /* Handling the remove notification buttons */
@@ -66,8 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
         for (i = 0; i < removeNotificationButtons.length; i++) {
             let button = removeNotificationButtons[i];
             let li = button.closest('li');
+            let nid = li.id.slice(3);
             button.addEventListener('click', function() {
-                removeNotification(li);
+                removeNotification(nid);
             });
         }
     }
@@ -101,7 +102,7 @@ function readNotification(li) {
     xhr.send();
 }
 
-function acceptFriend(other, li) {
+function acceptFriend(other, nid) {
     const xhr = new XMLHttpRequest();
     const url = 'functions/acceptFriendRequest.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
@@ -109,9 +110,7 @@ function acceptFriend(other, li) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             console.log('Richiesta di amicizia accettata con successo dal server');
-            nid = li.id.slice(3);
             outcomeNotification(nid, other, "è diventato tuo amico");
-            removeNotification(li);
         } else if (xhr.readyState == 4 && xhr.status != 200) {
             console.error("Errore durante l'accettazione della richiesta di amicizia:", xhr.status);
         }
@@ -119,8 +118,8 @@ function acceptFriend(other, li) {
     xhr.send();
 }
 
-function removeNotification(li) {
-    let nid = li.id.slice(3);
+function removeNotification(nid) {
+    let li = document.getElementById("nid" + nid);
     let list = li.parentNode;
     let xhr = new XMLHttpRequest();
     let url = 'functions/removeNotification.php?nid=' + encodeURIComponent(nid);
@@ -145,7 +144,7 @@ function removeNotification(li) {
 
 function outcomeNotification(nid, senderid, outcome) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/outcomeNotification.php?username=' + encodeURIComponent(username) + '&nid=' + encodeURIComponent(nid) + '&senderid=' + encodeURIComponent(senderid) + '&outcome=' + encodeURIComponent(outcome);
+    let url = 'functions/outcomeNotification.php?username=' + encodeURIComponent(username) + '&senderid=' + encodeURIComponent(senderid) + '&outcome=' + encodeURIComponent(outcome);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 

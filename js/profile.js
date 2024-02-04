@@ -18,9 +18,6 @@ const remove_comment_button = document.getElementsByName("remove_comment");
 const comment_post_button = document.getElementsByName("comment_post");
 const respond_comment_button = document.getElementsByName("answer_comment");
 
-const select_form = document.getElementById("select_form");
-const post_column = document.getElementById("post_column");
-
 function decorateTable(start, end, color) {
     let oraInizio = start.slice(0,2);
     let minutiInizio = start.slice(3,5);
@@ -243,26 +240,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     if(comment_post_button.length + respond_comment_button.length > 0) {
-        const add_comment = document.getElementById("add_comment_form");
-        add_comment.style.display = "none";
-        const comment_reset = document.getElementById("comment_reset");
-        comment_reset.addEventListener("click", function() { toggle(add_comment); });
-        const comment_text = document.getElementById("comment_text");
+        const comment_reset = document.getElementsByClassName("comment_reset");
+        for(i=0; i<comment_reset.length; i++) {
+            let form = comment_reset[i].closest("form");
+            form.style.display = "none";
+            comment_reset[i].addEventListener("click", function() { toggle(form); });
+        }
         if(comment_post_button.length > 0) {
             for(i=0; i<comment_post_button.length; i++) {
                 let button = comment_post_button[i];
-                let pid = button.id.split("_")[1];
-                let author = button.id.split("_")[2];
-                button.addEventListener("click", function() { mostraFormCommenti(add_comment, pid, author, null); });
+                let add_comment = document.getElementById("add_" + button.id);
+                button.addEventListener("click", function() { mostraFormCommenti(add_comment, null); });
             }
         }
         if(respond_comment_button.length > 0) {
             for(i=0; i<respond_comment_button.length; i++) {
                 let button = respond_comment_button[i];
-                let author = button.innerText.slice(11);
-                let pid = button.id.split("_")[1];
-                let creator = button.id.split("_")[2];
-                button.addEventListener("click", function() { mostraFormCommenti(add_comment, pid, creator, author); });
+                let risposta = button.innerText.slice(11);
+                add_comment = document.getElementById("add_" + button.id.split("-")[0]);
+                button.addEventListener("click", function() { mostraFormCommenti(add_comment, risposta); });
             }
         }
     }
@@ -407,7 +403,7 @@ function notify(username, request) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log('Notifica inviata');
-            //location.reload();
+            location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error("Errore durante l'invio della notifica:", xhr.status);
         }
@@ -434,13 +430,14 @@ function removePost(pid, creator) {
 
 function removeComment(pid, creator, cid) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/removeComment.php?pid=' + encodeURIComponent(pid) + '&creator=' + encodeURIComponent(creator) + 'cid=' + encodeURIComponent(cid);
+    let url = 'functions/removeComment.php?pid=' + encodeURIComponent(pid) + '&creator=' + encodeURIComponent(creator) + '&cid=' + encodeURIComponent(cid);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log('Commento rimosso con successo dal server');
+            location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante rimozione commento:', xhr.status);
         }
@@ -456,16 +453,12 @@ function toggle(element) {
     }
 }
 
-function mostraFormCommenti(add_comment, element_id, author, risposta) {
+function mostraFormCommenti(add_comment, risposta) {
     toggle(add_comment);
-    document.getElementById("post_author").value = author;
-    document.getElementById("post_number").value = element_id;
-    add_comment.children.item[3].innerHTML = element_id;
-    add_comment.children.item[4].innerHTML = author;
     if(risposta) {
-        document.getElementById("comment_text").value = "@" + risposta;
+        add_comment.querySelector("textarea").value = "@" + risposta;
     } else {
-        document.getElementById("comment_text").placeholder = "Commento al post di " + author;
+        add_comment.querySelector("textarea").placeholder = "Commento al post di " + add_comment.querySelector("input").value;
     }
 }
 
