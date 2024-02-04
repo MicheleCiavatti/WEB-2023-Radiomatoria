@@ -71,11 +71,12 @@
                         <li>
                                 <?php if (isFriend($username)): ?>
                                     <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
-                                <?php else if (friendshipRequested($username)): ?>
+                                <?php elseif (friendshipRequested($username)): ?>
                                     <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
                                 <?php else: ?>
                                     <button class="access_required" id="friend_request">Richiedi amicizia</button>
-                                <?php endif; ?>
+                                <?php endif;
+                                    endif; ?>
                         </li>
                         <li>
                                 <?php if (isFollowed($username)): ?>
