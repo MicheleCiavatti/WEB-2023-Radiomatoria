@@ -1,15 +1,17 @@
 <?php
 require_once "../classes/dbh.classes.php";
+require_once "../functions/Notify.php";
 session_start();
 
 if (isset($_POST['comment_text'])) {   
     $uid = $_SESSION['NomeUtente'];
-    if (isset($_SESSION['from_home'])) $stringHeader = 'location: ../home.php';
+    if (isset($_POST['from_home'])) $stringHeader = 'location: ../home.php';
     else $stringHeader = 'location: ../profile.php?id=' . $uid;     
     $comment_text = $_POST['comment_text'];
     $date = date("Y-m-d H:i:s");
     $post_author = $_POST['post_author'];
     $post_number = $_POST['post_number'];
+
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
         'SELECT *
@@ -39,5 +41,6 @@ if (isset($_POST['comment_text'])) {
         header($stringHeader. '&error=stmtfailed');
         exit();
     }
+    notify($uid, $post_author, "L'utente " . $uid . " ha commentato il tuo post", 0, 0);
     header($stringHeader);
 }
