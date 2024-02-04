@@ -76,10 +76,10 @@
                     <section>
                         <p><?= strval($post['TestoPost']); ?></p>
                         <!-- like/un-like button -->
-                        <?php if (isset($_SESSION['NomeUtente'])): ?>
-                            <footer>
-                                <ul>
-                                    <li>Likes: <?= getLikes($post['Creatore'], $post['NrPost']) ?></li>
+                        <footer>
+                            <ul>
+                                <li>Likes: <?= getLikes($post['Creatore'], $post['NrPost']) ?></li>
+                                <?php if (isset($_SESSION['NomeUtente'])): ?>
                                     <li>
                                         <input type="hidden" value="<?= strval($post['Creatore']); ?>">
                                             <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
@@ -89,9 +89,9 @@
                                             <?php endif; ?>
                                         <input type="hidden" value="<?= strval($post['NrPost']); ?>">
                                     </li>
-                                </ul>
-                            </footer>
-                        <?php endif; ?>
+                                <?php endif; ?>
+                            </ul>
+                        </footer>
                     </header>
                     <!-- comments -->
                     </section>

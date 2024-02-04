@@ -261,9 +261,20 @@
                             <section>
                                 <p><?= $post[3]; ?></p>
                                 <!-- like/un-like button -->
-                                <?php if (isset($_SESSION['NomeUtente'])): ?>
-                                    <footer>Likes: <?= getLikes($post[0], $post[1]) ?></footer>
-                                <?php endif; ?>
+                                <footer>
+                                    <li>Likes: <?= getLikes($post[0], $post[1]) ?></li>
+                                    <?php if (isset($_SESSION['NomeUtente']) && $_SESSION['NomeUtente'] != $utente['NomeUtente']): ?>
+                                        <li>
+                                            <input type="hidden" value="<?= $post[0]; ?>">
+                                            <?php if (!isLiked($_SESSION['NomeUtente'], $post[0], $post[1])): ?>
+                                                <button class="like_button">Like</button>
+                                            <?php else: ?>
+                                                <button class="unlike_button">Un-like</button>
+                                            <?php endif; ?>
+                                            <input type="hidden" value="<?= $post[1]; ?>">
+                                        </li>
+                                    <?php endif; ?>
+                                </footer>
                             </section>
                             <section>
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
