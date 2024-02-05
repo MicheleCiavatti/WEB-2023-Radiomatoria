@@ -111,8 +111,8 @@
                     <ul>
                         <?php foreach($frequenze as $f): ?>
                         <li id="f<?= str_replace('.', '_', $f)?>" class="remove_frequency_buttons">
-                            <?= $f ?>
-                            <button type="button" value="<?= $f ?>">Rimuovi</button>
+                            <p><?= $f ?></p>
+                            <p><button class="neg" type="button" value="<?= $f ?>">Rimuovi</button></p>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -143,8 +143,8 @@
                     <ul>
                         <?php foreach($orari as $intervallo): ?>
                             <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
-                                <?= $intervallo[0] ?> - <?= $intervallo[1]?>
-                                <button type="button">Rimuovi</button> 
+                                <p><?= $intervallo[0] ?> - <?= $intervallo[1]?></p>
+                                <p><button class="neg" type="button">Rimuovi</button></p>
                             </li>
                         <?php endforeach; ?>
                     </ul>

@@ -217,12 +217,6 @@ section > h3 {
     margin: 10px;
 }
 
-section > button {
-    border: none;
-    color: chocolate;
-    font-size: medium;
-}
-
 aside > ul {
     background-color: navajowhite;
 }
@@ -289,3 +283,31 @@ footer ul li {
     list-style: none;
     display: inline-block;
 }
+
+/* CSS */
+button.neg {
+  background: #e62143;
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-family: Mija,-apple-system,BlinkMacSystemFont,Roboto,"Roboto Slab","Droid Serif","Segoe UI",system-ui,Arial,sans-serif;
+  font-size: medium;
+  font-weight: 500;
+  justify-content: center;
+  line-height: 1;
+  padding: .5em 1em;
+  text-align: center;
+  text-decoration: none;
+  text-decoration-skip-ink: auto;
+  text-shadow: rgba(0, 0, 0, .3) 1px 1px 1px;
+  text-underline-offset: 1px;
+  transition: all .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  word-break: break-word;
+  border: 0;
+}
+
