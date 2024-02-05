@@ -59,7 +59,7 @@
                         <ul>
                             <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></label></li>  
                             <li><label><textarea name="post_text" placeholder="Scrivi un post" required></textarea></label></li>
-                            <li><button type="submit" name="upload_post">Pubblica</button></li>
+                            <li><button type="submit" class="pos" name="upload_post">Pubblica</button></li>
                         </ul>
                     </form>
                 </section>
@@ -83,7 +83,7 @@
                                     <li>
                                         <input type="hidden" value="<?= strval($post['Creatore']); ?>">
                                             <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
-                                                <button class="like_button">Like</button>
+                                                <button class="like_button pos">Like</button>
                                             <?php else: ?>
                                                 <button class="unlike_button neg">Un-like</button>
                                             <?php endif; ?>

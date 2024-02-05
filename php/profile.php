@@ -242,18 +242,19 @@
             <?php endif; ?>
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
-                    <header><h2>Post</h2></header>
-                    <?php if (isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                        <p>
-                            <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
-                                <ul>
-                                    <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></li>
-                                    <li><label><textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label></li>
-                                    <li><input class="pos" type="submit" name="upload_post" value="Pubblica"></li>
-                                </ul>
-                            </form>
-                        </p>
-                    <?php endif; ?>
+                <header><h2>Post</h2></header>
+                <?php if (isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                    <p>
+                        <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
+                            <ul>
+                                <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></li>
+                                <li><label><textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label></li>
+                                <li><input class="pos" type="submit" name="upload_post" value="Pubblica"></li>
+                            </ul>
+                        </form>
+                    </p>
+                <?php endif; ?>
+            </section>
                 <?php if (empty($post_list)): ?>
                     <p><?= $utente['NomeUtente'] ?> non ha alcun post.</p>
                 <?php else: ?>
@@ -316,7 +317,6 @@
                         </article>
                     <?php endforeach; ?>
             <?php endif; ?>
-            </section>
         </main>
         <script src="../js/profile.js" type="text/javascript"></script>
     </body>
