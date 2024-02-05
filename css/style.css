@@ -289,6 +289,11 @@ footer ul li {
     display: inline-block;
 }
 
+li:has(input[type="file"]) {
+    text-align: center;
+    font-style: italic;
+}
+
 label:has(input[type="file"]) {
     text-decoration: underline;
     cursor: pointer;
@@ -310,6 +315,21 @@ label:has(input[type="file"]):active {
 
 input[type="file"] {
     display: none;
+}
+
+textarea {
+    width: 90%;
+    height: 100px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    resize: none;
+}
+
+form:has(textarea) {
+    border: #cacaca 1px solid;
 }
 
 .neg {

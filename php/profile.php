@@ -246,9 +246,11 @@
                     <?php if (isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                         <p>
                             <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
-                                <label>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label>
-                                <label>Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
-                                <input type="submit" name="upload_post" value="Pubblica">
+                                <ul>
+                                    <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></li>
+                                    <li><label><textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label></li>
+                                    <li><input class="pos" type="submit" name="upload_post" value="Pubblica"></li>
+                                </ul>
                             </form>
                         </p>
                     <?php endif; ?>
