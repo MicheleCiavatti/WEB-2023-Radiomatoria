@@ -72,14 +72,16 @@
                                     <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
                                         <button class="neg" id="remove_follow" type="button">Rimuovi follow</button>
                                     <?php else: ?>
-                                        <button id="follow_button" type="button">Segui</button>
+                                        <button class="pos" id="follow_button" type="button">Segui</button>
                                     <?php endif; ?>
                             </li>
                         </ul>
                     <?php else: ?>
                         <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
-                            <label class="label_invisible">Nuova immagine profilo<input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required></label>
-                            <input type="submit" name="upload_propic" value="Cambia immagine">
+                            <ul>
+                                <li><label>Seleziona immagine<input type="file" class="neutral" name="profile_image" accept=".jpg, .jpeg, .png" required></label></li>
+                                <li><input type="submit" class="neutral" name="upload_propic" value="Cambia propic"></li>
+                            </ul>
                         </form>
                     <?php endif; ?>
                 <?php endif; ?>

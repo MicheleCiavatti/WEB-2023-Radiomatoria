@@ -284,13 +284,32 @@ header ul li {
     display: inline-block;
 }
 
-header ul:last-child {
-    float: right;
-}
-
 footer ul li {
     list-style: none;
     display: inline-block;
+}
+
+label:has(input[type="file"]) {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+label:has(input[type="file"]):hover {
+    background-color: #3498db;
+    color: #fff;
+}
+
+label:has(input[type="file"]) {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+label:has(input[type="file"]):active {
+    background-color: #3498db;
+    color: #fff;
+}
+
+input[type="file"] {
+    display: none;
 }
 
 .neg {

@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const button = removeFrequencyButtons[i];
             const id = button.parentElement.parentElement.id;
             const f_to_remove = button.parentElement.previousElementSibling.innerHTML;
-            console.log(id, f_to_remove);
             button.addEventListener('click', function() {removeFrequency(f_to_remove, username, id) });
         }
     }
