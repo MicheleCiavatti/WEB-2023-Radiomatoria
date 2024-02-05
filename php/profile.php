@@ -1,15 +1,7 @@
 <?php
     require_once './includes/profileInfo.inc.php';
+    require_once './includes/homepageInfo.inc.php';
     $username = $_GET['id']; //Get user owner of the profile
-    if(isset($_GET['relation'])) {
-        $relation = $_GET['relation'];
-        $sort = $_GET['sort'];
-        $order = $_GET['order'];
-    } else {
-        $relation = "none";
-        $sort = "data";
-        $order = 1;
-    }
     $data = profileAccess($username); 
     /*Adding user's info in local variables*/
     $utente = $data[0]; 
@@ -19,6 +11,7 @@
     $seguiti = $data[4]; 
     $bloccati = $data[5];
     $post_list = getPosts($username);
+    $n_notifications = isset($_SESSION['NomeUtente']) ? getNotifications($_SESSION['NomeUtente']) : 0;
     if(!isset($_SESSION['NomeUtente'])) {
         $_SESSION['NomeUtente'] = null;
     }
@@ -26,7 +19,7 @@
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <title>LongLight - Profilo di <?= $username?></title>
+        <title>LongLight - Profilo di <?= $username; ?></title>
         <meta charset="UTF-8"/>
         <link href="../css/style.css" rel="stylesheet" type="text/css"/>
     </head>
@@ -51,15 +44,19 @@
                     <li id="pag_guida"><a href="guida.php">Guida</a></li>
                     <li id="pag_profilo" <?php if ($_SESSION['NomeUtente'] == $username) echo 'class="current_page"'; ?>><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
-                    <li id="pag_notifiche"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                    <?php if ($n_notifications == 0): ?>
+                        <li id="pag_notifiche"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
+                    <?php else: ?>
+                        <li id="pag_notifiche"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche<sup>(<?= $n_notifications; ?>)</sup></a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
         <?php endif; ?>
         <main>
             <header>
                 <!--- Profile pic, name and buttons for friendship/follow --->
-                <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
-                <p id='profile_name'><?= $utente["NomeUtente"] ?></p>
+                <img src="<?= $utente['FotoProfilo']; ?>" alt=""/>
+                <p id='profile_name'><?= $utente["NomeUtente"]; ?></p>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <?php if ($username != $_SESSION['NomeUtente']): ?>
                         <ul id="comandi">
@@ -104,7 +101,7 @@
                     <li>Data di Nascita: <?= $utente['DataNascita']; ?></li>
                     <li>Indirizzo e-mail: <?= $utente['IndirizzoMail']; ?></li>
                 </ul>
-                <?php if ($username == $_SESSION['NomeUtente']): ?>
+                <?php if (isset($_SESSION['NomeUtente']) && $username == $_SESSION['NomeUtente']): ?>
                     <button class="access_required" id="change_public_fields">Modifica campi pubblici</button>
                     <form action="includes/alter_profile.inc.php" method="post" id="change_fields_form">
                         <table>
@@ -290,15 +287,15 @@
                         <button id="add_post_button" class="access_required">Aggiungi post</button>
                         <p>
                             <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
-                                <label>Immagine post<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></br>
-                                <label>Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
+                                <label for="post_image">Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></br>
+                                <label for="post_text">Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
                                 <input type="submit" name="upload_post" value="Pubblica">
                             </form>
                         </p>
                     <?php endif; ?>
                 </header>
                 <?php if (empty($post_list)): ?>
-                    <p><?= $utente['NomeUtente'] ?> non ha alcun post.</p>
+                    <p><?= $username; ?> non ha alcun post.</p>
                 <?php else:
                     foreach($post_list as $post):
                 ?>
@@ -314,11 +311,14 @@
                             <table>
                                 <tr>
                                     <td id="like_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['LikePost']; ?></td>
-                                    <td><button id="like_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" class="preference_button" name="like_button">Like</button></td>
+                                    <td><button id="like_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="like_button"';
+                                    if (isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Like</button></td>
+                                    
                                 </tr>
                                 <tr>
                                     <td id="dislike_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['DislikePost']; ?></td>
-                                    <td><button id="dislike_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" class="preference_button" name="dislike_button">Dislike</button></td>
+                                    <td><button id="dislike_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="dislike_button"';
+                                    if (isDisliked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Dislike</button></td>
                                 </tr>
                             </table>
                             <?php if(isset($_SESSION['NomeUtente'])): ?>
@@ -356,12 +356,14 @@
                                         <p><?=strval($comment['TestoCommento']);?></p>
                                         <table>
                                             <tr>
-                                                <td id="like_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $post['LikeCommento']; ?></td>
-                                                <td><button id="like_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>" class="preference_button" name="like_button">Like</button></td>
+                                                <td id="like_number_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $comment['LikeCommento']; ?></td>
+                                                <td><button id="like_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" name="like_button" 
+                                                <?php if (isLiked($_SESSION['NomeUtente'], $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif;?>>Like</button></td>
                                             </tr>
                                             <tr>
-                                                <td id="dislike_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $post['DislikeCommento']; ?></td>
-                                                <td><button id="dislike_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_<?= $comment['NrCommento']; ?>" class="preference_button" name="dislike_button">Dislike</button></td>
+                                                <td id="dislike_number_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $comment['DislikeCommento']; ?></td>
+                                                <td><button id="dislike_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" name="dislike_button"
+                                                <?php if (isDisliked($_SESSION['NomeUtente'], $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif;?>>Dislike</button></td>
                                             </tr>
                                         </table>
                                         <footer>
@@ -380,7 +382,7 @@
                         </section>
                     </article>
                 <?php endforeach;
-                    endif; ?>
+                endif; ?>
             </section>
             <!--************************************* HANDLING FRIEND LIST **************************************-->
             <?php if(!empty($amici)): ?>
