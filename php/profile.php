@@ -276,7 +276,7 @@
                                             <li>
                                                 <input type="hidden" value="<?= $post[0]; ?>">
                                                 <?php if (!isLiked($_SESSION['NomeUtente'], $post[0], $post[1])): ?>
-                                                    <button class="like_button">Like</button>
+                                                    <button class="like_button pos">Like</button>
                                                 <?php else: ?>
                                                     <button class="unlike_button neg">Un-like</button>
                                                 <?php endif; ?>
@@ -289,11 +289,13 @@
                             <section>
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
-                                        <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label>
-                                        <label>Testo commento<textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea></label>
-                                        <input type="hidden" name="post_author" value="<?= $post[0]?>">
-                                        <input type="hidden" name="post_number" value="<?= $post[1]?>">
-                                        <input type="submit" value="Pubblica">
+                                        <ul>
+                                            <li><label>Carica immagine per commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></li>
+                                            <li><label><textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea></label></li>
+                                            <li><input type="hidden" name="post_author" value="<?= $post[0]?>"></li>
+                                            <li><input type="hidden" name="post_number" value="<?= $post[1]?>"></li>
+                                            <li><input class="pos" type="submit" value="Pubblica"></li>
+                                        </ul>
                                     </form>
                                 <?php endif; ?>
                                 <ul>

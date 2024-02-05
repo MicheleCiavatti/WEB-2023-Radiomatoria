@@ -4,13 +4,13 @@ require_once "../functions/Notify.php";
 session_start();
 
 if (isset($_POST['comment_text'])) {   
-    $uid = $_SESSION['NomeUtente'];
-    if (isset($_POST['from_home'])) $stringHeader = 'location: ../home.php';
-    else $stringHeader = 'location: ../profile.php?id=' . $uid;     
+    $uid = $_SESSION['NomeUtente'];     
     $comment_text = $_POST['comment_text'];
     $date = date("Y-m-d H:i:s");
     $post_author = $_POST['post_author'];
     $post_number = $_POST['post_number'];
+    if (isset($_POST['from_home'])) $stringHeader = 'location: ../home.php';
+    else $stringHeader = 'location: ../profile.php?id=' . $post_author;
 
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
