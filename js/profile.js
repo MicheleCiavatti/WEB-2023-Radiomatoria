@@ -41,12 +41,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     /*Handling remove frequency buttons */
-    let removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
+    const removeFrequencyButtons = document.getElementsByClassName('remove_frequency_buttons');
     if (removeFrequencyButtons.length > 0) {
         for (i = 0; i < removeFrequencyButtons.length; i++) {
-            let button = removeFrequencyButtons[i];
-            let id = button.closest('li').id;
-            let f_to_remove = button.closest('li').innerHTML;
+            const button = removeFrequencyButtons[i];
+            const id = button.parentElement.parentElement.id;
+            const f_to_remove = button.parentElement.previousElementSibling.innerHTML;
+            console.log(id, f_to_remove);
             button.addEventListener('click', function() {removeFrequency(f_to_remove, username, id) });
         }
     }
@@ -58,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = button.closest('li').id;
             const start = button.previousElementSibling.value;
             const end = button.nextElementSibling.value;
-            console.log(start, end, id);
             button.addEventListener('click', function() {removeTimeInterval(username, start, end, id) });
         }
     }

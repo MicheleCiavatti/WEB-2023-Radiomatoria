@@ -110,9 +110,9 @@
                     <header><h2>Frequenze</h2></header>
                     <ul>
                         <?php foreach($frequenze as $f): ?>
-                        <li id="f<?= str_replace('.', '_', $f)?>" class="remove_frequency_buttons">
+                        <li id="f<?= str_replace('.', '_', $f)?>">
                             <p><?= $f ?></p>
-                            <p><button class="neg" type="button" value="<?= $f ?>">Rimuovi</button></p>
+                            <p><button class="remove_frequency_buttons neg" type="button" value="<?= $f ?>">Rimuovi</button></p>
                         </li>
                         <?php endforeach; ?>
                     </ul>
