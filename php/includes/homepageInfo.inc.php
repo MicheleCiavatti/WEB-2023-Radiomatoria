@@ -5,8 +5,9 @@ function getPosts($username) {
     $dbh = new Dbh;
     if ($username == null) {
         $s = $dbh->connect()->prepare(
-            'SELECT *
-             FROM POST
+            'SELECT P.*, COUNT(CASE WHEN I.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT I.Tipo THEN 1 END) AS DislikePost
+             FROM POST P LEFT JOIN INTERAZIONI I ON P.NrPost = I.ElementId AND P.Creatore = I.Creatore
+             GROUP BY P.Creatore, P.NrPost
              ORDER BY DataPost DESC
              LIMIT 20;'
         );
@@ -15,20 +16,20 @@ function getPosts($username) {
         }
     } else {
         $s = $dbh->connect()->prepare(
-            'SELECT * 
-             FROM POST P
+            'SELECT P.*, COUNT(CASE WHEN I.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT I.Tipo THEN 1 END) AS DislikePost
+             FROM POST P LEFT JOIN INTERAZIONI I ON P.NrPost = I.ElementId AND P.Creatore = I.Creatore
              WHERE P.Creatore IN 
-                (SELECT F.Followed
+                ((SELECT F.Followed
                  FROM FOLLOW F
-                 WHERE F.Follower = ?)
-             OR P.Creatore IN 
+                 WHERE F.Follower = ?),
                 (SELECT A.Amico1
                  FROM AMICIZIA A
-                 WHERE A.Amico2 = ?)
+                 WHERE A.Amico2 = ?), ?)
+             GROUP BY P.Creatore, P.NrPost
              ORDER BY P.DataPost DESC
-             LIMIT 10;'
+             LIMIT 15;'
         );
-        if (!$s->execute([$username, $username])) {
+        if (!$s->execute(array($username, $username, $username))) {
             return false;
         }
     }
@@ -41,29 +42,35 @@ function getPosts($username) {
             'DataPost' => $row['DataPost'],
             'TestoPost' => $row['TestoPost'],
             'ImmaginePost' => $row['ImmaginePost'],
+            'LikePost' => $row['LikePost'],
+            'DislikePost' => $row['DislikePost'],
         );
     }
     if ($username != null) {
+        $limit = 20 - $s->rowCount();
         $s = $dbh->connect()->prepare(
-            'SELECT *
-             FROM POST
-             WHERE CREATORE NOT IN 
-                (SELECT F.Followed
+            'SELECT P.*, COUNT(CASE WHEN I.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT I.Tipo THEN 1 END) AS DislikePost
+             FROM POST P LEFT JOIN INTERAZIONI I ON P.NrPost = I.ElementId AND P.Creatore = I.Creatore
+             WHERE P.Creatore NOT IN 
+             ((SELECT F.Followed
                  FROM FOLLOW F
-                 WHERE F.Follower = ?)
-             AND CREATORE NOT IN
+                 WHERE F.Follower = ?),
                 (SELECT A.Amico1
                  FROM AMICIZIA A
-                 WHERE A.Amico2 = ?)
-             AND CREATORE != ?
+                 WHERE A.Amico2 = ?), ?)
+             GROUP BY P.Creatore, P.NrPost
              ORDER BY DataPost DESC
-             LIMIT 3;'
+             LIMIT 20;'
         );
-        if (!$s->execute([$username, $username, $username])) {
+        if (!$s->execute(array($username, $username, $username))) {
             return false;
         }
+        $i = 0;
         $result = $s->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $row) {
+            if($i == $limit) {
+                break;
+            }
             error_log(print_r($row, true));
             array_unshift($posts, array(
                 'Creatore' => $row['Creatore'],
@@ -71,20 +78,38 @@ function getPosts($username) {
                 'DataPost' => $row['DataPost'],
                 'TestoPost' => $row['TestoPost'],
                 'ImmaginePost' => $row['ImmaginePost'],
-            ));
+                'LikePost' => $row['LikePost'],
+                'DislikePost' => $row['DislikePost'],
+                ));
+            $i++;
         }
     }
     return $posts;
 }
 
+function getNotifications($username) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT COUNT(*) AS N_Notifiche
+         FROM NOTIFICHE
+         WHERE Ricevente = ?;'
+    );
+    if (!$s->execute(array($username))) {
+        $s = null;
+        header('location: ../notifiche.php?id=' . $username . '&error=stmtfailed');
+        exit();
+    }
+    return $s->fetch()['N_Notifiche'];
+}
+
 function getComments($creatorPost, $nrPost) {
     $dbh = new Dbh;
     $s = $dbh->connect()->prepare(
-        'SELECT COMMENTI.*, COUNT(CASE WHEN INTERAZIONI.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT INTERAZIONI.Tipo THEN 1 END) AS DislikeCommento
-         FROM COMMENTI LEFT JOIN INTERAZIONI ON (COMMENTI.NrPost = INTERAZIONI.ElementIdPost AND COMMENTI.Creatore = INTERAZIONI.ElementCreator AND COMMENTI.NrCommento = INTERAZIONI.ElementIdCommento)
-         WHERE COMMENTI.Creatore = ? AND COMMENTI.NrPost = ?
-         GROUP BY COMMENTI.Creatore, COMMENTI.NrPost, COMMENTI.NrCommento
-         ORDER BY DataCommento DESC;'
+        'SELECT C.*, COUNT(CASE WHEN R.Tipo THEN 1 END) AS LikeCommento, COUNT(CASE WHEN NOT R.Tipo THEN 1 END) AS DislikeCommento
+         FROM COMMENTI C LEFT JOIN REAZIONI R ON (C.NrPost = R.ElementIdPost AND C.Creatore = R.Creatore AND C.NrCommento = R.ElementIdCommento)
+         WHERE C.Creatore = ? AND C.NrPost = ?
+         GROUP BY C.Creatore, C.NrPost, C.NrCommento
+         ORDER BY C.DataCommento DESC;'
     );
     if (!$s->execute(array($creatorPost, $nrPost))) {
         $s = null;
@@ -109,7 +134,68 @@ function getComments($creatorPost, $nrPost) {
             'DislikeCommento' => $row['DislikeCommento']
         );
     }
+    
     return $comments;
+}
+
+function isLiked($username, $creatorPost, $nrPost, $nrCommento) {
+    $dbh = new Dbh;
+    if(!$nrCommento) {
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM INTERAZIONI
+             WHERE Creatore = ? AND ElementId = ? AND Interagente = ? AND Tipo = 1;' // Tipo 1 = like
+        );
+        error_log('creatorPost: ' . $creatorPost . ' nrPost: ' . $nrPost . ' username: ' . $username);
+        if (!$s->execute(array($creatorPost, $nrPost, $username))) {
+            $s = null;
+            header('location: ../home.php?error=stmtfailed');
+            exit();
+        }
+    } else {
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM REAZIONI
+             WHERE Creatore = ? AND ElementIdPost = ? AND ElementIdCommento = ? AND Reagente = ? AND Tipo = 1;'
+        );
+        error_log('creatorPost: ' . $creatorPost . ' nrPost: ' . $nrPost . ' nrCommento: ' . $nrCommento . ' username: ' . $username);
+        if (!$s->execute(array($creatorPost, $nrPost, $nrCommento, $username))) {
+            $s = null;
+            header('location: ../home.php?error=stmtfailed');
+            exit();
+        }
+    }
+    return $s->rowCount() > 0;
+}
+
+function isDisliked($username, $creatorPost, $nrPost, $nrCommento) {
+    $dbh = new Dbh;
+    if(!$nrCommento) {
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM INTERAZIONI
+             WHERE Creatore = ? AND ElementId = ? AND Interagente = ? AND Tipo = 0;' // Tipo 0 = dislike
+        );
+        error_log('creatorPost: ' . $creatorPost . ' nrPost: ' . $nrPost . ' username: ' . $username);
+        if (!$s->execute(array($creatorPost, $nrPost, $username))) {
+            $s = null;
+            header('location: ../home.php?error=stmtfailed');
+            exit();
+        }
+    } else {
+        $s = $dbh->connect()->prepare(
+            'SELECT *
+             FROM REAZIONI
+             WHERE Creatore = ? AND ElementIdPost = ? AND ElementIdCommento = ? AND Reagente = ? AND Tipo = 0;'
+        );
+        error_log('creatorPost: ' . $creatorPost . ' nrPost: ' . $nrPost . ' nrCommento: ' . $nrCommento . ' username: ' . $username);
+        if (!$s->execute(array($creatorPost, $nrPost, $nrCommento, $username))) {
+            $s = null;
+            header('location: ../home.php?error=stmtfailed');
+            exit();
+        }
+    }
+    return $s->rowCount() > 0;
 }
 
 function resetPropic($username) {
