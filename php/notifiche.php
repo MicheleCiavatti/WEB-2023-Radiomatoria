@@ -39,10 +39,10 @@
                             <header><h3>Notifica da <a href="profile.php?id=<?=strval($n['Mandante'])?>"><?= strval($n['Mandante']); ?></a></h3></header>
                             <p><?= strval($n['TestoNotifica']); ?></p>
                             <?php if ($n['Richiesta'] == true): ?>
-                                <ul>
-                                    <li><button class="friendrefuse neg" name="friend_refuse">Rifiuta</button></li>
-                                    <li><button class="friendaccept pos" name="friend_accept">Accetta</button></li>
-                                </ul>
+                                    <ul>
+                                        <li><button class="friendrefuse neg" name="friend_refuse">Rifiuta</button></li>
+                                        <li><button class="friendaccept pos" name="friend_accept">Accetta</button></li>
+                                    </ul>
                             <?php else: ?>
                                 <!--- TODO: add button to remove notification -->
                                 <input type="hidden" name="notification_id" value="<?= strval($n['IdNotifica']); ?>">
