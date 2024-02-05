@@ -40,57 +40,20 @@
                             <p><?= strval($n['TestoNotifica']); ?></p>
                             <?php if ($n['Richiesta'] == true): ?>
                                 <ul>
-                                    <li><button class="friendrefuse" name="friend_refuse">Rifiuta</button></li>
-                                    <li><button class="friendaccept" name="friend_accept">Accetta</button></li>
+                                    <li><button class="friendrefuse neg" name="friend_refuse">Rifiuta</button></li>
+                                    <li><button class="friendaccept pos" name="friend_accept">Accetta</button></li>
                                 </ul>
                             <?php else: ?>
                                 <!--- TODO: add button to remove notification -->
                                 <input type="hidden" name="notification_id" value="<?= strval($n['IdNotifica']); ?>">
-                                <button class="removenotification" >Rimuovi notifica</button>
+                                <button class="removenotification neutral">Rimuovi notifica</button>
                             <?php endif; ?>
                         </section>
                     <?php endforeach; ?>
                 </section>
             <?php else: ?>
-                <p>Non hai nessuna notifica</p>
+                <section>Non hai nessuna notifica</section>
             <?php endif; ?>
-            <?php /*
-            <h2 id="notifications_total">Notifiche totali: </h2>
-            <section>
-                <h3>Da leggere</h3>
-                <ul id="unread_notifications_list">
-                    <?php foreach($notifiche_non_lette as $notifica): ?>
-                        <li id="nid<?= $notifica['IdNotifica'] ?>" onclick="readNotification($notifica['IdNotifica'])">
-                            <a href="profile.php?id=<?= $notifica['Mandante'] ?>"><?= $notifica['Mandante']; ?></a>
-                            <span><?= $notifica['TestoNotifica']; ?></span>
-                            <?php if($notifica['Richiesta'] == true): ?>
-                                <button name="friend_refuse" onclick="outcomeNotification($notifica['IdNotifica'], $notifica['Mandante'], 'ha rifiutato la tua richiesta di amicizia')">Rifiuta</button>
-                                <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['Mandante'])">Accetta</button>
-                            <?php else: ?>
-                                <button onclick="removeNotification($notifica['IdNotifica'])">Rimuovi</button>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </section>
-            <section>
-                <h3>Lette</h3>
-                <ul id="read_notifications_list">
-                    <?php foreach($notifiche_lette as $notifica): ?>
-                        <li>
-                            <a href="profile.php?id=<?= $notifica['Mandante'] ?>"><?= $notifica['Mandante']; ?></a>
-                            <span><?= $notifica['TestoNotifica']; ?></span>
-                            <?php if($notifica['Richiesta'] == true): ?>
-                                <button name="friend_refuse" onclick="outcomeNotification($notifica['IdNotifica'], $notifica['Mandante'], 'ha rifiutato la tua richiesta di amicizia')">Rifiuta</button>
-                                <button name="friend_accept" onclick="addFriend($notifica['IdNotifica'], $notifica['Mandante'])">Accetta</button>
-                            <?php else: ?>
-                                <button onclick="removeNotification($notifica['IdNotifica'])">Rimuovi</button>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </section>
-            */ ?>
         </main>
         <script src="../js/notifiche.js" type="text/javascript"></script>
     </body>

@@ -191,9 +191,9 @@
                             <?php foreach($amici as $amico):?>
                                 <li>
                                     <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1] ?>" alt=""/>
-                                    <a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a>
+                                    <p><a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a></p>
                                     <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <button class="remove_friend_buttons">Rimuovi</button>
+                                        <p><button class="remove_friend_buttons neg">Rimuovi</button></p>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach;?>
@@ -210,9 +210,9 @@
                             <?php foreach($seguiti as $seguito):?>
                                 <li>
                                     <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1] ?>" alt=""/>
-                                    <a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a>
+                                    <p><a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a></p>
                                     <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <button class="remove_follow_buttons" >Rimuovi</button>
+                                        <p><button class="remove_follow_buttons neg">Rimuovi</button></p>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach;?>
@@ -231,7 +231,7 @@
                                     <img src="<?= $bloccato[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
                                     <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <button class="access_required" >Perdona</button>
+                                        <button class="access_required pos">Perdona</button>
                                     <?php endif; ?>
                                 </li>
                                 

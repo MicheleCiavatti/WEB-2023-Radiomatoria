@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (removeFollowButtons.length > 0) {
         for (i = 0; i < removeFollowButtons.length; i++) {
             const button = removeFollowButtons[i];
-            const other = button.parentElement.querySelector('a').innerHTML;
+            const other = button.parentElement.parentElement.querySelector('a').innerHTML;
             button.addEventListener('click', function() { removeFollow(username, other) });
         }
     }
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (removeFriendButtons.length > 0) {
         for (i = 0; i < removeFriendButtons.length; i++) {
             const button = removeFriendButtons[i];
-            const other = button.parentElement.querySelector('a').innerHTML;
+            const other = button.parentElement.parentElement.querySelector('a').innerHTML;
             button.addEventListener('click', function() { removeFriend(username, other) });
         }
     }
