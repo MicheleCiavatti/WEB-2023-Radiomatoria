@@ -121,7 +121,7 @@
                     <!-- Form for adding frequencies -->
                     <form action="includes/addMHz.inc.php" method="post">
                         <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label>
-                        <input type="submit" value="Aggiungi">
+                        <input type="submit" class="neutral" value="Aggiungi">
                     </form>
                 </section>
             <?php endif; ?>
@@ -160,7 +160,7 @@
                         <form action="includes/addTimeSlot.inc.php" method="post">
                             <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
                             <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
-                            <input type="submit" value="Aggiungi">
+                            <input type="submit" class="neutral" value="Aggiungi">
                         </form>
                     <?php endif; ?>
                 </section>
