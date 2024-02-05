@@ -73,10 +73,9 @@
                         <?php if ($post['ImmaginePost'] != null): ?>
                             <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
                         <?php endif; ?>
-                    <section>
-                        <p><?= strval($post['TestoPost']); ?></p>
-                        <!-- like/un-like button -->
-                        <footer>
+                        <section>
+                            <p><?= strval($post['TestoPost']); ?></p>
+                            <!-- like/un-like button -->
                             <ul>
                                 <li>Likes: <?= getLikes($post['Creatore'], $post['NrPost']) ?></li>
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
@@ -91,10 +90,9 @@
                                     </li>
                                 <?php endif; ?>
                             </ul>
-                        </footer>
+                        </section>
                     </header>
                     <!-- comments -->
-                    </section>
                     <?php $comments = getComments($post['Creatore'], $post['NrPost']);?>
                     <section>
                         <?php if (isset($_SESSION['NomeUtente'])): ?>
