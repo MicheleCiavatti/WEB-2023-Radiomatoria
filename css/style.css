@@ -226,7 +226,8 @@ footer {
     font-weight: lighter;
 }
 
-aside, aside > section {
+aside, aside > p {
+    margin: 10px;
     background-color: navajowhite;
     color: black;
 }
@@ -239,7 +240,7 @@ section {
     color: black;
 }
 
-aside > section > ul {
+aside  > ul {
     list-style-type: square;
 }
 

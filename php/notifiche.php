@@ -55,6 +55,6 @@
                 <section>Non hai nessuna notifica</section>
             <?php endif; ?>
         </main>
-        <script src="../js/notifiche.js" type="text/javascript"></script>
+        <script src="../js/notifiche.js"></script>
     </body>
 </html>
