@@ -120,8 +120,8 @@
                     </ul>
                     <!-- Form for adding frequencies -->
                     <form action="includes/addMHz.inc.php" method="post">
-                        <label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label>
-                        <input type="submit" class="neutral" value="Aggiungi">
+                        <p><label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label></p>
+                        <p><input type="submit" class="neutral" value="Aggiungi"></p>
                     </form>
                 </section>
             <?php endif; ?>
@@ -158,9 +158,9 @@
                     <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
                         <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
                         <form action="includes/addTimeSlot.inc.php" method="post">
-                            <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
-                            <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
-                            <input type="submit" class="neutral" value="Aggiungi">
+                            <p><label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label></p>
+                            <p><label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label></p>
+                            <p><input type="submit" class="neutral" value="Aggiungi"></p>
                         </form>
                     <?php endif; ?>
                 </section>
@@ -169,16 +169,14 @@
             <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
                 <section>
                     <header><h2>Modifica password e indizio</h2></header>
-                    <ul>
-                        <li>Indizio: <?= $utente['Indizio']?></li>
-                    </ul>
+                    <p>Indizio: <?= $utente['Indizio']?></p>
                     <form action="includes/changeClue.inc.php" method="post">
-                        <label for="new_clue">Modifica l'indizio: <input name="new_clue" id="new_clue" required></label>
-                        <input type="submit" value="Modifica indizio">
+                        <p><label for="new_clue">Modifica l'indizio: <input name="new_clue" id="new_clue" required></label></p>
+                        <p><input type="submit" class="neutral" value="Modifica indizio"></p>
                     </form>
                     <form action="includes/changePW.inc.php" method="post">
-                        <label for="new_pw">Cambia password:<input name="new_pw" type="password" id="new_pw" minlength="8" required></label>
-                        <input type="submit" value="Modifica password">
+                        <p><label for="new_pw">Cambia password:<input name="new_pw" type="password" id="new_pw" minlength="8" required></label></p>
+                        <p><input type="submit" class="neutral" value="Modifica password"></p>
                     </form>
                 </section>
             <?php endif; ?>
