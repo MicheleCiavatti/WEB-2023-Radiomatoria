@@ -59,18 +59,18 @@
                             <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
                             <li>
                                     <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                        <button id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
+                                        <button class="neg" id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
                                     <?php else: ?>
                                         <?php if (friendshipRequested($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                            <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
+                                            <button class="neutral" id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
                                         <?php else: ?>
-                                            <button id="add_friend" type="button" value="Richiedi amicizia">Richiedi amicizia</button>
+                                            <button class="pos" id="add_friend" type="button" value="Richiedi amicizia">Richiedi amicizia</button>
                                         <?php endif; ?>
                                     <?php endif; ?>
                             </li>
                             <li>
                                     <?php if (isFollowed($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
-                                        <button id="remove_follow" type="button">Rimuovi follow</button>
+                                        <button class="neg" id="remove_follow" type="button">Rimuovi follow</button>
                                     <?php else: ?>
                                         <button id="follow_button" type="button">Segui</button>
                                     <?php endif; ?>
@@ -142,9 +142,13 @@
                     <header><h2>Orari</h2></header>
                     <ul>
                         <?php foreach($orari as $intervallo): ?>
-                            <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="remove_timeslot_buttons">
+                            <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>">
                                 <p><?= $intervallo[0] ?> - <?= $intervallo[1]?></p>
-                                <p><button class="neg" type="button">Rimuovi</button></p>
+                                <p>
+                                    <input type="hidden" value="<?= $intervallo[0] ?>">
+                                    <button class="remove_timeslot_buttons neg" type="button">Rimuovi</button>
+                                    <input type="hidden" value="<?= $intervallo[1] ?>">
+                                </p>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -270,7 +274,7 @@
                                                 <?php if (!isLiked($_SESSION['NomeUtente'], $post[0], $post[1])): ?>
                                                     <button class="like_button">Like</button>
                                                 <?php else: ?>
-                                                    <button class="unlike_button">Un-like</button>
+                                                    <button class="unlike_button neg">Un-like</button>
                                                 <?php endif; ?>
                                                 <input type="hidden" value="<?= $post[1]; ?>">
                                             </li>

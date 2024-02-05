@@ -54,11 +54,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const removeTimeIntervalButtons = document.getElementsByClassName('remove_timeslot_buttons');
     if (removeTimeIntervalButtons.length > 0) {
         for (i = 0; i < removeTimeIntervalButtons.length; i++) {
-            let button = removeTimeIntervalButtons[i];
-            let id = button.closest('li').id;
-            let times = button.closest('li').innerHTML.split('<')[0].split(' - ');
-            let start = times[0].trim();
-            let end = times[1].trim();
+            const button = removeTimeIntervalButtons[i];
+            const id = button.closest('li').id;
+            const start = button.previousElementSibling.value;
+            const end = button.nextElementSibling.value;
+            console.log(start, end, id);
             button.addEventListener('click', function() {removeTimeInterval(username, start, end, id) });
         }
     }

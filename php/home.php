@@ -85,7 +85,7 @@
                                             <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
                                                 <button class="like_button">Like</button>
                                             <?php else: ?>
-                                                <button class="unlike_button">Un-like</button>
+                                                <button class="unlike_button neg">Un-like</button>
                                             <?php endif; ?>
                                         <input type="hidden" value="<?= strval($post['NrPost']); ?>">
                                     </li>
