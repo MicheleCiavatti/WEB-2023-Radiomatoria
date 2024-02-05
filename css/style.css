@@ -411,3 +411,7 @@ word-break: break-word;
 border: 0;
 }
 
+
+span {
+    font-style: italic;
+}
