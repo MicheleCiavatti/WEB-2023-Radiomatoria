@@ -182,31 +182,27 @@
             </article>
             <aside>
                     <header><h2>Regole</h2></header>
-                    <section>
-                        <ul>
-                            <li>Non si impone un registro formale, ma si consiglia fortemente di aderire alle regole dell'ortografia e della grammatica e di astenersi dal turpiloquio.</li>
-                            <li>Raccomandazioni finalizzate ad invogliare all'acquisto di prodotti o servizi fuori tema rispetto allo scopo del sito saranno considerate spam.</li>
-                            <li>Raccomandazioni finalizzate ad invogliare all'acquisto di prodotti o servizi in tema rispetto allo scopo del sito saranno considerate spam se insistenti od assidue.</li>
-                            <li>Post umoristici non costituiranno materiale accettabile se eccessivamente indecenti od ancorati al tema del sito in maniera forzata.</li>
-                            <li>Si sconsiglia la diffusione di informazioni, soprattutto tecniche, sulla cui accuratezza non si abbia certezza.</li>
-                            <li>Non si dovranno diffamare utenti o pretendere la rivelazione di informazioni personali.</li>
-                            <li>Non si dovranno incoraggiare usi illeciti delle apparecchiature radiofoniche, metodi truffaldini per appropriarsi di frequenze o violazioni della legge in generale.</li>
-                            <li>Le immagini non dovranno presentare in maniera chiaramente visibile contenuti che potrebbero impressionare un utente.</li>
-                            <li>Commenti negativi verso prodotti, aziende od infrastrutture dovranno essere scritti con educazione da una prospettiva neutrale e dovranno riportare i fatti concreti su cui si basano.</li>
-                        </ul>
-                    </section>
+                    <ul>
+                        <li>Non si impone un registro formale, ma si consiglia fortemente di aderire alle regole dell'ortografia e della grammatica e di astenersi dal turpiloquio.</li>
+                        <li>Raccomandazioni finalizzate ad invogliare all'acquisto di prodotti o servizi fuori tema rispetto allo scopo del sito saranno considerate spam.</li>
+                        <li>Raccomandazioni finalizzate ad invogliare all'acquisto di prodotti o servizi in tema rispetto allo scopo del sito saranno considerate spam se insistenti od assidue.</li>
+                        <li>Post umoristici non costituiranno materiale accettabile se eccessivamente indecenti od ancorati al tema del sito in maniera forzata.</li>
+                        <li>Si sconsiglia la diffusione di informazioni, soprattutto tecniche, sulla cui accuratezza non si abbia certezza.</li>
+                        <li>Non si dovranno diffamare utenti o pretendere la rivelazione di informazioni personali.</li>
+                        <li>Non si dovranno incoraggiare usi illeciti delle apparecchiature radiofoniche, metodi truffaldini per appropriarsi di frequenze o violazioni della legge in generale.</li>
+                        <li>Le immagini non dovranno presentare in maniera chiaramente visibile contenuti che potrebbero impressionare un utente.</li>
+                        <li>Commenti negativi verso prodotti, aziende od infrastrutture dovranno essere scritti con educazione da una prospettiva neutrale e dovranno riportare i fatti concreti su cui si basano.</li>
+                    </ul>
             </aside>
             <?php if (!isset($_SESSION['NomeUtente'])): ?>
                 <aside>
                     <header><h2>Invito</h2></header>
-                    <section>
-                        <p>
-                            Speriamo che questa pagina ti abbia aiutato a vedere le tecnologie radiofoniche in una 
-                            luce diversa e ti invitiamo a registrarti al sito seguendo questo <a href="../signup.html">link</a>.
-                        </p>
+                    <p>
+                        Speriamo che questa pagina ti abbia aiutato a vedere le tecnologie radiofoniche in una 
+                        luce diversa e ti invitiamo a registrarti al sito seguendo questo <a href="../signup.html">link</a>.
+                    </p>
                 </aside>
             <?php endif; ?>
         </main>
-        <footer>LongLight è un progetto di Cacciaguerra Alessandro e Ciavatti Michele.</footer>
     </body>
 </html>
