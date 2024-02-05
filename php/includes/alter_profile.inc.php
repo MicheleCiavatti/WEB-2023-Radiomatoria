@@ -22,6 +22,112 @@ if (isset($_POST['new_name']) && isset($_POST['new_address']) && isset($_POST['n
         exit();
     }
 
+    if($uid != $name) {
+        $s = $dbh->connect()->prepare('UPDATE AMICIZIA SET Amico1 = ? WHERE Amico1 = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE AMICIZIA SET Amico2 = ? WHERE Amico2 = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE FOLLOW SET Followed = ? WHERE Followed = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE FOLLOW SET Follower = ? WHERE Follower = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE BLOCCO SET Bloccante = ? WHERE Bloccante = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE BLOCCO SET Bloccato = ? WHERE Bloccato = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE BANDE SET NomeUtente  = ? WHERE NomeUtente  = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE DISPONIBILITA  SET Utente  = ? WHERE Utente  = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE POST SET Creatore = ? WHERE Creatore = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE COMMENTI SET Creatore = ? WHERE Creatore = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE COMMENTI SET AutoreCommento = ? WHERE AutoreCommento = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE NOTIFICHE SET Ricevente = ? WHERE Ricevente = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE NOTIFICHE SET Mandante = ? WHERE Mandante = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE INTERAZIONI SET Creatore = ? WHERE Creatore = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE INTERAZIONI SET Interagente  = ? WHERE Interagente  = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE REAZIONI SET Creatore = ? WHERE Creatore = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $s = $dbh->connect()->prepare('UPDATE REAZIONI SET Reagente = ? WHERE Reagente = ?;');
+        if (!$s->execute(array($name, $uid))) {
+            $s = null;
+            header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
+            exit();
+        }
+        $_SESSION['NomeUtente'] = $name;
+    }
+
     $s = $dbh->connect()->prepare(
         'UPDATE UTENTI
             SET NomeUtente = ?, Indirizzo = ?, Città = ?, DataNascita = ?, IndirizzoMail = ?
@@ -31,9 +137,6 @@ if (isset($_POST['new_name']) && isset($_POST['new_address']) && isset($_POST['n
         $s = null;
         header('location; ../profile.php?id=' . $uid . '&error=stmtfailed');
         exit();
-    }
-    if($uid != $name) {
-        $_SESSION['NomeUtente'] = $name;
     }
     header('location: ../profile.php?id=' . $_SESSION['NomeUtente'] . '&error=none');
 } else {
