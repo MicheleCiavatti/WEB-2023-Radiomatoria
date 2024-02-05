@@ -67,7 +67,7 @@ nav ul {
 
 nav ul li {
     display: inline-block;
-    width: 19%;
+    width: 45%;
     background-color: rgb(87, 53, 53);
     text-align: center;
     margin: 10px 0 0;
@@ -87,10 +87,6 @@ nav ul li a {
 nav ul li a:hover {
     color: rgb(217, 53, 53);
     text-decoration: none;
-}
-
-.nav4 > ul > li {
-    width: 24%;
 }
 
 .current_page {
@@ -415,4 +411,12 @@ border: 0;
 
 span {
     font-style: italic;
+}
+@media screen and (min-width: 768px){
+    nav ul li {
+        width: 19%;
+    }
+    .nav4 > ul > li {
+        width: 24%;
+    }
 }
