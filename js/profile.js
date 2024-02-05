@@ -167,19 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
         private_fields.style.display = "none";
     }
     
-    /* Handling post selection */
-    select_form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        selections = new FormData(select_form)
-        window.location.href = "profile.php?id=" + owner + "&relation=" + selections.relation +  "&sort=" + selections.sort + "&order=" + selections.order;
-    });
-    comments = document.getElementsByName("comment_list");
-    if(comments.length > 0) {
-        for(i=0; i<comments.length; i++) {
-            comments[i].style.display = "none";
-        }
-    }
-    
     /* Handling comment and post addition */
     const user = document.getElementById("pag_profilo");
     if(user) {
@@ -189,18 +176,25 @@ document.addEventListener('DOMContentLoaded', function() {
         add_post_button.addEventListener("click", function() { toggle(add_post) });
         add_post.style.display = "none";
 
-        like_buttons = document.getElementsByName("like_button");
-        dislike_buttons = document.getElementsByName("dislike_button");
+        /* Likes and dislikes */
+        const like_buttons = document.getElementsByName("like_button");
+        const dislike_buttons = document.getElementsByName("dislike_button");
+        const author = user.firstChild.href.split("=")[1];
         for(i = 0; i < like_buttons.length; i++) {
             let like_button = like_buttons[i];
+            if(like_button.className == "preferred_button") {
+                decorateLike(like_button.id);
+            }
             let element_id = like_button.id.slice(12);
-            post_id = element_id.split("_")[0];
-            creator = element_id.split("_")[1];
-            comment_id = element_id.split("_")[2];
-            author = user.firstChild.href.split("=")[1];
+            let post_id = element_id.split("_")[0];
+            let creator = element_id.split("_")[1];
+            let comment_id = element_id.split("_")[2];
             like_button.addEventListener("click", function() { like(author, post_id, creator, comment_id); });
 
             let dislike_button = dislike_buttons[i];
+            if(dislike_button.className == "preferred_button") {
+                decorateDislike(dislike_button.id);
+            }
             dislike_button.addEventListener("click", function() { dislike(author, post_id, creator, comment_id); });
         }
     }
@@ -229,9 +223,10 @@ document.addEventListener('DOMContentLoaded', function() {
         for(i=0; i<show_comments_buttons.length; i++) {
             let button = show_comments_buttons[i];
             let list = comment_lists[i];
+            list.style.display = "none";
             button.addEventListener("click", function() {
                 toggle(list);
-                if (button.innerText == "Mostra commenti") {
+                if (list.style.display == "block") {
                     button.innerText = "Nascondi commenti";
                 } else {
                     button.innerText = "Mostra commenti";
@@ -462,17 +457,16 @@ function mostraFormCommenti(add_comment, risposta) {
     }
 }
 
-function decorate(element_id_like, element_id_dislike) {
-    element_id_like.foreach((element) => {
-        let active_like = document.getElementById('like_button_' + element);
-        active_like.innerHTML += 'd';
-        active_like.style.color = "cyan";
-    })
-    element_id_dislike.foreach((element) => {
-        let active_like = document.getElementById('dislike_button_' + element);
-        active_like.innerHTML += 'd';
-        active_like.style.color = "magenta";
-    })
+function decorateLike(like) {
+    let active_like = document.getElementById(like);
+    active_like.innerHTML += 'd';
+    active_like.style.color = "cyan";
+}
+
+function decorateDislike(dislike) {
+    let active_dislike = document.getElementById(dislike);
+    active_dislike.innerHTML += 'd';
+    active_dislike.style.color = "magenta";
 }
 
 function addLikeOrDislike(author, post_id, creator, comment_id, type) {
@@ -517,8 +511,7 @@ function like(author, post_id, creator, comment_id) {
             dislike(author, post_id, creator, comment_id);
         }
         addLikeOrDislike(author, post_id, creator, comment_id, true);
-        like_button.innerHTML += 'd';
-        like_button.style.color = "cyan";
+        decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
         removeLikeOrDislike(author, post_id, creator, comment_id);
@@ -536,8 +529,7 @@ function dislike(author, post_id, creator, comment_id) {
             like(author, post_id, creator, comment_id);
         }
         addLikeOrDislike(author, post_id, creator, comment_id, false);
-        dislike_button.innerHTML += 'd';
-        dislike_button.style.color = "magenta";
+        decorateDislike('dislike_button_' + post_id + '_' + creator + '_' + comment_id);
         dislike_number.innerText = parseInt(dislike_number.innerText) + 1;
     } else {
         removeLikeOrDislike(author, post_id, creator, comment_id);
