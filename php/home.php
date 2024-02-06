@@ -70,6 +70,7 @@ if (isset($_SESSION['NomeUtente'])) {
                     </form>
                 <?php endif; ?>
             </section>
+            <!-- post -->
             <section id="post_column">
                 <?php foreach ($post_list as $post): ?>
                     <article class="post" id="post<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
