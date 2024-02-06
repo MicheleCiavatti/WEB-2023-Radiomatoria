@@ -330,8 +330,8 @@
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" class="add_comment_form" id="add_comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
                                         <input type="hidden" class="post_author" name="post_author" value="<?= $post['Creatore']; ?>"/>
                                         <input type="hidden" class="post_number" name="post_number" value="<?= $post['NrPost']; ?>"/>
-                                        <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
-                                        <label>Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
+                                        <label for="comment_image">Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
+                                        <label for="comment_text">Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
                                         <input type="reset" class="comment_reset" value="Annulla commento"/>
                                         <input type="submit" value="Pubblica"/>
                                     </form>
