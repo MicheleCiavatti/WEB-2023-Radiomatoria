@@ -14,7 +14,8 @@ if (isset($_GET['post_author']) && isset($_GET['post_number']) && isset($_GET['l
         header($stringHeader . '?error=stmtfailed');
         exit();
     }
-    notify($_GET['liker'], $_GET['post_author'], $_GET['liker'] . " ha messo like al tuo post", 0, 0);
+    $post_id = 'Post_' . $_GET['post_author'] . '_' . $_GET['post_number'];
+    notify($_GET['liker'], $_GET['post_author'], $_GET['liker'] . " ha messo like al tuo post", 0, $post_id);
     header($stringHeader);
     exit();
 }

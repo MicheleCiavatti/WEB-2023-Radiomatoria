@@ -1,3 +1,5 @@
+const pid = new URLSearchParams(window.location.search).get('pid');
+if (pid) document.getElementById(pid).scrollIntoView({ behavior: 'smooth' });
 document.addEventListener('DOMContentLoaded', function() {
     let username = document.getElementById('session_user_name');
     let other = document.getElementById('profile_name').innerHTML;
@@ -168,7 +170,7 @@ function requestFriend(username, other) {
     const xhr = new XMLHttpRequest();
     const text = username + ' ti ha inviato una richiesta di amicizia!';
     const request = 1; // In MySQL, 1 means true for TINYINT(1)
-    const read = 0; // In MySQL, 0 means false for TINYINT(1)
+    const read = null; // The read is only used for posts, not for friend requests
     const url = 'functions/requestFriend.php?username=' + encodeURIComponent(username) 
         + '&other=' + encodeURIComponent(other)
         + '&text=' + encodeURIComponent(text)

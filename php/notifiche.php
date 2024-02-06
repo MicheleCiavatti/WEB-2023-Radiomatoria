@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <title>Notifiche</title>
+        <title>LongLight - Notifiche</title>
         <meta charset="UTF-8"/>
         <link href="../css/style.css" rel="stylesheet" type="text/css"/>
     </head>
@@ -44,9 +44,12 @@
                                         <li><button class="friendaccept pos" name="friend_accept">Accetta</button></li>
                                     </ul>
                             <?php else: ?>
-                                <!--- TODO: add button to remove notification -->
                                 <input type="hidden" name="notification_id" value="<?= strval($n['IdNotifica']); ?>">
                                 <button class="removenotification neutral">Rimuovi notifica</button>
+                                <?php if ($n['Lettura']): ?>
+                                    <input type="hidden" value="<?= strval($n['Lettura'])?>">
+                                    <button class="redirect_post pos">Vai al post</button>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </section>
                     <?php endforeach; ?>

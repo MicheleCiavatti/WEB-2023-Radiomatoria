@@ -257,7 +257,7 @@
                     <p><?= $utente['NomeUtente'] ?> non ha alcun post.</p>
                 <?php else: ?>
                     <?php foreach($post_list as $post): ?>
-                        <article class="post">
+                        <article class="post" id=<?= "Post_" . $post[0] . "_" . $post[1]?>>
                             <header>
                                 <p><a href="profile.php?id=<?= $post[0]; ?>"><?= $post[0]; ?></a></p>
                                 <p><?= $post[2]; ?></p>

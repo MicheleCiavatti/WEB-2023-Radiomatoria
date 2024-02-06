@@ -41,6 +41,7 @@ if (isset($_POST['comment_text'])) {
         header($stringHeader. '&error=stmtfailed');
         exit();
     }
-    notify($uid, $post_author, "L'utente " . $uid . " ha commentato il tuo post", 0, 0);
+    $post_id = 'Post_' . $post_author . '_' . $post_number;
+    notify($uid, $post_author, "L'utente " . $uid . " ha commentato il tuo post", 0, $post_id);
     header($stringHeader);
 }

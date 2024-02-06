@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', function() { removeNotification(username, other, section, nid) });
         }
     }
+
+    /* Handling redirect buttons */
+    const redirectButtons = document.getElementsByClassName('redirect_post');
+    if (redirectButtons.length > 0) {
+        for (i = 0; i < redirectButtons.length; i++) {
+            const button = redirectButtons[i];
+            button.addEventListener('click', function() {
+                const pid = button.previousElementSibling.value;
+                window.location.href = '../php/profile.php?id=' + username + '&pid=' + pid;
+            });
+        }
+    }
 });
 
 function refuseFriend(username, other, section) {

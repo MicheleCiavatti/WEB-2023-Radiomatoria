@@ -66,7 +66,7 @@
             <?php endif; ?>
             <!-- posts -->
             <?php foreach ($posts as $post): ?>
-                <article>
+                <article id=<?= "Post_" . $post['Creatore'] . "_" . $post['NrPost']?>>
                     <header>
                         <p><a href="profile.php?id=<?=strval($post['Creatore'])?>"><?= strval($post['Creatore']); ?></a></p>
                         <p><?= strval($post['DataPost']); ?></p>
