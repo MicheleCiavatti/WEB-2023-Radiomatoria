@@ -68,14 +68,14 @@ create table REAZIONI (
      ElementIdCommento int not null,
      Reagente varchar(50) not null,
      Tipo char not null,
-     constraint IDINTERAZIONI primary key (Creatore, ElementIdPost, ElementIdCommento, Reagente));
+     constraint IDREAZIONI primary key (Creatore, ElementIdPost, ElementIdCommento, Reagente));
 
 create table NOTIFICHE (
      Ricevente varchar(50) not null,
      Mandante varchar(50) not null,
      IdNotifica int not null,
      TestoNotifica varchar(300) not null,
-     Richiesta boolean not null,
+     Richiesta int not null,
      Lettura boolean not null,
      constraint IDNOTIFICA primary key (Mandante, Ricevente, IdNotifica));
 
