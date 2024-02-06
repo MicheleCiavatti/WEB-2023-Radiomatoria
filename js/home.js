@@ -6,7 +6,7 @@ const remove_comment_button = document.getElementsByName("remove_comment");
 const comment_post_button = document.getElementsByName("comment_post");
 const respond_comment_button = document.getElementsByName("answer_comment");
 
-const user = document.getElementById("user_data");
+const user = document.getElementById("session_user_name");
 
 document.addEventListener('DOMContentLoaded', function() {
     /* Handling comment and post addition */
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         /* Likes and dislikes */
         const like_buttons = document.getElementsByName("like_button");
         const dislike_buttons = document.getElementsByName("dislike_button");
-        const author = user.firstChild.href.split("=")[1];
+        const author = user.innerText;
         for(i = 0; i < like_buttons.length; i++) {
             let like_button = like_buttons[i];
             if(like_button.className == "preferred_button") {
@@ -210,7 +210,7 @@ function like(author, post_id, creator, comment_id) {
         if(document.getElementById('dislike_button_' + post_id + '_' + creator + '_' + comment_id).textContent.charAt(7)=='d') {
             dislike(author, post_id, creator, comment_id);
         }
-        addLikeOrDislike(author, post_id, creator, comment_id, true);
+        addLikeOrDislike(author, post_id, creator, comment_id, 1);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
@@ -228,7 +228,7 @@ function dislike(author, post_id, creator, comment_id) {
         if(document.getElementById('like_button_' + post_id + '_' + creator + '_' + comment_id).textContent.charAt(4)=='d') {
             like(author, post_id, creator, comment_id);
         }
-        addLikeOrDislike(author, post_id, creator, comment_id, false);
+        addLikeOrDislike(author, post_id, creator, comment_id, 0);
         decorateDislike('dislike_button_' + post_id + '_' + creator + '_' + comment_id);
         dislike_number.innerText = parseInt(dislike_number.innerText) + 1;
     } else {
