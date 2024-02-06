@@ -1,3 +1,7 @@
+/* For redirect function */
+const pid = new URLSearchParams(window.location.search).get('pid');
+if (pid) document.getElementById(pid).scrollIntoView({ behavior: 'smooth' });
+
 const intestazione = document.getElementById("intestazione_orari").children;
 const riga1 = document.getElementById("riga_orari_mattina").children;
 const riga2 = document.getElementById("riga_orari_sera").children;
@@ -67,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const username = document.getElementById('session_user_name').innerHTML;
         const addFriendButton = document.getElementById('friend_request');
         if (addFriendButton) {
-            addFriendButton.addEventListener('click', function() { notify(username, 1) });
+            addFriendButton.addEventListener('click', function() { notify(username, 1, "ti ha inviato una richiesta di amicizia") });
         }
         const cancelRequestButton = document.getElementById('cancel_request');
         if (cancelRequestButton) {
@@ -167,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         private_fields.style.display = "none";
     }
     
-    /* Handling comment and post addition */
+    /* Handling post addition */
     const user = document.getElementById("pag_profilo");
     if(user) {
         const add_post = document.getElementById('add_post_form');
@@ -218,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
    
-    /* Handling other comment and post buttons */
+    /* Handling comment showcase */
     if(show_comments_buttons.length > 0) {
         for(i=0; i<show_comments_buttons.length; i++) {
             let button = show_comments_buttons[i];
@@ -234,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+    /* Handling comment addition */
     if(comment_post_button.length + respond_comment_button.length > 0) {
         const comment_reset = document.getElementsByClassName("comment_reset");
         for(i=0; i<comment_reset.length; i++) {
@@ -302,7 +307,7 @@ function addFollow(username) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log('Follow aggiunto con successo al server');
-            notify(username, 0);
+            notify(username, 0, "è diventato un tuo follower");
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error("Errore durante l'aggiunta del follow:", xhr.status);
         }
@@ -390,9 +395,9 @@ function removeFriend(username, other) {
     xhr.send();
 }
 
-function notify(username, request) {
+function notify(username, request, text) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/notify.php?username=' + encodeURIComponent(username) + '&receiver=' + encodeURIComponent(owner) + '&request=' + encodeURIComponent(request);
+    let url = 'functions/notify.php?username=' + encodeURIComponent(username) + '&receiver=' + encodeURIComponent(owner) + '&request=' + encodeURIComponent(request) + '&text=' + encodeURIComponent(text);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -450,10 +455,14 @@ function toggle(element) {
 
 function mostraFormCommenti(add_comment, risposta) {
     toggle(add_comment);
+    username = add_comment.querySelector(".post_author").value;
+    request = add_comment.querySelector(".post_number").value;
     if(risposta) {
         add_comment.querySelector("textarea").value = "@" + risposta;
+        add_comment.addEventListener("submit", function() { notify(username, request, "ha aggiunto un commento al tuo post"); });
     } else {
         add_comment.querySelector("textarea").placeholder = "Commento al post di " + add_comment.querySelector("input").value;
+        add_comment.addEventListener("submit", function() { notify(username, request, "ha aggiunto una risposta al tuo commento"); });
     }
 }
 
@@ -512,6 +521,7 @@ function like(author, post_id, creator, comment_id) {
         }
         addLikeOrDislike(author, post_id, creator, comment_id, true);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
+        notify(creator, post_id, "ha aggiunto un like al tuo post");
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
         removeLikeOrDislike(author, post_id, creator, comment_id);

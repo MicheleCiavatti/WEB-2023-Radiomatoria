@@ -6,11 +6,11 @@ const remove_comment_button = document.getElementsByName("remove_comment");
 const comment_post_button = document.getElementsByName("comment_post");
 const respond_comment_button = document.getElementsByName("answer_comment");
 
-const user = document.getElementById("session_user_name");
+const username = document.getElementById('session_user_name') ? document.getElementById('session_user_name').innerHTML : null;
 
 document.addEventListener('DOMContentLoaded', function() {
     /* Handling comment and post addition */
-    if(user) {
+    if(username) {
         const add_post = document.getElementById('add_post_form');
         const add_post_button = document.getElementById('add_post_button');
     
@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         /* Likes and dislikes */
         const like_buttons = document.getElementsByName("like_button");
         const dislike_buttons = document.getElementsByName("dislike_button");
-        const author = user.innerText;
         for(i = 0; i < like_buttons.length; i++) {
             let like_button = like_buttons[i];
             if(like_button.className == "preferred_button") {
@@ -30,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let post_id = element_id.split("_")[0];
             let creator = element_id.split("_")[1];
             let comment_id = element_id.split("_")[2];
-            like_button.addEventListener("click", function() { like(author, post_id, creator, comment_id); });
+            like_button.addEventListener("click", function() { like(username, post_id, creator, comment_id); });
 
             let dislike_button = dislike_buttons[i];
             if(dislike_button.className == "preferred_button") {
                 decorateDislike(dislike_button.id);
             }
-            dislike_button.addEventListener("click", function() { dislike(author, post_id, creator, comment_id); });
+            dislike_button.addEventListener("click", function() { dislike(username, post_id, creator, comment_id); });
         }
     }
 

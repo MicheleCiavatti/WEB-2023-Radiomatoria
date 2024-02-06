@@ -1,4 +1,4 @@
-const username = document.getElementById('pag_profilo').firstChild.innerHTML;
+const username = document.getElementById('session_user_name').innerHTML;
 const unread_list = document.getElementById('unread_notifications_list');
 const read_list = document.getElementById('read_notifications_list');
 const total = document.getElementById("notifications_total");
@@ -72,6 +72,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+
+    /* Handling redirect buttons */
+    const redirectButtons = document.getElementsByClassName('redirect_post');
+    if (redirectButtons.length > 0) {
+        for (i = 0; i < redirectButtons.length; i++) {
+            let button = redirectButtons[i];
+            const pid = button.previousElementSibling.value;
+            let li = button.closest('li');
+            let nid = li.id.slice(3);
+            button.addEventListener('click', function() {
+                removeNotification(nid);
+                window.location.href = '../php/profile.php?id=' + username + '&pid=Post_' + username + '_' + pid;
+            });
+        }
+    }
 });
 
 function readNotification(li) {
@@ -101,6 +116,7 @@ function readNotification(li) {
     };
     xhr.send();
 }
+
 
 function acceptFriend(other, nid) {
     const xhr = new XMLHttpRequest();
@@ -134,7 +150,7 @@ function removeNotification(nid) {
             } else {
                 location.reload();
             }
-                    console.log('Notifica rimossa con successo dal server');
+            console.log('Notifica rimossa con successo dal server');
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante la rimozione della notifica:', xhr.status);
         }
@@ -150,8 +166,8 @@ function outcomeNotification(nid, senderid, outcome) {
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            removeNotification(nid);
             console.log('Risposta inviata con successo dal server');
+            removeNotification(nid);
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante la creazione della risposta:', xhr.status);
         }
