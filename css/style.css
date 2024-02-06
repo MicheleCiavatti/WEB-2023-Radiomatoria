@@ -194,7 +194,7 @@ header > img + p + form {
 }
 
 ul > li > img {
-    max-width: 10%;
+    max-width: 75px;
     border-radius: 50%;
     margin-right: 15px;
 }
@@ -423,5 +423,11 @@ span {
 
     figure > img {
         max-width: 500px;
+    }
+
+    ul > li > img {
+        max-width: 110px;
+        border-radius: 50%;
+        margin-right: 15px;
     }
 }
