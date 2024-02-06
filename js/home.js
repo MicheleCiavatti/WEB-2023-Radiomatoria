@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const likeButtons = document.getElementsByClassName('like_button');
-    const username = document.getElementById('session_user_name').innerHTML;
+    const username = document.getElementById('session_user_name') ? document.getElementById('session_user_name').innerHTML : null;
     if (likeButtons.length > 0) {
         for (i = 0; i < likeButtons.length; i++) {
             const button = likeButtons[i];
