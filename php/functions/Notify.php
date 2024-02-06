@@ -23,7 +23,7 @@ function notify($sender, $receiver, $text, $request, $read = 'no post') {
     }
 }
 
-function removeNotification($sender, $receiver, $nid, $request) {
+function removeNotification($sender, $receiver, $nid, $request = 0) {
     $dbh = new Dbh;
     if ($request == 1) {
         $s = $dbh->connect()->prepare(
