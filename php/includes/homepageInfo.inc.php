@@ -136,7 +136,6 @@ function isLiked($username, $creatorPost, $nrPost) {
          FROM INTERAZIONI
          WHERE Creatore = ? AND ElementId = ? AND Interagente = ? AND Tipo = 1;' // Tipo 1 = like
     );
-    error_log('creatorPost: ' . $creatorPost . ' nrPost: ' . $nrPost . ' username: ' . $username);
     if (!$s->execute(array($creatorPost, $nrPost, $username))) {
         $s = null;
         header('location: ../home.php?error=stmtfailed');

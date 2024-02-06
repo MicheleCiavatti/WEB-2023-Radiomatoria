@@ -2,7 +2,6 @@
 require_once "../classes/dbh.classes.php";
 function notify($sender, $receiver, $text, $request, $read = 'no post') {
     if ($sender != $receiver) {
-        error_log("Notifica: " . $sender . " -> " . $receiver . " : " . $text . " Richiesta: " . $request . " Lettura: " . $read);
         $dbh = new Dbh;
         $s = $dbh->connect()->prepare(
             'SELECT MAX(IdNotifica) AS MaxNotifica

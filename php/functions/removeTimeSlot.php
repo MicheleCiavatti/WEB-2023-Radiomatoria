@@ -4,8 +4,6 @@ require_once "../classes/dbh.classes.php";
 $dbh = new Dbh;
 
 if (isset($_GET['username']) && isset($_GET['start']) && isset($_GET['end'])) {
-    error_log($_GET['end']);
-    error_log(strtotime($_GET['end']));
     $uid = $_GET['username'];
     $end = date("H:i:s", strtotime($_GET['end']));
     $start = date("H:i:s", strtotime($_GET['start']));
