@@ -5,9 +5,9 @@ session_start();
 if (isset($_POST['comment_text'])) {   
     $uid = $_SESSION['NomeUtente'];
     if (isset($_POST['from_home'])) {
-        $stringHeader = 'location: ../home.php';
+        $stringHeader = 'location: ../home.php?';
     } else {
-        $stringHeader = 'location: ../profile.php?id=' . $uid;
+        $stringHeader = 'location: ../profile.php?id=' . $uid . '&';
     }
     $comment_text = $_POST['comment_text'];
     $date = date("Y-m-d H:i:s");
@@ -21,7 +21,7 @@ if (isset($_POST['comment_text'])) {
     );
     if (!$s->execute(array($post_author, $post_number))) {
         $s = null;
-        header($stringHeader . '&error=stmtfailed');
+        header($stringHeader . 'error=stmtfailed');
         exit();
     }
     $nrComment = ($s->fetch(PDO::FETCH_NUM))[0] + 1;
@@ -39,8 +39,8 @@ if (isset($_POST['comment_text'])) {
     );
     if (!$s->execute(array($post_author, $date, $comment_text, $comment_pic, $nrComment, $post_number, $uid))) {
         $s = null;
-        header($stringHeader . '&error=stmtfailed');
+        header($stringHeader . 'error=stmtfailed');
         exit();
     }
-    header($stringHeader);
+    header($stringHeader . 'error=none');
 }
