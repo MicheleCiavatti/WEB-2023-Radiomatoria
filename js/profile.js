@@ -521,7 +521,11 @@ function like(author, post_id, creator, comment_id) {
         }
         addLikeOrDislike(author, post_id, creator, comment_id, true);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
-        notify(creator, post_id, "ha aggiunto un like al tuo post");
+        if(comment_id) {
+            notify(creator, post_id, "ha aggiunto un like al tuo commento");
+        } else {
+            notify(creator, post_id, "ha aggiunto un like al tuo post");
+        }
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
         removeLikeOrDislike(author, post_id, creator, comment_id);

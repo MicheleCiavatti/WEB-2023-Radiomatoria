@@ -105,6 +105,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function notify(username, request, text) {
+    let xhr = new XMLHttpRequest();
+    let url = 'functions/notify.php?username=' + encodeURIComponent(username) + '&receiver=' + encodeURIComponent(owner) + '&request=' + encodeURIComponent(request) + '&text=' + encodeURIComponent(text);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Notifica inviata');
+            location.reload();
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error("Errore durante l'invio della notifica:", xhr.status);
+        }
+    };
+    xhr.send();
+}
+
 function removePost(pid, creator) {
     let xhr = new XMLHttpRequest();
     let url = 'functions/removePost.php?pid=' + encodeURIComponent(pid) + '&creator=' + encodeURIComponent(creator);
@@ -151,8 +167,10 @@ function mostraFormCommenti(add_comment, risposta) {
     toggle(add_comment);
     if(risposta) {
         add_comment.querySelector("textarea").value = "@" + risposta;
+        add_comment.addEventListener("submit", function() { notify(username, request, "ha aggiunto un commento al tuo post"); });
     } else {
         add_comment.querySelector("textarea").placeholder = "Commento al post di " + add_comment.querySelector("input").value;
+        add_comment.addEventListener("submit", function() { notify(username, request, "ha aggiunto una risposta al tuo commento"); });
     }
 }
 
@@ -209,8 +227,13 @@ function like(author, post_id, creator, comment_id) {
         if(document.getElementById('dislike_button_' + post_id + '_' + creator + '_' + comment_id).textContent.charAt(7)=='d') {
             dislike(author, post_id, creator, comment_id);
         }
-        addLikeOrDislike(author, post_id, creator, comment_id, 1);
+        addLikeOrDislike(author, post_id, creator, comment_id, true);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
+        if(comment_id) {
+            notify(creator, post_id, "ha aggiunto un like al tuo commento");
+        } else {
+            notify(creator, post_id, "ha aggiunto un like al tuo post");
+        }
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
         removeLikeOrDislike(author, post_id, creator, comment_id);
