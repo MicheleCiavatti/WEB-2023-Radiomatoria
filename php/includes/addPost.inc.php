@@ -13,7 +13,7 @@ if (isset($_POST['post_text'])) {
     $date = date("Y-m-d H:i:s");
     $dbh = new Dbh;
     $stmt = $dbh->connect()->prepare(
-        'SELECT MAX(NrPost)
+        'SELECT MAX(NrPost) AS MaxPost
          FROM POST
          WHERE Creatore = ?;'
     );
@@ -22,7 +22,11 @@ if (isset($_POST['post_text'])) {
         header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
         exit();
     }
-    $nrPost = ($stmt->fetch(PDO::FETCH_NUM))[0] + 1;
+    if($stmt->rowCount() > 0) {
+        $nrPost = $stmt->fetch()['MaxPost'] + 1;
+    } else {
+        $nrPost = 2;
+    }
     if (isset($_FILES['post_image']) && !empty($_FILES['post_image']['name']) && $_FILES['post_image']['error'] == 0) {
         $imgDir = __DIR__ . "/../../img/";
         $imgName = "post_" . $uid . "_" . $nrPost . "." . pathinfo($_FILES['post_image']['name'], PATHINFO_EXTENSION);
@@ -40,5 +44,5 @@ if (isset($_POST['post_text'])) {
         header($stringHeader . '&error=stmtfailed');
         exit();
     }
-    header($stringHeader);
+    header($stringHeader . '&error=none');
 }
