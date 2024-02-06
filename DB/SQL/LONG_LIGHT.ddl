@@ -68,7 +68,7 @@ create table NOTIFICHE (
      IdNotifica int not null,
      TestoNotifica varchar(300) not null,
      Richiesta boolean not null,
-     Lettura boolean not null,
+     Lettura varchar(50) not null,
      constraint IDNOTIFICA primary key (Mandante, Ricevente, IdNotifica));
 
 create table POST (
