@@ -26,6 +26,10 @@
     display:inline-block;
 }
 
+.no_display {
+    display: none;
+}
+
 main > article > header > img, main > section > article > header > img {
     max-width: 300px;
     border-radius: 0%;

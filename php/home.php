@@ -58,7 +58,8 @@
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
                         <ul>
                             <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></label></li>  
-                            <li><label><textarea name="post_text" placeholder="Scrivi un post" required></textarea></label></li>
+                            <li><label class="no_display" for="post_text">Scrivi un post</label>
+                                <textarea id="post_text" name="post_text" placeholder="Scrivi un post" required></textarea></li>
                             <li><button type="submit" class="pos" name="upload_post">Pubblica</button></li>
                         </ul>
                     </form>
@@ -100,12 +101,13 @@
                         <?php if (isset($_SESSION['NomeUtente'])): ?>
                             <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
                                 <ul>
-                                <li><label>Carica immagine per commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></li>
-                                <li><label><textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea></label></li>
-                                <li><input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>"></li>
-                                <li><input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>"></li>
-                                <li><input type="hidden" name="from_home"></li>
-                                <li><input class="pos" type="submit" value="Pubblica"></li>
+                                    <li><label>Carica immagine per commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></li>
+                                    <li><label for="Comment_Post_<?= strval($post['Creatore'])?>_<?= strval($post['NrPost']) ?>" class="no_display">Scrivi un commento</label>
+                                        <textarea id="Comment_Post_<?= strval($post['Creatore'])?>_<?= strval($post['NrPost']) ?>" name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= strval($post['Creatore']) ?>" required></textarea></li>
+                                    <li><input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>"></li>
+                                    <li><input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>"></li>
+                                    <li><input type="hidden" name="from_home"></li>
+                                    <li><input class="pos" type="submit" value="Pubblica"></li>
                                 </ul>
                             </form>
                         <?php endif; ?>

@@ -64,7 +64,7 @@
             <article>
                     <header><h2>Domande e risposte sulla radiomatoria</h2></header>
                     <section>
-                        <p><strong>Cosa vuol dire Long Light?</strong></p>
+                        <h3>Cosa vuol dire Long Light?</h3>
                         <p>
                             Letteralmente "Luce Lunga", fa riferimento al fatto che le frequenze radio sono 
                             radiazioni luminose con un'elevata lunghezza d'onda.
@@ -78,7 +78,7 @@
                         </figure>
                     </section>
                     <section>
-                        <p><strong>Cosa spinge a diventare radioamatori?</strong></p>
+                        <h3>Cosa spinge a diventare radioamatori?</h3>
                         <p>
                             L'archetipo del radioamatore raccoglie essenzialmente due tipi di persone: 
                             l'operatore che ama i collegamenti a lunga distanza ed il tecnico che studia la 
@@ -89,7 +89,7 @@
                         </p>
                     </section>
                     <section>
-                        <p><strong>Il radioamatore ha un gergo tecnico strutturato?</strong></p>
+                        <h3>Il radioamatore ha un gergo tecnico strutturato?</h3>
                         <p>
                             Si utilizza un sistema di identificazione internazionale chiamato 
                             <a href="https://www.radioamatore.info/codice-q-cw-etc/codice-q.html">Codice Q</a>: 
@@ -107,7 +107,7 @@
                         </dl>
                     </section>
                     <section>
-                        <p><strong>Si tratta di un hobby costoso?</strong></p>
+                        <h3>Si tratta di un hobby costoso?</h3>
                         <p>
                             La dismissione di attrezzatura da parte degli operatori telefonici ha immesso nel 
                             mercato dell'usato apparecchiature e materiale a basso costo ed un radioamatore 
@@ -125,7 +125,7 @@
                         </figure>
                     </section>
                     <section>
-                        <p><strong>Le frequenze sono molto utilizzate?</strong></p>
+                        <h3>Le frequenze sono molto utilizzate?</h3>
                         <p>
                             Contrariamente a quanto si pensa, al giorno d'oggi lo spettro radiofonico si 
                             presenta tutt'altro che spoglio: ci sono diversi servizi attivi, soprattutto 
@@ -138,7 +138,7 @@
                         </p>
                     </section>
                     <section>
-                        <p><strong>Quale frequenza scegliere per comunicare</strong></p>
+                        <h3>Quale frequenza scegliere per comunicare</h3>
                         <p>
                             I radioamatori devono operare solo nei range di frequenze a loro assegnati, 
                             anche se molto vicini a range privati (satelliti, televisione, stazioni radio 
@@ -155,7 +155,7 @@
                         </figure>
                     </section>
                     <section>
-                        <p><strong>Come si ottiene una propria frequenza?</strong></p>
+                        <h3>Come si ottiene una propria frequenza?</h3>
                         <p>
                             Per essere radioamatore bisogna sostenere un esame ministeriale di radiotecnica e 
                             normative sull'utilizzo delle frequenze. Solo dopo aver ottenuto la patente diviene 
@@ -172,7 +172,7 @@
                         </figure>
                     </section>
                     <section>
-                        <p><strong>La figura del radiamatore viene valutata?</strong></p>
+                        <h3>La figura del radiamatore viene valutata?</h3>
                         <p>
                             Normalmente i radioamatori vengono chiamati ad operare assieme alla Protezione Civile 
                             in quanto sono gli unici in grado di intervenire nell'immediatezza e con risorse 

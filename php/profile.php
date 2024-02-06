@@ -247,7 +247,8 @@
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
                         <ul>
                             <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></li>
-                            <li><label><textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label></li>
+                            <li><label class="no_display" for="post_text">Scrivi un post</label>
+                                <textarea id="post_text" name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></li>
                             <li><input class="pos" type="submit" name="upload_post" value="Pubblica"></li>
                         </ul>
                     </form>
@@ -290,7 +291,8 @@
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data">
                                         <ul>
                                             <li><label>Carica immagine per commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></li>
-                                            <li><label><textarea name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea></label></li>
+                                            <li><label for="Comment_Post_<?= strval($post[0])?>_<?= strval($post[1]) ?>" class="no_display">Scrivi un commento</label>
+                                                <textarea id="Comment_Post_<?= strval($post[0])?>_<?= strval($post[1]) ?>" name="comment_text" rows="1" cols="100" placeholder="Rispondi al post di <?= $post[0]?>" required></textarea></li>
                                             <li><input type="hidden" name="post_author" value="<?= $post[0]?>"></li>
                                             <li><input type="hidden" name="post_number" value="<?= $post[1]?>"></li>
                                             <li><input class="pos" type="submit" value="Pubblica"></li>
