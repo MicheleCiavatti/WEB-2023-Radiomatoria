@@ -41,7 +41,7 @@ if (isset($_POST['post_text'])) {
     );
     if (!$s->execute(array($uid, $date, $text, $image, $nrPost))) {
         $s = null;
-        header($stringHeader . '&error=stmtfailed');
+        header($stringHeader . '?error=stmtfailed');
         exit();
     }
     header($stringHeader . '&error=none');
