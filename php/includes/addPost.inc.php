@@ -5,9 +5,9 @@ require_once "../classes/dbh.classes.php";
 if (isset($_POST['post_text'])) {
     $uid = $_SESSION['NomeUtente'];
     if (isset($_POST['from_home'])) {
-        $stringHeader = 'location: ../home.php';
+        $stringHeader = 'location: ../home.php?';
     } else {
-        $stringHeader = 'location: ../profile.php?id=' . $uid;
+        $stringHeader = 'location: ../profile.php?id=' . $uid .'&';
     }
     $text = $_POST['post_text'];
     $date = date("Y-m-d H:i:s");
@@ -19,7 +19,7 @@ if (isset($_POST['post_text'])) {
     );
     if (!$stmt->execute(array($uid))) {
         $stmt = null;
-        header('location: ../profile.php?id=' . $uid . '&error=stmtfailed');
+        header($stringHeader . 'error=stmtfailed');
         exit();
     }
     if($stmt->rowCount() > 0) {
@@ -41,8 +41,8 @@ if (isset($_POST['post_text'])) {
     );
     if (!$s->execute(array($uid, $date, $text, $image, $nrPost))) {
         $s = null;
-        header($stringHeader . '?error=stmtfailed');
+        header($stringHeader . 'error=stmtfailed');
         exit();
     }
-    header($stringHeader);
+    header($stringHeader . 'error=none');
 }
