@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const section = button.closest('section');
                 const other = section.querySelector('header h3 a').innerHTML;
                 const nid = button.nextElementSibling.value;
-                removeNotification(username, other, section, nid);
+                removeNotification(username, other, section, nid, false);
                 window.location.href = '../php/profile.php?id=' + username + '&pid=' + pid;
             });
         }
@@ -81,8 +81,8 @@ function acceptFriend(username, other, section) {
     xhr.send();
 }
 
-function removeNotification(username, other, section, nid) {
-    section.innerHTML = `<p>Notifica da ${other} rimossa</p>`
+function removeNotification(username, other, section, nid, change = true) {
+    if (change) section.innerHTML = `<p>Notifica da ${other} rimossa</p>`
     const xhr = new XMLHttpRequest();
     const url = 'functions/removeNotification.php?username=' + encodeURIComponent(username) 
                 + '&other=' + encodeURIComponent(other)
