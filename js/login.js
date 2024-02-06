@@ -8,8 +8,30 @@ if (error) {
     }
 }
 
-function mostraIndizio() {
-    let indizio = getClue(document.getElementById('address'));
-    document.getElementById('clue').innerHTML = indizio;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const clueButton = document.getElementById('clue_button');
+    clueButton.addEventListener('click', () => {
+        const mail = document.getElementById('address').value;
+        if (mail === '' || !mail.includes('@')) {
+            document.getElementById('clue').innerHTML = 'Inserisci una mail';
+        } else {
+            getClue(mail);
+        }
+    });
+});
 
+function getClue(mail) {
+    const xhr = new XMLHttpRequest();
+    const url = 'php/functions/getClue.php?mail=' + encodeURIComponent(mail);
+    xhr.open('GET', url, false);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const clue = xhr.responseURL.split('=')[1];
+            document.getElementById('clue').innerHTML = clue;
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error('Errore durante il recupero del clue:', xhr.status);
+        }
+    };
+    xhr.send();
+}
