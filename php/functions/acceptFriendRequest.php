@@ -21,7 +21,7 @@ if (isset($_GET['username']) && isset($_GET['other'])) {
     if (!$s->execute(array($receiver, $sender))) {
         error_log("Errore nell'esecuzione della query INSERT: " . print_r($s->errorInfo(), true));
     }
-    notify($receiver, $sender, "L'utente " . $receiver . " ha accettato la tua richiesta di amicizia", 0, null);
+    notify($receiver, $sender, "L'utente " . $receiver . " ha accettato la tua richiesta di amicizia", 0);
 } else {
     error_log("Variabili non settate");
 }

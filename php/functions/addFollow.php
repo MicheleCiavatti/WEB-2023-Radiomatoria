@@ -13,7 +13,7 @@ if (isset($_GET['username']) && isset($_GET['other'])) {
     if(!$s->execute(array($followed, $follower))) {
         error_log("Errore nell'esecuzione della query INSERT: " . print_r($s->errorInfo(), true));
     }
-    notify($follower, $followed, $follower . ' ha iniziato a seguirti!', 0, null);
+    notify($follower, $followed, $follower . ' ha iniziato a seguirti!', 0);
 }  else {
     error_log("Variabili non settate");
 }

@@ -1,5 +1,6 @@
 const pid = new URLSearchParams(window.location.search).get('pid');
 if (pid) document.getElementById(pid).scrollIntoView({ behavior: 'smooth' });
+
 document.addEventListener('DOMContentLoaded', function() {
     let username = document.getElementById('session_user_name');
     let other = document.getElementById('profile_name').innerHTML;

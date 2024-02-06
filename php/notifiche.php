@@ -46,7 +46,7 @@
                             <?php else: ?>
                                 <input type="hidden" name="notification_id" value="<?= strval($n['IdNotifica']); ?>">
                                 <button class="removenotification neutral">Rimuovi notifica</button>
-                                <?php if ($n['Lettura']): ?>
+                                <?php if ($n['Lettura'] != 'no post'): ?>
                                     <input type="hidden" value="<?= strval($n['Lettura'])?>">
                                     <button class="redirect_post pos">Vai al post</button>
                                     <input type="hidden" name="notification_id" value="<?= strval($n['IdNotifica']); ?>">
@@ -56,7 +56,7 @@
                     <?php endforeach; ?>
                 </section>
             <?php else: ?>
-                <section>Non hai nessuna notifica</section>
+                <section><p>Non hai nessuna notifica</p></section>
             <?php endif; ?>
         </main>
         <script src="../js/notifiche.js"></script>
