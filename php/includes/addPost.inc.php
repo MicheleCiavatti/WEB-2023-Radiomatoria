@@ -44,5 +44,5 @@ if (isset($_POST['post_text'])) {
         header($stringHeader . '?error=stmtfailed');
         exit();
     }
-    header($stringHeader . '&error=none');
+    header($stringHeader);
 }
