@@ -519,7 +519,7 @@ function like(post_id, creator, comment_id) {
         if(document.getElementById('dislike_button_' + post_id + '_' + creator + '_' + comment_id).textContent.charAt(7)=='d') {
             dislike(post_id, creator, comment_id);
         }
-        addLikeOrDislike(post_id, creator, comment_id, true);
+        addLikeOrDislike(post_id, creator, comment_id, 1);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
         if(!comment_id) {
             if(creator != username) {
@@ -542,7 +542,7 @@ function dislike(post_id, creator, comment_id) {
         if(document.getElementById('like_button_' + post_id + '_' + creator + '_' + comment_id).textContent.charAt(4)=='d') {
             like(post_id, creator, comment_id);
         }
-        addLikeOrDislike(post_id, creator, comment_id, false);
+        addLikeOrDislike(post_id, creator, comment_id, 0);
         decorateDislike('dislike_button_' + post_id + '_' + creator + '_' + comment_id);
         dislike_number.innerText = parseInt(dislike_number.innerText) + 1;
     } else {
