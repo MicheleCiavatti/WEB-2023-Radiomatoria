@@ -21,10 +21,11 @@ function getPosts($username) {
              WHERE P.Creatore IN 
                 ((SELECT F.Followed
                  FROM FOLLOW F
-                 WHERE F.Follower = ?),
+                 WHERE F.Follower = ?) UNION
                 (SELECT A.Amico1
                  FROM AMICIZIA A
-                 WHERE A.Amico2 = ?), ?)
+                 WHERE A.Amico2 = ?))
+                 OR P.Creatore = ?
              GROUP BY P.Creatore, P.NrPost
              ORDER BY P.DataPost DESC
              LIMIT 15;'
@@ -54,10 +55,11 @@ function getPosts($username) {
              WHERE P.Creatore NOT IN 
              ((SELECT F.Followed
                  FROM FOLLOW F
-                 WHERE F.Follower = ?),
+                 WHERE F.Follower = ?) UNION
                 (SELECT A.Amico1
                  FROM AMICIZIA A
-                 WHERE A.Amico2 = ?), ?)
+                 WHERE A.Amico2 = ?))
+                 AND NOT P.Creatore = ?
              GROUP BY P.Creatore, P.NrPost
              ORDER BY DataPost DESC
              LIMIT 20;'
