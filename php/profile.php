@@ -377,8 +377,7 @@
                             <?php endif; ?>
                         </section>
                     </article>
-                <?php endforeach;
-                endif; ?>
+                <?php endforeach; ?>
             </section>
             <!--************************************* HANDLING FRIEND LIST **************************************-->
             <?php if(!empty($amici)): ?>

@@ -106,8 +106,8 @@ if (isset($_SESSION['NomeUtente'])) {
                                 <!-- add comment -->
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" class="add_comment_form" id="add_comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
-                                        <input type="hidden" name="post_author" value="<?= strval($post['Creatore']) ?>" />
-                                        <input type="hidden" name="post_number" value="<?= strval($post['NrPost']) ?>" />
+                                        <input type="hidden" class="post_author" name="post_author" value="<?= strval($post['Creatore']) ?>" />
+                                        <input type="hidden" class="post_number" name="post_number" value="<?= strval($post['NrPost']) ?>" />
                                         <label for="comment_image">Carica immagine<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
                                         <label for="comment_text">Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
                                         <input type="hidden" name="from_home"/>
