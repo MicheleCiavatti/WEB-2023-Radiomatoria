@@ -50,13 +50,13 @@
         <?php endif; ?>
         <main>
             <header>
-                <!--- Profile pic, name and buttons for friendship/follow --->
+                <!-- Profile pic, name and buttons for friendship/follow -->
                 <img src="<?= $utente['FotoProfilo'] ?>" alt=""/>
                 <p id='profile_name'><?= $utente["NomeUtente"] ?></p>
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <?php if ($utente['NomeUtente'] != $_SESSION['NomeUtente']): ?>
                         <ul>
-                            <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
+                            <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!-- Hidden field containing session user name -->
                             <li>
                                     <?php if (isFriend($_SESSION['NomeUtente'], $utente['NomeUtente'])): ?>
                                         <button class="neg" id="remove_friend" type="button" value="Rimuovi amicizia">Rimuovi amicizia</button>
@@ -119,9 +119,11 @@
                         <?php endforeach; ?>
                     </ul>
                     <!-- Form for adding frequencies -->
-                    <form action="includes/addMHz.inc.php" method="post">
-                        <p><label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label></p>
-                        <p><input type="submit" class="neutral" value="Aggiungi"></p>
+                    <form action="includes/addMHz.inc.php" method="post" class="as_row">
+                        <ul>
+                            <li><label for="frequency">Nuova frequenza (in MHz):<input name="frequency" id="frequency" type="number" step="any" min="0" required></label></li>
+                            <li><input type="submit" class="neutral" value="Aggiungi"></li>
+                        </ul>
                     </form>
                 </section>
             <?php endif; ?>
@@ -157,10 +159,12 @@
                     <!-- Form for adding time slots -->
                     <?php if ($_SESSION['NomeUtente'] == $utente['NomeUtente']):?>
                         <span>Non si accettano sovrapposizioni né segmentazioni (fasce orarie divise in segmenti immediatamente consecutivi)</span>
-                        <form action="includes/addTimeSlot.inc.php" method="post">
-                            <p><label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label></p>
-                            <p><label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label></p>
-                            <p><input type="submit" class="neutral" value="Aggiungi"></p>
+                        <form action="includes/addTimeSlot.inc.php" method="post" class="as_row">
+                            <ul>
+                                <li><label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label></li>
+                                <li><label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label></li>
+                                <li><input type="submit" class="neutral" value="Aggiungi"></li>
+                            </ul>
                         </form>
                     <?php endif; ?>
                 </section>
@@ -170,13 +174,17 @@
                 <section>
                     <header><h2>Modifica password e indizio</h2></header>
                     <p>Indizio: <?= $utente['Indizio']?></p>
-                    <form action="includes/changeClue.inc.php" method="post">
-                        <p><label for="new_clue">Modifica l'indizio: <input name="new_clue" id="new_clue" required></label></p>
-                        <p><input type="submit" class="neutral" value="Modifica indizio"></p>
+                    <form action="includes/changeClue.inc.php" method="post" class="as_row">
+                        <ul>
+                            <li><label for="new_clue">Modifica l'indizio: <input name="new_clue" id="new_clue" required></label></li>
+                            <li><input type="submit" class="neutral" value="Modifica indizio"></li>
+                        </ul>
                     </form>
-                    <form action="includes/changePW.inc.php" method="post">
-                        <p><label for="new_pw">Cambia password:<input name="new_pw" type="password" id="new_pw" minlength="8" required></label></p>
-                        <p><input type="submit" class="neutral" value="Modifica password"></p>
+                    <form action="includes/changePW.inc.php" method="post" class="as_row">
+                        <ul>
+                            <li><label for="new_pw">Cambia password:<input name="new_pw" type="password" id="new_pw" minlength="8" required></label></li>
+                            <li><input type="submit" class="neutral" value="Modifica password"></li>
+                        </ul>
                     </form>
                 </section>
             <?php endif; ?>
@@ -184,73 +192,65 @@
             <?php if(!empty($amici)): ?>
                 <section>
                     <header><h2>Amici</h2></header>
-                    <p>
-                        <ul>
-                            <?php foreach($amici as $amico):?>
-                                <li>
-                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1] ?>" alt=""/>
-                                    <p><a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a></p>
-                                    <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <p><button class="remove_friend_buttons neg">Rimuovi</button></p>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach;?>
-                        </ul>
-                    </p>
+                    <ul>
+                        <?php foreach($amici as $amico):?>
+                            <li>
+                                <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $amico[1] ?>" alt=""/>
+                                <p><a href="profile.php?id=<?= $amico[0]?>"><?= $amico[0] ?></a></p>
+                                <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <p><button class="remove_friend_buttons neg">Rimuovi</button></p>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach;?>
+                    </ul>
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING FOLLOWED LIST **************************************-->
             <?php if(!empty($seguiti)): ?>
                 <section>
                     <header><h2>Following</h2></header>
-                    <p>
-                        <ul>
-                            <?php foreach($seguiti as $seguito):?>
-                                <li>
-                                    <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1] ?>" alt=""/>
-                                    <p><a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a></p>
-                                    <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <p><button class="remove_follow_buttons neg">Rimuovi</button></p>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach;?>
-                        </ul>
-                    </p>
+                    <ul>
+                        <?php foreach($seguiti as $seguito):?>
+                            <li>
+                                <img src="<?= "http://localhost/WEB-2023-Radiomatoria/img/" . $seguito[1] ?>" alt=""/>
+                                <p><a href="profile.php?id=<?= $seguito[0]?>"><?= $seguito[0] ?></a></p>
+                                <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <p><button class="remove_follow_buttons neg">Rimuovi</button></p>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach;?>
+                    </ul>
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING BLOCKED LIST **************************************-->
             <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente'] && !empty($bloccati)): ?>
                 <section>
                     <header><h2>Bloccati</h2></header>
-                    <p>
-                        <ul>
-                            <?php foreach($bloccati as $bloccato): ?>
-                                <li>
-                                    <img src="<?= $bloccato[1]; ?>" alt=""/>
-                                    <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
-                                    <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                                        <button class="access_required pos">Perdona</button>
-                                    <?php endif; ?>
-                                </li>
-                                
-                            <?php endforeach; ?>
-                        </ul>
-                    </p>
+                    <ul>
+                        <?php foreach($bloccati as $bloccato): ?>
+                            <li>
+                                <img src="<?= $bloccato[1]; ?>" alt=""/>
+                                <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
+                                <?php if(isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
+                                    <button class="access_required pos">Perdona</button>
+                                <?php endif; ?>
+                            </li>
+                            
+                        <?php endforeach; ?>
+                    </ul>
                 </section>
             <?php endif; ?>
             <!--************************************* HANDLING POSTS **************************************-->
             <section>
                 <header><h2>Post</h2></header>
                 <?php if (isset($_SESSION['NomeUtente']) && $utente['NomeUtente'] == $_SESSION['NomeUtente']): ?>
-                    <p>
-                        <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
-                            <ul>
-                                <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></li>
-                                <li><label><textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label></li>
-                                <li><input class="pos" type="submit" name="upload_post" value="Pubblica"></li>
-                            </ul>
-                        </form>
-                    </p>
+                    <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data">
+                        <ul>
+                            <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></li>
+                            <li><label><textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label></li>
+                            <li><input class="pos" type="submit" name="upload_post" value="Pubblica"></li>
+                        </ul>
+                    </form>
                 <?php endif; ?>
             </section>
                 <?php if (empty($post_list)): ?>

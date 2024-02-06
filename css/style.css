@@ -22,6 +22,10 @@
     }
 }
 
+.as_row > ul > li {
+    display:inline-block;
+}
+
 main > article > header > img, main > section > article > header > img {
     max-width: 300px;
     border-radius: 0%;
