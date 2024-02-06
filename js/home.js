@@ -174,11 +174,7 @@ function mostraFormCommenti(add_comment, risposta) {
             add_comment.addEventListener("submit", function() { notify(creator, request, "ha aggiunto un commento al tuo post"); });
         }
     } else {
-        author = add_comment.querySelector(".comment_author").value;
         add_comment.querySelector("textarea").placeholder = "Commento al post di " + add_comment.querySelector("input").value;
-        if(username != author) {
-            add_comment.addEventListener("submit", function() { notify(author, request, "ha aggiunto una risposta al tuo commento"); });
-        }
     }
 }
 
@@ -237,12 +233,8 @@ function like(post_id, creator, comment_id) {
         }
         addLikeOrDislike(post_id, creator, comment_id, true);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
-        if(creator != username) {
-            if(comment_id) {
-                notify(author, post_id, "ha aggiunto un like al tuo commento");
-            } else {
-                notify(author, post_id, "ha aggiunto un like al tuo post");
-            }
+        if(!comment_id && creator != username) {
+            notify(author, post_id, "ha aggiunto un like al tuo post");
         }
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
