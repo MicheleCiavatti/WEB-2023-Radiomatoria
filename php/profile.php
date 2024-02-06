@@ -65,7 +65,7 @@
                                     <?php if (isFriend($username)): ?>
                                         <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
                                     <?php elseif (friendshipRequested($username)): ?>
-                                        <button id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
+                                        <button  class="access_required" id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
                                     <?php else: ?>
                                         <button class="access_required" id="friend_request">Richiedi amicizia</button>
                                     <?php endif; ?>
@@ -87,8 +87,8 @@
                         </ul>
                     <?php else: ?>
                         <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
-                            <input type="file" name="profile_image" accept=".jpg, .jpeg, .png" required>
-                            <input type="submit" name="upload_propic" value="Cambia immagine">
+                            <label for="profile_image">Seleziona immagine<input type="file" class="neutral" name="profile_image" accept=".jpg, .jpeg, .png" required/></label>
+                            <input type="submit" name="upload_propic" value="Cambia immagine"/>
                         </form>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -245,7 +245,7 @@
                         <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>" class="timeslots">
                             <?= $intervallo[0] ?> - <?= $intervallo[1]?>
                             <?php if ($_SESSION['NomeUtente'] == $username):?>
-                                <button class="access_required" name="remove_timeslot_buttons" type="button">Rimuovi</button> 
+                                <button class="remove_timeslot_buttons neg" name="remove_timeslot_buttons" type="button">Rimuovi</button> 
                             <?php endif; ?>
                         </li>
                         <?php endforeach; ?>
@@ -256,7 +256,7 @@
                         <form action="includes/addTimeSlot.inc.php" method="post">
                             <label for="orainizio">OraInizio:<input name="orainizio" id="orainizio" type="time" required></label>
                             <label for="orafine">OraFine:<input name="orafine" id="orafine" type="time" required></label>
-                            <input type="submit" value="Aggiungi">
+                            <input type="submit" class="neutral" value="Aggiungi">
                         </form>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -269,13 +269,13 @@
                     <span>Indizio: <?= $utente['Indizio']?></span>
                     <form action="includes/changeClue.inc.php" method="post">
                         <label for="new_clue">Modifica l'indizio: <input name="new_clue" id="new_clue" required/></label>
-                        <input type="submit" value="Modifica indizio">
+                        <input type="submit" class="neutral" value="Modifica indizio">
                     </form>
                     <form action="includes/changePW.inc.php" method="post">
                         <label for="new_pw1">Cambia password (almeno 8 caratteri):<input name="new_pw1" type="password" id="new_pw1" minlength="8" required></label></br>
                         <label for="new_pw2">Conferma nuova password:<input name="new_pw2" type="password" id="new_pw2" minlength="8" required></label></br>
                         <label for="old_pw">Vecchia password:<input name="old_pw" type="password" id="old_pw" minlength="8" required></label>
-                        <input type="submit" value="Modifica password">
+                        <input type="submit" class="neutral" value="Modifica password">
                     </form>
                 </section>
             <?php endif; ?>
@@ -289,17 +289,13 @@
                             <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
                                 <label for="post_image">Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></br>
                                 <label for="post_text">Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
-                                <input type="submit" name="upload_post" value="Pubblica">
+                                <input class="pos" type="submit" name="upload_post" value="Pubblica">
                             </form>
                         </p>
                     <?php endif; ?>
                 </header>
-                <?php if (empty($post_list)): ?>
-                    <p><?= $username; ?> non ha alcun post.</p>
-                <?php else:
-                    foreach($post_list as $post):
-                ?>
-                    <article class="post" id="post<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
+                <?php foreach($post_list as $post): ?>
+                    <article class="post" id=<?= "Post_" . $post['Creatore'] . "_" . $post['NrPost']?>>
                         <header>
                             <?php if ($post['ImmaginePost'] != null): ?>
                                 <img src="<?= $post['ImmaginePost']; ?>" alt=""/>
@@ -332,8 +328,8 @@
                             <header>
                                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" class="add_comment_form" id="add_comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
-                                        <input type="hidden" name="post_author" value="<?= $post['Creatore']; ?>"/>
-                                        <input type="hidden" name="post_number" value="<?= $post['NrPost']; ?>"/>
+                                        <input type="hidden" class="post_author" name="post_author" value="<?= $post['Creatore']; ?>"/>
+                                        <input type="hidden" class="post_number" name="post_number" value="<?= $post['NrPost']; ?>"/>
                                         <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
                                         <label>Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
                                         <input type="reset" class="comment_reset" value="Annulla commento"/>

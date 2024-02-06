@@ -23,7 +23,7 @@
         <nav>
             <ul>
                 <li id="pag_profilo"><a href="profile.php?id=<?= $_SESSION['NomeUtente']; ?>"><?= $_SESSION['NomeUtente']; ?></a></li>
-                <li><a href="home.php">Home page</a></li>
+                <li id="pag_principale"><a href="home.php">Home page</a></li>
                 <li id="pag_guida"><a href="guida.php">Guida</a></li>
                 <li><a href="notifiche.php?id=<?= $_SESSION['NomeUtente']; ?>">Notifiche</a></li>
                 <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
@@ -40,13 +40,20 @@
                                 <li id="nid<?= $n['IdNotifica']; ?>" name="non_letta">
                                     <header><h4>Notifica da <a href="profile.php?id=<?=strval($n['Mandante'])?>"><?= strval($n['Mandante']); ?></a></h4></header>
                                     <p><?= strval($n['TestoNotifica']); ?></p>
-                                    <?php if ($n['Richiesta'] == true): ?>
-                                        <button class="friendrefuse" name="friend_refuse">Rifiuta</button>
-                                        <button class="friendaccept" name="friend_accept">Accetta</button>
+                                    <?php if ($n['Richiesta'] == 1): ?>
+                                        <ul>
+                                            <li><button class="friendrefuse neg" name="friend_refuse">Rifiuta</button></li>
+                                            <li><button class="friendaccept pos" name="friend_accept">Accetta</button></li>
+                                        </ul>
                                     <?php else: ?>
-                                        <button class="removenotification" name="note_remove">Rimuovi notifica</button>
+                                        <button class="removenotification neutral" name="note_remove">Rimuovi notifica</button>
+                                        <?php if ($n['Richiesta'] > 1): ?>
+                                            <input type="hidden" value="<?= strval($n['Richiesta'])?>">
+                                            <button class="redirect_post pos">Vai al post</button>
+                                        <?php else: ?>
+                                            <button class="readnotification neg">Segna come letta</button>
+                                        <?php endif; ?>
                                     <?php endif; ?>
-                                    <button class="readnotification">Segna come letta</button>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -61,8 +68,10 @@
                                     <header><h4>Notifica da <a href="profile.php?id=<?=strval($n['Mandante'])?>"><?= strval($n['Mandante']); ?></a></h4></header>
                                     <p><?= strval($n['TestoNotifica']); ?></p>
                                     <?php if ($n['Richiesta'] == true): ?>
-                                        <button class="friendrefuse" name="friend_refuse">Rifiuta</button>
-                                        <button class="friendaccept" name="friend_accept">Accetta</button>
+                                        <ul>
+                                            <li><button class="friendrefuse neg" name="friend_refuse">Rifiuta</button></li>
+                                            <li><button class="friendaccept pos" name="friend_accept">Accetta</button></li>
+                                        </ul>
                                     <?php else: ?>
                                         <button class="removenotification" >Rimuovi notifica</button>
                                     <?php endif; ?>

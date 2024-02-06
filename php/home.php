@@ -28,7 +28,7 @@ if (isset($_SESSION['NomeUtente'])) {
         <?php if (!isset($_SESSION['NomeUtente'])): ?> <!-- If user is not logged in -->
             <nav class="nav4">
                 <ul>
-                    <li id="pag_principale"><a href="home.php">Home</a></li>
+                    <li class="current_page" id="pag_principale"><a href="home.php">Home</a></li>
                     <li id="pag_guida"><a href="guida.php">Guida</a></li>
                     <li id="pag_creazione"><a href="../signup.html">Signup</a></li>
                     <li id="pag_accesso"><a href="../login.html">Login</a></li>
@@ -53,7 +53,7 @@ if (isset($_SESSION['NomeUtente'])) {
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <header id="user_data">
                         <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
-                        <p><?= $_SESSION['NomeUtente']; ?></p>
+                        <p id="session_user_name"><?= $_SESSION['NomeUtente']; ?></p>
                 </header>
             <?php endif; ?>
             <section>
