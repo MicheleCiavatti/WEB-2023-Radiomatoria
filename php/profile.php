@@ -135,7 +135,7 @@
                         <header><h2>Orari</h2></header>
                         <ul>
                             <?php foreach($orari as $intervallo): ?>
-                            <li><?= $intervallo[0] ?> - <?= $intervallo[1]?></li>
+                            <li><?= substr($intervallo[0], 0, -3) ?> - <?= substr($intervallo[1], 0, -3)?></li>
                             <?php endforeach; ?>
                         </ul>
                     </section>
@@ -147,7 +147,7 @@
                     <ul>
                         <?php foreach($orari as $intervallo): ?>
                             <li id="ts<?= str_replace(':', '_', $intervallo[0] . $intervallo[1])?>">
-                                <p><?= $intervallo[0] ?> - <?= $intervallo[1]?></p>
+                                <p><?= substr($intervallo[0], 0, -3)?> - <?= substr($intervallo[1], 0, -3)?></p>
                                 <p>
                                     <input type="hidden" value="<?= $intervallo[0] ?>">
                                     <button class="remove_timeslot_buttons neg" type="button">Rimuovi</button>
