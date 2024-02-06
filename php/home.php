@@ -73,27 +73,27 @@
                         <?php if ($post['ImmaginePost'] != null): ?>
                             <img src="<?= strval($post['ImmaginePost']); ?>" alt=""/>
                         <?php endif; ?>
-                        <section>
-                            <p><?= strval($post['TestoPost']); ?></p>
-                            <!-- like/un-like button -->
-                            <footer>
-                                <ul>
-                                    <li>Likes: <?= getLikes($post['Creatore'], $post['NrPost']) ?></li>
-                                    <?php if (isset($_SESSION['NomeUtente'])): ?>
-                                        <li>
-                                            <input type="hidden" value="<?= strval($post['Creatore']); ?>">
-                                                <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
-                                                    <button class="like_button pos">Like</button>
-                                                <?php else: ?>
-                                                    <button class="unlike_button neg">Un-like</button>
-                                                <?php endif; ?>
-                                            <input type="hidden" value="<?= strval($post['NrPost']); ?>">
-                                        </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </footer>
-                        </section>
                     </header>
+                    <section>
+                        <p><?= strval($post['TestoPost']); ?></p>
+                        <!-- like/un-like button -->
+                        <footer>
+                            <ul>
+                                <li>Likes: <?= getLikes($post['Creatore'], $post['NrPost']) ?></li>
+                                <?php if (isset($_SESSION['NomeUtente'])): ?>
+                                    <li>
+                                        <input type="hidden" value="<?= strval($post['Creatore']); ?>">
+                                            <?php if (!isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'])): ?>
+                                                <button class="like_button pos">Like</button>
+                                            <?php else: ?>
+                                                <button class="unlike_button neg">Un-like</button>
+                                            <?php endif; ?>
+                                        <input type="hidden" value="<?= strval($post['NrPost']); ?>">
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </footer>
+                    </section>
                     <!-- comments -->
                     <?php $comments = getComments($post['Creatore'], $post['NrPost']);?>
                     <section>
