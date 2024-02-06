@@ -49,6 +49,7 @@
                                 <?php if ($n['Lettura']): ?>
                                     <input type="hidden" value="<?= strval($n['Lettura'])?>">
                                     <button class="redirect_post pos">Vai al post</button>
+                                    <input type="hidden" name="notification_id" value="<?= strval($n['IdNotifica']); ?>">
                                 <?php endif; ?>
                             <?php endif; ?>
                         </section>

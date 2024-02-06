@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const button = redirectButtons[i];
             button.addEventListener('click', function() {
                 const pid = button.previousElementSibling.value;
+                const section = button.closest('section');
+                const other = section.querySelector('header h3 a').innerHTML;
+                const nid = button.nextElementSibling.value;
+                removeNotification(username, other, section, nid);
                 window.location.href = '../php/profile.php?id=' + username + '&pid=' + pid;
             });
         }
