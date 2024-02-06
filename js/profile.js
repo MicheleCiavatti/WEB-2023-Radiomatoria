@@ -22,6 +22,8 @@ const remove_comment_button = document.getElementsByName("remove_comment");
 const comment_post_button = document.getElementsByName("comment_post");
 const respond_comment_button = document.getElementsByName("answer_comment");
 
+const username = document.getElementById('session_user_name') ? document.getElementById('session_user_name').innerHTML : null;
+
 function decorateTable(start, end, color) {
     let oraInizio = start.slice(0,2);
     let minutiInizio = start.slice(3,5);
@@ -68,17 +70,16 @@ function decorateTable(start, end, color) {
 document.addEventListener('DOMContentLoaded', function() {
     if(document.getElementById("comandi")) {
         /* Handling of buttons in the top of the page */
-        const username = document.getElementById('session_user_name').innerHTML;
         const addFriendButton = document.getElementById('friend_request');
         if (addFriendButton) {
-            addFriendButton.addEventListener('click', function() { notify(username, 1, "ti ha inviato una richiesta di amicizia") });
+            addFriendButton.addEventListener('click', function() { notify(owner, 1, "ti ha inviato una richiesta di amicizia") });
         }
         const cancelRequestButton = document.getElementById('cancel_request');
         if (cancelRequestButton) {
-            cancelRequestButton.addEventListener('click', function() { removeFriendRequest(username) });
+            cancelRequestButton.addEventListener('click', function() { removeFriendRequest() });
         }
         if (removeFriendButton.length > 0) {
-            removeFriendButton[0].addEventListener('click', function() { removeFriend(username, owner) });
+            removeFriendButton[0].addEventListener('click', function() { removeFriend(owner) });
         }
         const addFollowButton = document.getElementById('follow_button');
         if (addFollowButton) {
@@ -87,14 +88,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         if (removeFollowButton.length > 0) {
-            removeFollowButton[0].addEventListener('click', function() { removeFollow(username, owner) });
+            removeFollowButton[0].addEventListener('click', function() { removeFollow(owner) });
         }
         const addBlockButton = document.getElementById('block_button');
         if (addBlockButton) {
-            addBlockButton.addEventListener('click', function() { addBlock(username) });
+            addBlockButton.addEventListener('click', function() { addBlock() });
         }
         if (removeBlockButton.length > 0) {
-            removeBlockButton[0].addEventListener('click', function() { removeBlock(username, owner) });
+            removeBlockButton[0].addEventListener('click', function() { removeBlock(owner) });
         }
     } else {
         /* Handling of buttons in the bottom of the page */
@@ -172,8 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /* Handling post addition */
-    const user = document.getElementById("pag_profilo");
-    if(user) {
+    if(username) {
         const add_post = document.getElementById('add_post_form');
         const add_post_button = document.getElementById('add_post_button');
     
@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
         /* Likes and dislikes */
         const like_buttons = document.getElementsByName("like_button");
         const dislike_buttons = document.getElementsByName("dislike_button");
-        const author = user.firstChild.href.split("=")[1];
         for(i = 0; i < like_buttons.length; i++) {
             let like_button = like_buttons[i];
             if(like_button.className == "preferred_button") {
@@ -193,13 +192,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let post_id = element_id.split("_")[0];
             let creator = element_id.split("_")[1];
             let comment_id = element_id.split("_")[2];
-            like_button.addEventListener("click", function() { like(author, post_id, creator, comment_id); });
+            like_button.addEventListener("click", function() { like(post_id, creator, comment_id); });
 
             let dislike_button = dislike_buttons[i];
             if(dislike_button.className == "preferred_button") {
                 decorateDislike(dislike_button.id);
             }
-            dislike_button.addEventListener("click", function() { dislike(author, post_id, creator, comment_id); });
+            dislike_button.addEventListener("click", function() { dislike(post_id, creator, comment_id); });
         }
     }
 
@@ -299,7 +298,7 @@ function removeTimeInterval(start, end, id) {
     xhr.send();
 }
 
-function addFollow(username) {
+function addFollow() {
     let xhr = new XMLHttpRequest();
     let url = 'functions/addFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
     xhr.open('GET', url, true);
@@ -307,7 +306,7 @@ function addFollow(username) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log('Follow aggiunto con successo al server');
-            notify(username, 0, "è diventato un tuo follower");
+            notify(owner, 0, "è diventato un tuo follower");
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error("Errore durante l'aggiunta del follow:", xhr.status);
         }
@@ -315,7 +314,7 @@ function addFollow(username) {
     xhr.send();
 }
 
-function addBlock(username) {
+function addBlock() {
     let xhr = new XMLHttpRequest();
     let url = 'functions/addBlock.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
     xhr.open('GET', url, true);
@@ -331,7 +330,7 @@ function addBlock(username) {
     xhr.send();
 }
 
-function removeBlock(username, other) {
+function removeBlock(other) {
     let xhr = new XMLHttpRequest();
     let url = 'functions/removeBlock.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
@@ -347,7 +346,7 @@ function removeBlock(username, other) {
     xhr.send();
 }
 
-function removeFollow(username, other) {
+function removeFollow(other) {
     let xhr = new XMLHttpRequest();
     let url = 'functions/removeFollow.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
@@ -363,7 +362,7 @@ function removeFollow(username, other) {
     xhr.send();
 }
 
-function removeFriendRequest(username) {
+function removeFriendRequest() {
     const xhr = new XMLHttpRequest();
     const url = 'functions/removeFriendRequest.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(owner);
     xhr.open('GET', url, true);
@@ -379,7 +378,7 @@ function removeFriendRequest(username) {
     xhr.send();
 }
 
-function removeFriend(username, other) {
+function removeFriend(other) {
     const xhr = new XMLHttpRequest();
     const url = 'functions/removeFriend.php?username=' + encodeURIComponent(username) + '&other=' + encodeURIComponent(other);
     xhr.open('GET', url, true);
@@ -395,9 +394,9 @@ function removeFriend(username, other) {
     xhr.send();
 }
 
-function notify(username, request, text) {
+function notify(receiver, request, text) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/notify.php?username=' + encodeURIComponent(username) + '&receiver=' + encodeURIComponent(owner) + '&request=' + encodeURIComponent(request) + '&text=' + encodeURIComponent(text);
+    let url = 'functions/notify.php?username=' + encodeURIComponent(username) + '&receiver=' + encodeURIComponent(receiver) + '&request=' + encodeURIComponent(request) + '&text=' + encodeURIComponent(text);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -455,14 +454,15 @@ function toggle(element) {
 
 function mostraFormCommenti(add_comment, risposta) {
     toggle(add_comment);
-    username = add_comment.querySelector(".post_author").value;
+    creator = add_comment.querySelector(".post_author").value;
     request = add_comment.querySelector(".post_number").value;
     if(risposta) {
         add_comment.querySelector("textarea").value = "@" + risposta;
-        add_comment.addEventListener("submit", function() { notify(username, request, "ha aggiunto un commento al tuo post"); });
+        if(username != creator) {
+            add_comment.addEventListener("submit", function() { notify(creator, request, "ha aggiunto un commento al tuo post"); });
+        }
     } else {
         add_comment.querySelector("textarea").placeholder = "Commento al post di " + add_comment.querySelector("input").value;
-        add_comment.addEventListener("submit", function() { notify(username, request, "ha aggiunto una risposta al tuo commento"); });
     }
 }
 
@@ -478,9 +478,9 @@ function decorateDislike(dislike) {
     active_dislike.style.color = "magenta";
 }
 
-function addLikeOrDislike(author, post_id, creator, comment_id, type) {
+function addLikeOrDislike(post_id, creator, comment_id, type) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/addLikeOrDislike.php?author=' + encodeURIComponent(author) + '&post_id=' + encodeURIComponent(post_id) +
+    let url = 'functions/addLikeOrDislike.php?author=' + encodeURIComponent(username) + '&post_id=' + encodeURIComponent(post_id) +
     '&creator=' + encodeURIComponent(creator) + '&comment_id=' + encodeURIComponent(comment_id) + '&type=' + encodeURIComponent(type);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -495,9 +495,9 @@ function addLikeOrDislike(author, post_id, creator, comment_id, type) {
     xhr.send();
 }
 
-function removeLikeOrDislike(author, post_id, creator, comment_id) {
+function removeLikeOrDislike(post_id, creator, comment_id) {
     let xhr = new XMLHttpRequest();
-    let url = 'functions/removeLikeOrDislike.php?author=' + encodeURIComponent(author) + '&post_id=' + encodeURIComponent(post_id) +
+    let url = 'functions/removeLikeOrDislike.php?author=' + encodeURIComponent(username) + '&post_id=' + encodeURIComponent(post_id) +
     '&creator=' + encodeURIComponent(creator) + '&comment_id=' + encodeURIComponent(comment_id);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -512,19 +512,19 @@ function removeLikeOrDislike(author, post_id, creator, comment_id) {
     xhr.send();
 }
 
-function like(author, post_id, creator, comment_id) {
+function like(post_id, creator, comment_id) {
     let like_button = document.getElementById('like_button_' + post_id + '_' + creator + '_' + comment_id);
     let like_number = document.getElementById('like_number_' + post_id + '_' + creator + '_' + comment_id);
     if(like_button.textContent.charAt(4)!='d') {
         if(document.getElementById('dislike_button_' + post_id + '_' + creator + '_' + comment_id).textContent.charAt(7)=='d') {
-            dislike(author, post_id, creator, comment_id);
+            dislike(post_id, creator, comment_id);
         }
-        addLikeOrDislike(author, post_id, creator, comment_id, true);
+        addLikeOrDislike(post_id, creator, comment_id, true);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
-        if(comment_id) {
-            notify(creator, post_id, "ha aggiunto un like al tuo commento");
-        } else {
-            notify(creator, post_id, "ha aggiunto un like al tuo post");
+        if(!comment_id) {
+            if(creator != username) {
+                notify(creator, post_id, "ha aggiunto un like al tuo post");
+            }
         }
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
@@ -535,18 +535,18 @@ function like(author, post_id, creator, comment_id) {
     }
 }
 
-function dislike(author, post_id, creator, comment_id) {
+function dislike(post_id, creator, comment_id) {
     let dislike_button = document.getElementById('dislike_button_' + post_id + '_' + creator + '_' + comment_id);
     let dislike_number = document.getElementById('dislike_number_' + post_id + '_' + creator + '_' + comment_id);
     if(dislike_button.textContent.charAt(7)!='d') {
         if(document.getElementById('like_button_' + post_id + '_' + creator + '_' + comment_id).textContent.charAt(4)=='d') {
-            like(author, post_id, creator, comment_id);
+            like(post_id, creator, comment_id);
         }
-        addLikeOrDislike(author, post_id, creator, comment_id, false);
+        addLikeOrDislike(post_id, creator, comment_id, false);
         decorateDislike('dislike_button_' + post_id + '_' + creator + '_' + comment_id);
         dislike_number.innerText = parseInt(dislike_number.innerText) + 1;
     } else {
-        removeLikeOrDislike(author, post_id, creator, comment_id);
+        removeLikeOrDislike(post_id, creator, comment_id);
         dislike_button.innerHTML = "Dislike"
         dislike_button.style.color = "black";
         dislike_number.innerText = parseInt(dislike_number.innerText) - 1;
