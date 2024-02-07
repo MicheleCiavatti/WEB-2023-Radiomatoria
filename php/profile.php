@@ -10,7 +10,7 @@
     $amici = $data[3]; 
     $seguiti = $data[4]; 
     $bloccati = $data[5];
-    $post_list = getPosts($username);
+    $post_list = getPosts($username, true);
     $n_notifications = isset($_SESSION['NomeUtente']) ? getNotifications($_SESSION['NomeUtente']) : 0;
     if(!isset($_SESSION['NomeUtente'])) {
         $_SESSION['NomeUtente'] = null;
@@ -430,7 +430,7 @@
                                 <li id="<?= $bloccato[0]; ?>">
                                     <img src="<?= $bloccato[1]; ?>" alt=""/>
                                     <a href="profile.php?id=<?= $bloccato[0]; ?>)"><?= $bloccato[0]; ?></a>
-                                    <button class="access_required"  name="remove_block_buttons">Perdona</button>
+                                    <button class="access_required" name="remove_block_buttons">Perdona</button>
                                 </li>
                             <?php endforeach; ?>
                         </ul>

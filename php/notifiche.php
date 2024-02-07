@@ -63,7 +63,7 @@
                             <article id="nid<?= $n['IdNotifica'] ?>" name="letta">
                                 <header><h4>Notifica da <a href="profile.php?id=<?=strval($n['Mandante'])?>"><?= strval($n['Mandante']); ?></a></h4></header>
                                 <p><?= strval($n['TestoNotifica']); ?></p>
-                                <?php if ($n['Richiesta'] == true): ?>
+                                <?php if ($n['Richiesta'] == 1): ?>
                                     <ul class="respond_to_<?=strval($n['Mandante'])?>">
                                         <li><button class="friendrefuse neg" name="friend_refuse">Rifiuta</button></li>
                                         <li><button class="friendaccept pos" name="friend_accept">Accetta</button></li>

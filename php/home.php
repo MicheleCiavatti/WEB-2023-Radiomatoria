@@ -2,7 +2,7 @@
 session_start();
 require_once "includes/homepageInfo.inc.php";
 if (isset($_SESSION['NomeUtente'])) {
-    $post_list = getPosts($_SESSION['NomeUtente']);
+    $post_list = getPosts($_SESSION['NomeUtente'], false);
     $n_notifications = getNotifications($_SESSION['NomeUtente']);
     if(empty(glob($_SESSION['FotoProfilo']))) {
         $_SESSION['FotoProfilo'] = '../img/default.png';
