@@ -18,6 +18,16 @@ if (isset($_GET['username']) && isset($_GET['receiver']) && isset($_GET['text'])
         header('location: ../profile.php?id=' . $uid . '&error=blocked');
         exit();
     }
+    $repeatcheck = $dbh->connect()->prepare("SELECT * FROM NOTIFICHE WHERE Mandante = ? AND Ricevente = ? AND Richiesta = ? AND TestoNotifica = ?");
+    if(!$repeatcheck->execute(array($uid, $receiver, $request, $text))) {
+        $repeatcheck = null;
+        header('location: ../../login.html?error=stmtfailed');
+        exit();
+    }
+    if($repeatcheck->rowCount() > 0) {
+        header('location: ../profile.php?id=' . $uid . '&error=repeated');
+        exit();
+    }
     $idcheck = $dbh->connect()->prepare("SELECT * FROM NOTIFICHE WHERE IdNotifica = ?");
     if($idcheck === false) {
         error_log("Errore nella preparazione della query SELECT.");
