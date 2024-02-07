@@ -103,21 +103,21 @@ document.addEventListener('DOMContentLoaded', function() {
             for (i = 0; i < removeFriendButton.length; i++) {
                 let button = removeFriendButton[i];
                 let other = button.parentElement.id;
-                button.addEventListener('click', function() { removeFriend(owner, other) });
+                button.addEventListener('click', function() { removeFriend(other) });
             }
         }
         if (removeFollowButton.length > 0) {
             for (i = 0; i < removeFollowButton.length; i++) {
                 let button = removeFollowButton[i];
                 let other = button.parentElement.id;
-                button.addEventListener('click', function() { removeFollow(owner, other) });
+                button.addEventListener('click', function() { removeFollow(other) });
             }
         }
         if (removeBlockButton.length > 0) {
             for (i = 0; i < removeBlockButton.length; i++) {
                 let button = removeBlockButton[i];
                 let other = button.parentElement.id;
-                button.addEventListener('click', function() { removeBlock(owner, other) });
+                button.addEventListener('click', function() { removeBlock(other) });
             }
         }
     }
@@ -249,6 +249,18 @@ document.addEventListener('DOMContentLoaded', function() {
             for(i=0; i<comment_post_button.length; i++) {
                 let button = comment_post_button[i];
                 let add_comment = document.getElementById("add_" + button.id);
+                creator = add_comment.querySelector(".post_author").value;
+                request = add_comment.querySelector(".post_number").value;
+                if(username != creator) {
+                    add_comment.addEventListener("submit", function(event) {
+                        event.preventDefault();
+                        notify(creator, request, "ha aggiunto un commento al tuo post");
+                        fetch(add_comment.action, {
+                            method: 'POST',
+                            body: new URLSearchParams(new FormData(add_comment))
+                        });
+                    });
+                }
                 button.addEventListener("click", function() { mostraFormCommenti(add_comment, null); });
             }
         }
@@ -454,13 +466,8 @@ function toggle(element) {
 
 function mostraFormCommenti(add_comment, risposta) {
     toggle(add_comment);
-    creator = add_comment.querySelector(".post_author").value;
-    request = add_comment.querySelector(".post_number").value;
     if(risposta) {
         add_comment.querySelector("textarea").value = "@" + risposta;
-        if(username != creator) {
-            add_comment.addEventListener("submit", function() { notify(creator, request, "ha aggiunto un commento al tuo post"); });
-        }
     } else {
         add_comment.querySelector("textarea").placeholder = "Commento al post di " + add_comment.querySelector("input").value;
     }
@@ -521,14 +528,12 @@ function like(post_id, creator, comment_id) {
         }
         addLikeOrDislike(post_id, creator, comment_id, 1);
         decorateLike('like_button_' + post_id + '_' + creator + '_' + comment_id);
-        if(!comment_id) {
-            if(creator != username) {
-                notify(creator, post_id, "ha aggiunto un like al tuo post");
-            }
+        if(comment_id == 0 && creator != username) {
+            notify(creator, post_id, "ha aggiunto un like al tuo post");
         }
         like_number.innerText = parseInt(like_number.innerText) + 1;
     } else {
-        removeLikeOrDislike(author, post_id, creator, comment_id);
+        removeLikeOrDislike(post_id, creator, comment_id);
         like_button.innerHTML = "Like"
         like_button.style.color = "black";
         like_number.innerText = parseInt(like_number.innerText) - 1;
