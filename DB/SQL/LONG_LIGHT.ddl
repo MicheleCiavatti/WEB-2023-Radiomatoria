@@ -53,7 +53,7 @@ create table FOLLOW (
 create table BLOCCO (
      Bloccato varchar(50) not null,
      Bloccante varchar(50) not null,
-     constraint IDFOLLOW primary key (Bloccante, Bloccato));
+     constraint IDBLOCCO primary key (Bloccante, Bloccato));
 
 create table INTERAZIONI (
      Creatore varchar(50) not null,
