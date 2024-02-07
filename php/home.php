@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once "includes/homepageInfo.inc.php";
+    $user = isset($_SESSION['NomeUtente']) ? getUserInfo($_SESSION['NomeUtente']) : null;
     $posts = isset($_SESSION['NomeUtente']) ? getPosts($_SESSION['NomeUtente']) : getPosts(null);
         if (isset($_SESSION['NomeUtente']) && empty(glob($_SESSION['FotoProfilo']))) {
             $_SESSION['FotoProfilo'] = '../img/default.png';
@@ -47,8 +48,8 @@
         <main>
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <header>
-                        <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
-                        <p><?= $_SESSION['NomeUtente']; ?></p>
+                        <img src="<?= $user['FotoProfilo']; ?>" alt=""/>
+                        <p><?= $user['NomeUtente']; ?></p>
                 </header>
             <?php endif; ?>
             <!-- post form -->

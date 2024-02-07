@@ -1,6 +1,21 @@
 <?php
 require_once __DIR__ . "/../classes/dbh.classes.php";
 
+function getUserInfo($username) {
+    $dbh = new Dbh;
+    $s = $dbh->connect()->prepare(
+        'SELECT *
+         FROM UTENTI
+         WHERE NomeUtente = ?;'
+    );
+    if (!$s->execute(array($username))) {
+        $s = null;
+        header('location: ../home.php?error=stmtfailed');
+        exit();
+    }
+    return $s->fetch(PDO::FETCH_ASSOC);
+}
+
 function getPosts($username) {
     $dbh = new Dbh;
     if ($username == null) {
