@@ -6,6 +6,7 @@ $dbh = new Dbh;
 if (isset($_GET['username']) && isset($_GET['receiver']) && isset($_GET['text'])) {
     $uid = $_GET['username'];
     $receiver = $_GET['receiver'];
+    $text = $_GET['text'];
     $request = $_GET['request'];
     $blockcheck = $dbh->connect()->prepare("SELECT * FROM BLOCCO WHERE Bloccante = ? AND Bloccato = ?");
     if(!$blockcheck->execute(array($receiver, $uid))) {
