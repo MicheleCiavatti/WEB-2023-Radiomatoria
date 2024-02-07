@@ -230,10 +230,6 @@ aside  > ul {
     list-style-type: square;
 }
 
-#session_user_name {
-    display: none;
-}
-
 article header h2 {
     display: block;
     text-align: center;
