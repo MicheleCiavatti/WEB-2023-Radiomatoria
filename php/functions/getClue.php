@@ -15,9 +15,12 @@ if (isset($_GET['mail'])) {
         header($stringHeader . '?error=stmtfailed');
         exit();
     }
-    $clue = $s->fetch();
-    if ($clue) {
+    if ($s->rowCount() > 0) {
+        $clue = $s->fetch();
         header($stringHeader . '?clue=' . $clue['Indizio']);
+        exit();
+    } else {
+        header($stringHeader . '?MailInesistente');
         exit();
     }
 }
