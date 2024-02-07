@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../classes/dbh.classes.php";
 
-function getPosts($username) {
+function getPosts($username, $profile) {
     $dbh = new Dbh;
     if ($username == null) {
         $s = $dbh->connect()->prepare(
@@ -11,10 +11,7 @@ function getPosts($username) {
              ORDER BY DataPost DESC
              LIMIT 20;'
         );
-        if (!$s->execute()) {
-            return false;
-        }
-    } else {
+    } else if($profile == true) {
         $s = $dbh->connect()->prepare(
             'SELECT P.*, COUNT(CASE WHEN I.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT I.Tipo THEN 1 END) AS DislikePost
              FROM POST P LEFT JOIN INTERAZIONI I ON P.NrPost = I.ElementId AND P.Creatore = I.Creatore
@@ -28,27 +25,9 @@ function getPosts($username) {
                  OR P.Creatore = ?
              GROUP BY P.Creatore, P.NrPost
              ORDER BY P.DataPost DESC
-             LIMIT 15;'
+             LIMIT 20;'
         );
-        if (!$s->execute(array($username, $username, $username))) {
-            return false;
-        }
-    }
-    $result = $s->fetchAll(PDO::FETCH_ASSOC);
-    $posts = [];
-    foreach ($result as $row) {
-        $posts[] = array(
-            'Creatore' => $row['Creatore'],
-            'NrPost' => $row['NrPost'],
-            'DataPost' => $row['DataPost'],
-            'TestoPost' => $row['TestoPost'],
-            'ImmaginePost' => $row['ImmaginePost'],
-            'LikePost' => $row['LikePost'],
-            'DislikePost' => $row['DislikePost'],
-        );
-    }
-    if ($username != null) {
-        $limit = 20 - $s->rowCount();
+    } else {
         $s = $dbh->connect()->prepare(
             'SELECT P.*, COUNT(CASE WHEN I.Tipo THEN 1 END) AS LikePost, COUNT(CASE WHEN NOT I.Tipo THEN 1 END) AS DislikePost
              FROM POST P LEFT JOIN INTERAZIONI I ON P.NrPost = I.ElementId AND P.Creatore = I.Creatore
@@ -64,27 +43,22 @@ function getPosts($username) {
              ORDER BY DataPost DESC
              LIMIT 20;'
         );
-        if (!$s->execute(array($username, $username, $username))) {
-            return false;
-        }
-        $i = 0;
-        $result = $s->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($result as $row) {
-            if($i == $limit) {
-                break;
-            }
-            error_log(print_r($row, true));
-            array_unshift($posts, array(
-                'Creatore' => $row['Creatore'],
-                'NrPost' => $row['NrPost'],
-                'DataPost' => $row['DataPost'],
-                'TestoPost' => $row['TestoPost'],
-                'ImmaginePost' => $row['ImmaginePost'],
-                'LikePost' => $row['LikePost'],
-                'DislikePost' => $row['DislikePost'],
-                ));
-            $i++;
-        }
+    }
+    if (!$s->execute(array($username, $username, $username))) {
+        return false;
+    }
+    $result = $s->fetchAll(PDO::FETCH_ASSOC);
+    $posts = [];
+    foreach ($result as $row) {
+        $posts[] = array(
+            'Creatore' => $row['Creatore'],
+            'NrPost' => $row['NrPost'],
+            'DataPost' => $row['DataPost'],
+            'TestoPost' => $row['TestoPost'],
+            'ImmaginePost' => $row['ImmaginePost'],
+            'LikePost' => $row['LikePost'],
+            'DislikePost' => $row['DislikePost'],
+        );
     }
     return $posts;
 }
