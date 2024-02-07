@@ -65,7 +65,7 @@ if (isset($_SESSION['NomeUtente'])) {
                     <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
                         <input type="hidden" name="from_home"/>
                         <ul>
-                            <li><label for="post_image">Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></label></li>  
+                            <li><label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"/></label></li>  
                             <li><label for="post_text">Testo post<textarea name="post_text" placeholder="Scrivi un post" rows="2" cols="50" required></textarea></label></li>
                             <li><button type="submit" name="upload_post">Pubblica</button></li>
                         </ul>
@@ -111,7 +111,7 @@ if (isset($_SESSION['NomeUtente'])) {
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" class="add_comment_form" id="add_comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
                                         <input type="hidden" class="post_author" name="post_author" value="<?= strval($post['Creatore']) ?>" />
                                         <input type="hidden" class="post_number" name="post_number" value="<?= strval($post['NrPost']) ?>" />
-                                        <label for="comment_image">Carica immagine<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
+                                        <label>Carica immagine<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
                                         <label for="comment_text">Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
                                         <input type="hidden" name="from_home"/>
                                         <input type="reset" class="comment_reset" value="Annulla commento" />
