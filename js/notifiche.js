@@ -72,8 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
         for (i = 0; i < redirectButtons.length; i++) {
             let button = redirectButtons[i];
             const pid = button.previousElementSibling.value;
-            let article = button.closest('article');
-            let nid = article.id;
             button.addEventListener('click', function() {
                 window.location.href = '../php/profile.php?id=' + username + '&pid=Post_' + username + '_' + pid;
             });
