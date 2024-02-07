@@ -3,6 +3,7 @@ require_once '../classes/dbh.classes.php';
 
 if (isset($_GET['mail'])) {
     $mail = $_GET['mail'];
+    error_log($mail);
     $dbh = new Dbh();
     $stringHeader = 'location: ../../login.html';
     $s = $dbh->connect()->prepare(

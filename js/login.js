@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function getClue(mail) {
     const xhr = new XMLHttpRequest();
     const url = 'php/functions/getClue.php?mail=' + encodeURIComponent(mail);
+    console.log(url);
     xhr.open('GET', url, false);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
