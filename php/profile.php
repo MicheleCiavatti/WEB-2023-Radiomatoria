@@ -89,7 +89,7 @@
                     <?php else: ?>
                         <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
                             <ul>
-                                <li><label for="profile_image">Seleziona immagine<input type="file" class="neutral" name="profile_image" accept=".jpg, .jpeg, .png" required></label></li>
+                                <li><label>Seleziona immagine<input type="file" class="neutral" name="profile_image" accept=".jpg, .jpeg, .png" required></label></li>
                                 <li><input type="submit" class="neutral" name="upload_propic" value="Cambia propic"></li>
                             </ul>
                         </form>
