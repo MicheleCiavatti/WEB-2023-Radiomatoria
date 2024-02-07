@@ -290,7 +290,7 @@
                         <button id="add_post_button" class="access_required">Aggiungi post</button>
                         <p>
                             <form action="includes/addPost.inc.php" method="post" enctype="multipart/form-data" id="add_post_form">
-                                <label for="post_image">Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></br>
+                                <label>Carica immagine<input type="file" name="post_image" accept=".jpg, .jpeg, .png"></label></br>
                                 <label for="post_text">Testo post<textarea name="post_text" rows="4" cols="50" placeholder="Scrivi un post" required></textarea></label>
                                 <input class="pos" type="submit" name="upload_post" value="Pubblica">
                             </form>
@@ -333,7 +333,7 @@
                                     <form action="includes/addComment.inc.php" method="post" enctype="multipart/form-data" class="add_comment_form" id="add_comment_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>">
                                         <input type="hidden" class="post_author" name="post_author" value="<?= $post['Creatore']; ?>"/>
                                         <input type="hidden" class="post_number" name="post_number" value="<?= $post['NrPost']; ?>"/>
-                                        <label for="comment_image">Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
+                                        <label>Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
                                         <label for="comment_text">Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
                                         <input type="reset" class="comment_reset" value="Annulla commento"/>
                                         <input type="submit" class="comment_submit" value="Pubblica"/>
