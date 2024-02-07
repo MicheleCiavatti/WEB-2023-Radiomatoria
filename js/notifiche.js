@@ -90,16 +90,7 @@ function readNotification(article) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log('Notifica segnata come letta dal server');
-            article.setAttribute("name", "letta");
-            if(read_list) {
-                read_list.appendChild(article);
-                if(empty(unread_list)) {
-                    location.reload();
-                }
-                addNumbers();
-            } else {
-                location.reload();
-            }
+            location.reload();
         } else if (xhr.readyState === 4 && xhr.status !== 200) {
             console.error('Errore durante la lettura della notifica:', xhr.status);
         }
