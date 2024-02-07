@@ -42,7 +42,9 @@
                 <ul>
                     <li id="pag_principale"><a href="home.php">Home</a></li>
                     <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                    <li id="pag_profilo" <?php if ($_SESSION['NomeUtente'] == $username) echo 'class="current_page"'; ?>><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                    <li id="pag_profilo" <?php if ($_SESSION['NomeUtente'] == $username) echo 'class="current_page"'; ?>>
+                        <a id="session_user_name" href="profile.php?id=<?=$_SESSION['NomeUtente'];?>"><?=$_SESSION['NomeUtente'];?></a>
+                    </li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                     <?php if ($n_notifications == 0): ?>
                         <li id="pag_notifiche"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
@@ -60,7 +62,6 @@
                 <?php if (isset($_SESSION['NomeUtente'])): ?>
                     <?php if ($username != $_SESSION['NomeUtente']): ?>
                         <ul id="comandi">
-                            <li id="session_user_name"><?= $_SESSION['NomeUtente']?></li> <!--- Hidden field containing session user name --->
                             <li>
                                     <?php if (isFriend($username)): ?>
                                         <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
