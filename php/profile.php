@@ -63,33 +63,35 @@
                     <?php if ($username != $_SESSION['NomeUtente']): ?>
                         <ul id="comandi">
                             <li>
-                                    <?php if (isFriend($username)): ?>
-                                        <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
-                                    <?php elseif (friendshipRequested($username)): ?>
-                                        <button  class="access_required" id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
-                                    <?php else: ?>
-                                        <button class="access_required" id="friend_request">Richiedi amicizia</button>
-                                    <?php endif; ?>
+                                <?php if (isFriend($username)): ?>
+                                    <button class="access_required" name="remove_friend_buttons">Rescindi amicizia</button>
+                                <?php elseif (friendshipRequested($username)): ?>
+                                    <button  class="access_required" id="cancel_request" type="button" value="Annulla richiesta">Annulla richiesta</button>
+                                <?php else: ?>
+                                    <button class="access_required" id="friend_request">Richiedi amicizia</button>
+                                <?php endif; ?>
                             </li>
                             <li>
-                                    <?php if (isFollowed($username)): ?>
-                                        <button class="access_required" name="remove_follow_buttons">Rimuovi follow</button>
-                                    <?php else: ?>
-                                        <button class="access_required" id="follow_button">Segui</button>
-                                    <?php endif; ?>
+                                <?php if (isFollowed($username)): ?>
+                                    <button class="access_required" name="remove_follow_buttons">Rimuovi follow</button>
+                                <?php else: ?>
+                                    <button class="access_required" id="follow_button">Segui</button>
+                                <?php endif; ?>
                             </li>
                             <li>
-                                    <?php if (isBlocked($username)): ?>
-                                        <button class="access_required" name="remove_block_buttons">Solleva blocco</button>
-                                    <?php else: ?>
-                                        <button class="access_required" id="block_button">Blocca</button>
-                                    <?php endif; ?>
+                                <?php if (isBlocked($username)): ?>
+                                    <button class="access_required" name="remove_block_buttons">Solleva blocco</button>
+                                <?php else: ?>
+                                    <button class="access_required" id="block_button">Blocca</button>
+                                <?php endif; ?>
                             </li>
                         </ul>
                     <?php else: ?>
                         <form action="includes/changeProfilePic.inc.php" method="post" enctype="multipart/form-data">
-                            <label for="profile_image">Seleziona immagine<input type="file" class="neutral" name="profile_image" accept=".jpg, .jpeg, .png" required/></label>
-                            <input type="submit" name="upload_propic" value="Cambia immagine"/>
+                            <ul>
+                                <li><label for="profile_image">Seleziona immagine<input type="file" class="neutral" name="profile_image" accept=".jpg, .jpeg, .png" required></label></li>
+                                <li><input type="submit" class="neutral" name="upload_propic" value="Cambia propic"></li>
+                            </ul>
                         </form>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -309,13 +311,13 @@
                                 <tr>
                                     <td id="like_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['LikePost']; ?></td>
                                     <td><button id="like_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="like_button"';
-                                    if (isLiked($username, $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Like</button></td>
+                                    if (isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Like</button></td>
                                     
                                 </tr>
                                 <tr>
                                     <td id="dislike_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['DislikePost']; ?></td>
                                     <td><button id="dislike_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="dislike_button"';
-                                    if (isDisliked($username, $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Dislike</button></td>
+                                    if (isDisliked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Dislike</button></td>
                                 </tr>
                             </table>
                             <?php if(isset($_SESSION['NomeUtente'])): ?>
@@ -334,7 +336,7 @@
                                         <label for="comment_image">Immagine commento<input type="file" name="comment_image" accept=".jpg, .jpeg, .png"></label></br>
                                         <label for="comment_text">Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
                                         <input type="reset" class="comment_reset" value="Annulla commento"/>
-                                        <input type="submit" value="Pubblica"/>
+                                        <input type="submit" class="comment_submit" value="Pubblica"/>
                                     </form>
                                 <?php endif; ?>
                             </header>
@@ -354,13 +356,13 @@
                                         <table>
                                             <tr>
                                                 <td id="like_number_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $comment['LikeCommento']; ?></td>
-                                                <td><button id="like_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" name="like_button" 
-                                                <?php if (isLiked($username, $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif;?>>Like</button></td>
+                                                <td><button id="like_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="like_button"';
+                                                if (isLiked($_SESSION['NomeUtente'], $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Like</button></td>
                                             </tr>
                                             <tr>
                                                 <td id="dislike_number_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $comment['DislikeCommento']; ?></td>
-                                                <td><button id="dislike_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" name="dislike_button"
-                                                <?php if (isDisliked($username, $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif;?>>Dislike</button></td>
+                                                <td><button id="dislike_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="dislike_button"';
+                                                if (isDisliked($_SESSION['NomeUtente'], $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Dislike</button></td>
                                             </tr>
                                         </table>
                                         <footer>

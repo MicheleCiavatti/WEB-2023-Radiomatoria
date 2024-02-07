@@ -41,9 +41,7 @@ if (isset($_SESSION['NomeUtente'])) {
                 <ul>
                     <li class="current_page" id="pag_principale"><a href="home.php">Home</a></li>
                     <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                    <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">
-                        <a id="session_user_name" href="profile.php?id=<?=$_SESSION['NomeUtente']?>"><?=$_SESSION['NomeUtente'];?></a>
-                    </li>
+                    <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                     <?php if ($n_notifications == 0): ?>
                         <li id="pag_notifiche"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
@@ -57,7 +55,7 @@ if (isset($_SESSION['NomeUtente'])) {
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <header id="user_data">
                         <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
-                        <p><?= $_SESSION['NomeUtente']; ?></p>
+                        <p id="session_user_name"><?= $_SESSION['NomeUtente']; ?></p>
                 </header>
             <?php endif; ?>
             <section>
@@ -91,12 +89,12 @@ if (isset($_SESSION['NomeUtente'])) {
                                 <tr>
                                     <td id="like_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['LikePost']; ?></td>
                                     <td><button id="like_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="like_button"';
-                                    if (isLiked($username, $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Like</button></td>
+                                    if (isset($_SESSION['NomeUtente']) && isLiked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Like</button></td>
                                 </tr>
                                 <tr>
                                     <td id="dislike_number_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0"><?= $post['DislikePost']; ?></td>
                                     <td><button id="dislike_button_<?= $post['NrPost']; ?>_<?= $post['Creatore']; ?>_0" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="dislike_button"';
-                                    if (isDisliked($username, $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Dislike</button></td>
+                                    if (isset($_SESSION['NomeUtente']) && isDisliked($_SESSION['NomeUtente'], $post['Creatore'], $post['NrPost'], null)): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Dislike</button></td>
                                 </tr>
                             </table>
                             <?php if(isset($_SESSION['NomeUtente'])): ?>
@@ -117,7 +115,7 @@ if (isset($_SESSION['NomeUtente'])) {
                                         <label for="comment_text">Testo commento<textarea name="comment_text" rows="2" cols="50" required></textarea></label>
                                         <input type="hidden" name="from_home"/>
                                         <input type="reset" class="comment_reset" value="Annulla commento" />
-                                        <input type="submit" value="Pubblica" />
+                                        <input type="submit" class="comment_submit" value="Pubblica" />
                                     </form>
                                 <?php endif; ?>
                             </header>
@@ -138,13 +136,13 @@ if (isset($_SESSION['NomeUtente'])) {
                                             <table>
                                                 <tr>
                                                     <td id="like_number_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $comment['LikeCommento']; ?></td>
-                                                    <td><button id="like_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" name="like_button" 
-                                                    <?php if (isLiked($username, $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif;?>>Like</button></td>
+                                                    <td><button id="like_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="like_button"';
+                                                    if (isLiked($username, $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Like</button></td>
                                                 </tr>
                                                 <tr>
                                                     <td id="dislike_number_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>"><?= $comment['DislikeCommento']; ?></td>
-                                                    <td><button id="dislike_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" name="dislike_button"
-                                                    <?php if (isDisliked($username, $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif;?>>Dislike</button></td>
+                                                    <td><button id="dislike_button_<?= $comment['NrPost']; ?>_<?= $comment['Creatore']; ?>_<?= $comment['NrCommento']; ?>" <?php if(isset($_SESSION['NomeUtente'])): echo 'name="dislike_button"';
+                                                    if (isDisliked($username, $comment['Creatore'], $comment['NrPost'], $comment['NrCommento'])): echo 'class="preferred_button"'; else: echo 'class="preference_button"'; endif; endif;?>>Dislike</button></td>
                                                 </tr>
                                             </table>
                                             <footer>
