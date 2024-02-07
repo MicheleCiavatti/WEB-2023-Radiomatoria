@@ -41,7 +41,9 @@ if (isset($_SESSION['NomeUtente'])) {
                 <ul>
                     <li class="current_page" id="pag_principale"><a href="home.php">Home</a></li>
                     <li id="pag_guida"><a href="guida.php">Guida</a></li>
-                    <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">Profilo</a></li>
+                    <li id="pag_profilo"><a href="profile.php?id=<?=$_SESSION['NomeUtente']?>">
+                        <a id="session_user_name" href="profile.php?id=<?=$_SESSION['NomeUtente']?>"><?=$_SESSION['NomeUtente'];?></a>
+                    </li>
                     <li id="pag_uscita"><a href="includes/logout.inc.php">Logout</a></li>
                     <?php if ($n_notifications == 0): ?>
                         <li id="pag_notifiche"><a href="notifiche.php?id=<?=$_SESSION['NomeUtente']?>">Notifiche</a></li>
@@ -55,7 +57,7 @@ if (isset($_SESSION['NomeUtente'])) {
             <?php if (isset($_SESSION['NomeUtente'])): ?>
                 <header id="user_data">
                         <img src="<?= $_SESSION['FotoProfilo']; ?>" alt=""/>
-                        <p id="session_user_name"><?= $_SESSION['NomeUtente']; ?></p>
+                        <p><?= $_SESSION['NomeUtente']; ?></p>
                 </header>
             <?php endif; ?>
             <section>
